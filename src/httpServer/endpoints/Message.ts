@@ -3,6 +3,7 @@ import { BaseResponse } from "../BaseGetEndpoint.js";
 import { EndpointTypes } from "../EndpointType.js";
 import { MinecraftServerInteraction } from "../../dto/HTTPEndpointsStruct.js";
 import { UUID } from "../../dto/UUID.js";
+import { Application } from "../../Application.js";
 
 class HttpHandler_Message implements BaseResponse {
     public endpointType = EndpointTypes.POST;
@@ -15,11 +16,11 @@ class HttpHandler_Message implements BaseResponse {
             message: req.body.message
         }
 
-        // Add to database
+        Application.instance.collections.games.insertOne(content);
 
-        // Send through discord?
+        // Application.instance.discordServer.publicLogChannel.send(content.transformed());
 
-        // Log through discord
+        Application.instance.logger.info(`${content.sender.uuid} sent message \"${content.message}\"`);
 
         res.status(200).send();
     }

@@ -18,7 +18,7 @@ export class HttpServer {
         await new EndpointLoader().loadEndpoints();
 
         HttpServer.instance.app.listen(Application.instance.env.httpServerPort, () => {
-            console.log("READY")
+            Application.instance.logger.info("HTTP server ready!");
         });
     }
 }

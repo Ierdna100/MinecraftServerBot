@@ -13,7 +13,6 @@ export class EndpointLoader {
 
             if (endpoint.endpointType == EndpointTypes.GET) {
                 HttpServer.instance.app.get(endpoint.endpoint, endpoint.handleResponse);
-                console.log("A")
             }
             else if (endpoint.endpointType == EndpointTypes.POST) {
                 HttpServer.instance.app.post(endpoint.endpoint, endpoint.handleResponse);
