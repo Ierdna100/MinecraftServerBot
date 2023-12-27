@@ -1,4 +1,4 @@
 export enum EndpointTypes {
     GET,
-    POST
+    POST,
 }

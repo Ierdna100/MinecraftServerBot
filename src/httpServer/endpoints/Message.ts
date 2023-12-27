@@ -13,8 +13,8 @@ class HttpHandler_Message implements BaseResponse {
         let content: MinecraftServerInteraction.Message = {
             timestamp: new Date(req.body.timestamp),
             sender: new UUID(req.body.sender),
-            message: req.body.message
-        }
+            message: req.body.message,
+        };
 
         Application.instance.collections.games.insertOne(content);
 
@@ -24,7 +24,6 @@ class HttpHandler_Message implements BaseResponse {
 
         res.status(200).send();
     }
-    
 }
 
 export default HttpHandler_Message;

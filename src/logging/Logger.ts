@@ -7,13 +7,13 @@ export class Logger {
     private separator = "&";
 
     constructor(parseDetails?: boolean, name?: string, defaultSeparator?: string) {
-        this.parseDetails = (parseDetails == undefined) ? false: parseDetails;
+        this.parseDetails = parseDetails == undefined ? false : parseDetails;
         this.name = name || "";
-        this.showName = (name == undefined) ? false : true;
+        this.showName = name == undefined ? false : true;
     }
 
     public changeIfSeeName(showName: boolean): void {
-        this.showName = (this.name == undefined) ? false : showName;
+        this.showName = this.name == undefined ? false : showName;
     }
 
     public changeDefaultSeparator(newSeparator: string): void {
@@ -96,7 +96,7 @@ export class Logger {
                 return "\u001b[36m"; // cyan
             case "w":
                 return "\u001b[37m"; // white
-            case "d": 
+            case "d":
                 return "\u001b[39m"; // default
             case "B":
                 return "\u001b[40m";
@@ -114,7 +114,7 @@ export class Logger {
                 return "\u001b[46m";
             case "W":
                 return "\u001b[47m";
-            case "D": 
+            case "D":
                 return "\u001b[49m";
         }
 

@@ -8,7 +8,7 @@ export class HttpServer {
 
     constructor() {
         this.app = express();
-        
+
         this.initializeServer();
 
         HttpServer.instance = this;
