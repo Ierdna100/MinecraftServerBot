@@ -1,7 +1,9 @@
 export class EnvManager {
-    public static assertDefined(fieldValue: string | undefined): string {
+    public static assertDefined(fieldName: string): string {
+        const fieldValue = process.env[fieldName];
+
         if (fieldValue == "" || fieldValue == undefined) {
-            throw new Error(`Environnement field not set to a value! Please fill out the .env file!`);
+            throw new Error(`Environnement field <${fieldName}> not set to a value! Please fill out the .env file!`);
         }
 
         return fieldValue;

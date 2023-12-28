@@ -1,51 +1,53 @@
-import { IP } from "./IP.js";
-import { UUID } from "./UUID.js";
-import { Vec3 } from "./Vec3.js";
 import { MinecraftDimension } from "./MinecraftDimension.js";
 
 export namespace MinecraftServerInteraction {
-    export interface Message {
+    export interface Base {
         timestamp: Date;
-        message: string;
-        sender: UUID;
     }
 
-    export interface death {
-        userKilled: UUID;
+    export interface Message extends Base {
+        message: string;
+        sender: string;
+    }
+
+    export interface death extends Base {
+        userKilled: string;
         deathMsg: string;
     }
 
     export interface deathByEntity extends death {
-        killer: UUID;
+        killer: string;
         killerIsPlayer: boolean;
     }
 
-    export interface playerLeft {
-        player: UUID;
+    export interface playerLeft extends Base {
+        player: string;
         reason: string;
     }
 
-    export interface playerAttemptedLogin {
-        ip: IP;
+    export interface playerAttemptedLogin extends Base {
+        ip: string;
         displayName: string;
-        uuid: UUID;
+        uuid: string;
     }
 
     export interface playerJoined extends playerAttemptedLogin {
-        ip: IP;
+        ip: string;
         displayName: string;
-        uuid: UUID;
-        spawnPos: Vec3;
+        uuid: string;
+        x: number;
+        y: number;
+        z: number;
         spawnDimension: MinecraftDimension;
     }
 
-    export interface playerFailedLogin {
-        ip: IP;
+    export interface playerFailedLogin extends Base {
+        ip: string;
         displayName: string;
-        uuid: UUID;
+        uuid: string;
     }
 
-    export interface advancementNonProgressibleAcquired {
+    export interface advancementNonProgressibleAcquired extends Base {
         user: string;
         advancementName: string;
     }
@@ -55,7 +57,7 @@ export namespace MinecraftServerInteraction {
         progress: string;
     }
 
-    export interface serverOverloadedWarning {
+    export interface serverOverloadedWarning extends Base {
         millisecondsForLastFrame: number;
         ticksLastFrame: number;
     }

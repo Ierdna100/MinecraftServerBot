@@ -1,0 +1,27 @@
+import { EmbedBuilder } from "discord.js";
+import { Application } from "../../Application.js";
+import { MinecraftServerInteraction } from "../../dto/HTTPEndpointsStruct.js";
+import { BaseWSInteraction } from "../../dto/BaseWSInteraction.js";
+import { InteractionTypes } from "../../dto/InteractionTypes.js";
+import { EmbedColors } from "../../discordServer/EmbedColors.js";
+import { MinecraftUser } from "../../dto/MinecraftUser.js";
+
+class WSInteractionResponder_PlayerLeft implements BaseWSInteraction {
+    public interactionType = InteractionTypes.playerLeft;
+
+    public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
+        let data = buffer as MinecraftServerInteraction.playerLeft;
+
+        let player = (await MinecraftUser.getUserByUUID(data.player))!;
+
+        // prettier-ignore
+        let messageEmbed = new EmbedBuilder()
+            .setColor(EmbedColors.green)
+            .setTitle(`**${player.displayName}** left the game: ${data.reason}`);
+
+        await Application.instance.discordServer.publicLogChannel.send({ embeds: [messageEmbed] });
+        await Application.instance.collections.leaves.insertOne(buffer);
+    }
+}
+
+export default WSInteractionResponder_PlayerLeft;

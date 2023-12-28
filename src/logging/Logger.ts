@@ -1,27 +1,6 @@
 export class Logger {
-    // TODO: left to implement showName, parseDetails and a way to disable this altogether
-    private name: string;
-    private showName: boolean;
-    private parseDetails: boolean;
-
-    private separator = "&";
-
-    constructor(parseDetails?: boolean, name?: string, defaultSeparator?: string) {
-        this.parseDetails = parseDetails == undefined ? false : parseDetails;
-        this.name = name || "";
-        this.showName = name == undefined ? false : true;
-    }
-
-    public changeIfSeeName(showName: boolean): void {
-        this.showName = this.name == undefined ? false : showName;
-    }
-
-    public changeDefaultSeparator(newSeparator: string): void {
-        this.separator = newSeparator;
-    }
-
-    public parseData(data: string): string {
-        let splitData = data.split(this.separator);
+    public static parseData(data: string): string {
+        let splitData = data.split("&");
         if (splitData.length == 1) {
             return data;
         }
@@ -33,26 +12,41 @@ export class Logger {
                 continue;
             }
 
-            out += this.parseDetail(data2.charAt(0)) + data2.substring(1);
+            out += Logger.parseDetail(data2.charAt(0)) + data2.substring(1);
         }
 
         return out + "\u001b[0m";
     }
 
-    public info(data: string): void {
-        console.log(this.parseData(data));
+    private static logTime(): string {
+        const date = new Date();
+        return (
+            "[" +
+            date.getHours().toString().padStart(2, "0") +
+            ":" +
+            date.getMinutes().toString().padStart(2, "0") +
+            ":" +
+            date.getSeconds().toString().padStart(2, "0") +
+            "." +
+            date.getMilliseconds().toString().padStart(3, "0") +
+            "] "
+        );
     }
 
-    public trace(data: string): void {
-        console.trace(this.parseData(data));
+    public static info(data: string): void {
+        console.log(Logger.logTime() + Logger.parseData(data));
     }
 
-    public error(data: string): void {
-        console.error("\u001b[31m" + this.parseData(data));
+    public static trace(data: string): void {
+        console.trace(Logger.logTime() + Logger.parseData(data));
     }
 
-    public warn(data: string): void {
-        console.warn("\u001b[33m" + this.parseData(data));
+    public static error(data: Error): void {
+        console.error("\u001b[31m" + Logger.logTime() + data.message + "\u001b[0m");
+    }
+
+    public static warn(data: string): void {
+        console.warn("\u001b[33m" + Logger.logTime() + Logger.parseData(data));
     }
 
     /*
@@ -66,7 +60,7 @@ export class Logger {
         &i: italics
         &&: and symbol
     */
-    private parseDetail(detail: string): string {
+    private static parseDetail(detail: string): string {
         switch (detail) {
             case "u":
                 return "\u001b[4m"; // Underline
