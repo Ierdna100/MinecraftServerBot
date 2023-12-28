@@ -1,5 +1,3 @@
-import { MinecraftDimension } from "./MinecraftDimension.js";
-
 export namespace MinecraftServerInteraction {
     export interface Base {
         timestamp: Date;
@@ -21,7 +19,7 @@ export namespace MinecraftServerInteraction {
     }
 
     export interface playerLeft extends Base {
-        player: string;
+        uuid: string;
         reason: string;
     }
 
@@ -38,7 +36,7 @@ export namespace MinecraftServerInteraction {
         x: number;
         y: number;
         z: number;
-        spawnDimension: MinecraftDimension;
+        spawnDimension: string;
     }
 
     export interface playerFailedLogin extends Base {
@@ -48,7 +46,7 @@ export namespace MinecraftServerInteraction {
     }
 
     export interface advancementNonProgressibleAcquired extends Base {
-        user: string;
+        uuid: string;
         advancementName: string;
     }
 

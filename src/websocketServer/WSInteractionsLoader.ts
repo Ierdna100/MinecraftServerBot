@@ -7,11 +7,11 @@ export class WSInteractionsLoader {
     public async loadInteractionReplies() {
         WSInteractionsLoader.interactions = [];
 
-        const endpointFileNames = fs.readdirSync("./build/websocketServer/interactions/");
+        const endpointFileNames = fs.readdirSync("./build/websocketServer/interactionHandlers/");
 
         for (const endpointFileName of endpointFileNames) {
             let interactionCtor: { default: new () => BaseWSInteraction } = await import(
-                `./interactions/${endpointFileName}`
+                `./interactionHandlers/${endpointFileName}`
             );
 
             WSInteractionsLoader.interactions.push(new interactionCtor.default());

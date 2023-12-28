@@ -38,7 +38,7 @@ export class Application {
             coll_overloads: EnvManager.assertDefined("COLL_NAME_SERVER_OVERLOADS"),
             coll_auth: EnvManager.assertDefined("COLL_NAME_ALLOWED_MEMBERS"),
             coll_perf: EnvManager.assertDefined("COLL_NAME_PERFORMANCE_REPORTS"),
-            WSPingFreq: parseInt(EnvManager.assertDefined("WS_PING_FREQ_SEC")),
+            WSPingFreqMs: parseInt(EnvManager.assertDefined("WS_PING_FREQ_SEC")),
             WSPingTimeoutMs: parseInt(EnvManager.assertDefined("WS_PING_TIMEOUT_MS")),
             MCPingRoleId: EnvManager.assertDefined("MC_PING_ROLE_ID")
         };

@@ -7,7 +7,7 @@ export class CommandLoader {
     public static async loadCommands() {
         CommandLoader.commands = [];
 
-        const commandFileNames = fs.readdirSync("./build/discordServer/commands/commands/");
+        const commandFileNames = fs.readdirSync("./build/discordServer/commands/");
 
         for (const commandFileName of commandFileNames) {
             let command: { default: new () => BaseCommand } = await import(`./commands/${commandFileName}`);

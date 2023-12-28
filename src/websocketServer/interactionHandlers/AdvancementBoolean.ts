@@ -12,7 +12,7 @@ class WSInteractionResponder_AdvancementBoolean implements BaseWSInteraction {
     public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
         const data = buffer as MinecraftServerInteraction.advancementNonProgressibleAcquired;
 
-        const player = (await MinecraftUser.getUserByUUID(data.user))!;
+        const player = (await MinecraftUser.getUserByUUID(data.uuid))!;
 
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()

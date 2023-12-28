@@ -6,12 +6,12 @@ import { InteractionTypes } from "../../dto/InteractionTypes.js";
 import { EmbedColors } from "../../discordServer/EmbedColors.js";
 import { MinecraftUser } from "../../dto/MinecraftUser.js";
 
-class WSInteractionResponder_PlayerFailedLogin implements BaseWSInteraction {
-    public interactionType = InteractionTypes.playerFailedLogin;
+class WSInteractionResponder_PlayerFailedLoginNoUser implements BaseWSInteraction {
+    public interactionType = InteractionTypes.playerFailedLoginNoUser;
 
     public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
         return;
     }
 }
 
-export default WSInteractionResponder_PlayerFailedLogin;
+export default WSInteractionResponder_PlayerFailedLoginNoUser;

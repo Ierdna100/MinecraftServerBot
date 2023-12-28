@@ -1,6 +1,6 @@
 import { Application } from "../Application.js";
 import { Server, WebSocket } from "ws";
-import { WSInteractionsLoader } from "./EndpointLoader.js";
+import { WSInteractionsLoader } from "./WSInteractionsLoader.js";
 import { WebsocketConnection } from "./WebsocketConnection.js";
 
 export class WSServer {

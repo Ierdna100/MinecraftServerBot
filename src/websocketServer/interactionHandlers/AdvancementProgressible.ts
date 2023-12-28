@@ -12,7 +12,7 @@ class WSInteractionResponder_AdvancementProgressible implements BaseWSInteractio
     public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
         let data = buffer as MinecraftServerInteraction.advancementProgressibleUpdated;
 
-        let player = (await MinecraftUser.getUserByUUID(data.user))!;
+        let player = (await MinecraftUser.getUserByUUID(data.uuid))!;
 
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()

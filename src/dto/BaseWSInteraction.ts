@@ -8,6 +8,6 @@ export abstract class BaseWSInteraction {
 }
 
 export interface IBaseWSInteraction {
-    interactionType: InteractionTypes;
-    data: MinecraftServerInteraction.Base;
+    opcode: number | InteractionTypes;
+    data: Omit<MinecraftServerInteraction.Base, "timestamp">;
 }

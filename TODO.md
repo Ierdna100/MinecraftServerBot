@@ -1,0 +1,25 @@
+1. Commands
+    - MINECRAFT:
+        - /initMod: reset up the websocket between the two servers
+        - /allowIdling: self-explanatory
+        - /warn-day: self-explanatory
+    - DISCORD:
+        - /help
+        - /registerName: registers mc name
+        - /registerMember: admin Only, whitelist member
+    - MODALS:
+        - confirm IP
+2. Shell script for starting everything in order
+    - Mongo server
+    - This server
+    - Minecraft server
+3. Test for Discord log mod
+4. Test death by player
+5. Ticksbehind not working?
+6. Messages dont send to DB? (forgot to add handler)
+7. Automate updating allowedMembers
+8. Add proper logging
+9. Datapack
+10. In case of bot lack of response, send directly via webhook, then immediately stop the server from attempting to heartbeat or do else
+11. Some kind of messageID (UID - Unique ID) system to track messages that expect responses?
+12.

@@ -12,7 +12,7 @@ class WSInteractionResponder_PlayerLeft implements BaseWSInteraction {
     public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
         let data = buffer as MinecraftServerInteraction.playerLeft;
 
-        let player = (await MinecraftUser.getUserByUUID(data.player))!;
+        let player = (await MinecraftUser.getUserByUUID(data.uuid))!;
 
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()
