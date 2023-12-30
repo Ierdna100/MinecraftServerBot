@@ -22,7 +22,9 @@ export class DiscordClient {
 
         await DiscordClient.instance.login(Application.instance.env.token);
 
-        this.publicLogChannel = (await DiscordClient.instance.channels.fetch("1172073979759050762")) as TextChannel;
+        this.publicLogChannel = (await DiscordClient.instance.channels.fetch(
+            Application.instance.env.LogChannelId
+        )) as TextChannel;
     }
 
     private onReady() {

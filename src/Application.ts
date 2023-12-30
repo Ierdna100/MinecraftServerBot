@@ -40,7 +40,8 @@ export class Application {
             coll_perf: EnvManager.assertDefined("COLL_NAME_PERFORMANCE_REPORTS"),
             WSPingFreqMs: parseInt(EnvManager.assertDefined("WS_PING_FREQ_SEC")),
             WSPingTimeoutMs: parseInt(EnvManager.assertDefined("WS_PING_TIMEOUT_MS")),
-            MCPingRoleId: EnvManager.assertDefined("MC_PING_ROLE_ID")
+            MCPingRoleId: EnvManager.assertDefined("MC_PING_ROLE_ID"),
+            LogChannelId: EnvManager.assertDefined("PUBLIC_LOG_CHANNEL")
         };
 
         this.logger = new Logger();
