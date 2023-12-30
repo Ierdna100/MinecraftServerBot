@@ -19,11 +19,11 @@ class WSInteractionResponder_AdvancementProgressible implements BaseWSInteractio
 
         if (data.isDone) {
             messageEmbed.setColor(EmbedColors.purple);
-            messageEmbed.setTitle(`**${player.displayName}** has acquired ${data.advancementName}`);
+            messageEmbed.setTitle(`**${player.displayName}** has acquired ${data.name}`);
         } else {
             messageEmbed.setColor(EmbedColors.blue);
             messageEmbed.setTitle(
-                `**${player.displayName}** has progressed in advancement ${data.advancementName} (${data.progress})`
+                `**${player.displayName}** has progressed in advancement ${data.name} (${data.progress})`
             );
         }
 

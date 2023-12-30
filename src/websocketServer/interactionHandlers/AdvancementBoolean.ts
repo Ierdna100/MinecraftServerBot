@@ -17,7 +17,7 @@ class WSInteractionResponder_AdvancementBoolean implements BaseWSInteraction {
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()
             .setColor(EmbedColors.purple)
-            .setTitle(`**${player.displayName} acquired advancement ${data.advancementName}**`);
+            .setTitle(`**${player.displayName} acquired advancement ${data.name}**`);
 
         await Application.instance.discordServer.publicLogChannel.send({ embeds: [messageEmbed] });
         await Application.instance.collections.advancements.insertOne(buffer);

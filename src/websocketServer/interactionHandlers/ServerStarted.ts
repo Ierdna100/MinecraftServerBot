@@ -12,9 +12,12 @@ class WSInteractionResponder_ServerStarted implements BaseWSInteraction {
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()
             .setColor(EmbedColors.green)
-            .setTitle(`<@&${Application.instance.env.MCPingRoleId}> server started!`);
+            .setTitle(`Minecraft server started!`);
 
-        await Application.instance.discordServer.publicLogChannel.send({ embeds: [messageEmbed] });
+        await Application.instance.discordServer.publicLogChannel.send({
+            content: `<@&${Application.instance.env.MCPingRoleId}`,
+            embeds: [messageEmbed]
+        });
         await Application.instance.collections.starts.insertOne(buffer);
     }
 }

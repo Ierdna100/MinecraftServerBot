@@ -14,7 +14,7 @@ class WSInteractionResponder_ServerOverloaded implements BaseWSInteraction {
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()
             .setColor(EmbedColors.yellow)
-            .setTitle(`Server running ${data.millisecondsForLastFrame} ms (${data.ticksLastFrame} ticks) behind!`);
+            .setTitle(`Server running ${data.millisecondsBehind} ms (${data.ticksBehind} ticks) behind!`);
 
         await Application.instance.discordServer.publicLogChannel.send({ embeds: [messageEmbed] });
         await Application.instance.collections.overloads.insertOne(buffer);

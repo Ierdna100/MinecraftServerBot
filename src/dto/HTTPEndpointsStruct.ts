@@ -47,7 +47,7 @@ export namespace MinecraftServerInteraction {
 
     export interface advancementNonProgressibleAcquired extends Base {
         uuid: string;
-        advancementName: string;
+        name: string;
     }
 
     export interface advancementProgressibleUpdated extends advancementNonProgressibleAcquired {
@@ -56,7 +56,7 @@ export namespace MinecraftServerInteraction {
     }
 
     export interface serverOverloadedWarning extends Base {
-        millisecondsForLastFrame: number;
-        ticksLastFrame: number;
+        millisecondsBehind: number;
+        ticksBehind: number;
     }
 }

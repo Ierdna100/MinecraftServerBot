@@ -12,9 +12,12 @@ class WSInteractionResponder_ServerStopWarning implements BaseWSInteraction {
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()
             .setColor(EmbedColors.orange)
-            .setTitle(`<@&${Application.instance.env.MCPingRoleId}> server stopping!`);
+            .setTitle(`Minecraft server stopping!`);
 
-        await Application.instance.discordServer.publicLogChannel.send({ embeds: [messageEmbed] });
+        await Application.instance.discordServer.publicLogChannel.send({
+            content: `<@&${Application.instance.env.MCPingRoleId}`,
+            embeds: [messageEmbed]
+        });
     }
 }
 
