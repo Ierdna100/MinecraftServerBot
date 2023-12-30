@@ -36,3 +36,9 @@
 15. Register commands script
 16. Setgamerules (init script?)
 17. Rename "CollegeMod" to "andreimod" or smth
+
+18. fabric-tailor
+19. lithium
+20. starlight
+21. faric API 0.85
+    > `taskset -c 0-5 java -Xmx10G -Xms1G -jar fabric-server.jar nogui`
