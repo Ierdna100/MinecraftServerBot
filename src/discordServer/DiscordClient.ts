@@ -14,7 +14,7 @@ export class DiscordClient {
     private async initializeDiscordClient() {
         DiscordClient.instance = new Client({ intents: [] });
 
-        // CommandLoader.loadCommands();
+        CommandLoader.loadCommands();
 
         DiscordClient.instance.on("ready", () => this.onReady());
         DiscordClient.instance.on("interactionCreate", (interaction) => this.onInteractionCreate(interaction));

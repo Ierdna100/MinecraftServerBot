@@ -7,8 +7,16 @@
         - /help
         - /registerName: registers mc name
         - /registerMember: admin Only, whitelist member
+        - /getAchiviementData
     - MODALS:
         - confirm IP
+    - Continously updated stuff:
+        - panel with server info:
+            - Players online
+            - Server status
+            - timestamp
+            - IP
+            - authenticated players
 2. Shell script for starting everything in order
     - Mongo server
     - This server
@@ -22,4 +30,9 @@
 9. Datapack
 10. In case of bot lack of response, send directly via webhook, then immediately stop the server from attempting to heartbeat or do else
 11. Some kind of messageID (UID - Unique ID) system to track messages that expect responses?
-12.
+12. Server MOTD randomizer?
+13. server icon and such
+14. Install script
+15. Register commands script
+16. Setgamerules (init script?)
+17. Rename "CollegeMod" to "andreimod" or smth

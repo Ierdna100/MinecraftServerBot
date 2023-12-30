@@ -59,27 +59,32 @@ export class WebsocketConnection {
         this.pingClient();
     }
 
-    private async sendAuthData() {
+    public async sendAuthData() {
         const allAuthedUsers = (await Application.instance.collections.auth
             .find({})
             .toArray()) as unknown as MongoModel_MinecraftUser[];
         if (allAuthedUsers != null) {
             let allValidUsers: { uuid: string | undefined; allowedIps: string[] }[] = [];
             for (const user of allAuthedUsers) {
-                if (user.displayName == undefined || user.displayName == "") {
+                if (user.uuid == undefined || user.uuid == "") {
                     continue;
                 }
 
                 allValidUsers.push({ uuid: user.uuid, allowedIps: user.allowedIps });
             }
 
-            console.log(allValidUsers);
-            this.ws.send(JSON.stringify(allValidUsers));
+            const fullData = {
+                opcode: InteractionTypes.allowedMembers,
+                data: allValidUsers
+            };
+
+            console.log(fullData);
+            this.ws.send(JSON.stringify(fullData));
         }
     }
 
     private pingClient() {
         this.pingTime = new Date();
-        this.ws.ping("ping");
+        this.ws.ping();
     }
 }
