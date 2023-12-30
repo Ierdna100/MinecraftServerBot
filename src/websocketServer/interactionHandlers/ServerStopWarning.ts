@@ -15,7 +15,7 @@ class WSInteractionResponder_ServerStopWarning implements BaseWSInteraction {
             .setTitle(`Minecraft server stopping!`);
 
         await Application.instance.discordServer.publicLogChannel.send({
-            content: `<@&${Application.instance.env.MCPingRoleId}`,
+            content: `<@&${Application.instance.env.MCPingRoleId}>`,
             embeds: [messageEmbed]
         });
     }

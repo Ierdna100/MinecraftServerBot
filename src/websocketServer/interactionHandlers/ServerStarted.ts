@@ -15,7 +15,7 @@ class WSInteractionResponder_ServerStarted implements BaseWSInteraction {
             .setTitle(`Minecraft server started!`);
 
         await Application.instance.discordServer.publicLogChannel.send({
-            content: `<@&${Application.instance.env.MCPingRoleId}`,
+            content: `<@&${Application.instance.env.MCPingRoleId}>`,
             embeds: [messageEmbed]
         });
         await Application.instance.collections.starts.insertOne(buffer);
