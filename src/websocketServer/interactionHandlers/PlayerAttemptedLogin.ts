@@ -33,6 +33,7 @@ class WSInteractionResponder_PlayerAttemptedLogin implements BaseWSInteraction {
         );
 
         for (const connection of WebsocketConnection.connections) {
+            console.log("Sending auth data");
             connection.sendAuthData();
         }
     }
