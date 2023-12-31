@@ -2,6 +2,7 @@ import { User } from "discord.js";
 import { Application } from "../Application.js";
 import { MongoModel_MinecraftUser } from "./MongoModels.js";
 import { DiscordClient } from "../discordServer/DiscordClient.js";
+import { Logger } from "../logging/Logger.js";
 
 export class MinecraftUser {
     public uuid: string | undefined;
@@ -16,9 +17,15 @@ export class MinecraftUser {
     }
 
     public static async getUserByUUID(uuidToMatch: string): Promise<MinecraftUser | null> {
+        Logger.info("The bot crashes here sometimes, uuidToMatch:");
+        console.log(uuidToMatch);
+
         const rawInput = (await Application.instance.collections.auth.findOne({
             uuid: uuidToMatch.toString()
         })) as unknown as MongoModel_MinecraftUser;
+
+        console.log("rawInput:");
+        console.log(rawInput);
 
         let newUser = new MinecraftUser(await DiscordClient.instance.users.fetch(rawInput.discordUser));
         newUser.allowedIps = rawInput.allowedIps;

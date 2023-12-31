@@ -9,16 +9,17 @@ import { InteractionTypes } from "../dto/InteractionTypes.js";
 import { MinecraftServerInteraction } from "../dto/HTTPEndpointsStruct.js";
 
 export class WebsocketConnection {
-    public static mcinst: WebSocket;
+    public static connections: WebsocketConnection[];
+
     public ws: WebSocket;
     public pingTime: Date;
 
     constructor(ws: WebSocket) {
-        WebsocketConnection.mcinst = ws;
+        WebsocketConnection.connections.push(this);
         this.pingTime = new Date();
         this.ws = ws;
 
-        Logger.info("Minecraft client connected");
+        Logger.info("Client connected");
 
         ws.on("message", (buffer: string) => {
             let data = JSON.parse(buffer) as IBaseWSInteraction;
@@ -34,6 +35,10 @@ export class WebsocketConnection {
                         timestamp: new Date(),
                         ...data.data
                     };
+
+                    Logger.info("New reply-able interaction received with opcode: " + data.opcode);
+                    console.log(data.data);
+
                     interaction.reply(finalData);
                     break;
                 }
@@ -53,7 +58,8 @@ export class WebsocketConnection {
         });
 
         ws.on("close", () => {
-            Logger.info("Minecraft client disconnected");
+            Logger.info("Client disconnected");
+            WebsocketConnection.connections.splice(WebsocketConnection.connections.indexOf(this), 1);
         });
 
         this.pingClient();

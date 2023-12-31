@@ -32,17 +32,9 @@ class WSInteractionResponder_PlayerAttemptedLogin implements BaseWSInteraction {
             }
         );
 
-        WebsocketConnection.mcinst.send(
-            JSON.stringify({
-                opcode: InteractionTypes.allowedMembers,
-                data: [
-                    {
-                        uuid: buffer.uuid,
-                        allowedIps: [buffer.ip]
-                    }
-                ]
-            })
-        );
+        for (const connection of WebsocketConnection.connections) {
+            connection.sendAuthData();
+        }
     }
 }
 
