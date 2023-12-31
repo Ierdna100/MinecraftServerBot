@@ -9,13 +9,13 @@ export namespace MinecraftServerInteraction {
     }
 
     export interface death extends Base {
-        userKilled: string;
-        deathMsg: string;
+        killed: string;
+        msg: string;
     }
 
     export interface deathByEntity extends death {
         killer: string;
-        killerIsPlayer: boolean;
+        isByPlayer: boolean;
     }
 
     export interface playerLeft extends Base {
