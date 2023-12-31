@@ -9,7 +9,7 @@ import { InteractionTypes } from "../dto/InteractionTypes.js";
 import { MinecraftServerInteraction } from "../dto/HTTPEndpointsStruct.js";
 
 export class WebsocketConnection {
-    public static connections: WebsocketConnection[];
+    public static connections: WebsocketConnection[] = [];
 
     public ws: WebSocket;
     public pingTime: Date;
