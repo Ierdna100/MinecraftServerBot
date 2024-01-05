@@ -10,15 +10,15 @@ import { MinecraftServerInteraction } from "../dto/HTTPEndpointsStruct.js";
 import { PeriodicMessage } from "../discordServer/PeriodicMessage.js";
 
 export class WebsocketConnection {
-    public static connections: WebsocketConnection[] = [];
+    public static connection: WebsocketConnection;
 
     public ws: WebSocket;
     public pingTime: Date;
 
     constructor(ws: WebSocket) {
-        new PeriodicMessage();
+        PeriodicMessage.instance.initializePeriodicMessaging();
 
-        WebsocketConnection.connections.push(this);
+        WebsocketConnection.connection = this;
         this.pingTime = new Date();
         this.ws = ws;
 
@@ -62,7 +62,6 @@ export class WebsocketConnection {
 
         ws.on("close", () => {
             Logger.info("Client disconnected");
-            WebsocketConnection.connections.splice(WebsocketConnection.connections.indexOf(this), 1);
         });
 
         this.pingClient();

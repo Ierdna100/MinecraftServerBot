@@ -39,11 +39,15 @@ export class Application {
             coll_overloads: EnvManager.assertDefined("COLL_NAME_SERVER_OVERLOADS"),
             coll_auth: EnvManager.assertDefined("COLL_NAME_ALLOWED_MEMBERS"),
             coll_perf: EnvManager.assertDefined("COLL_NAME_PERFORMANCE_REPORTS"),
+            coll_playerMetadata: EnvManager.assertDefined("COLL_NAME_PLAYER_METADATA"),
+            coll_serverData: EnvManager.assertDefined("COLL_NAME_SERVER_DATA"),
+            coll_discordAuthentication: EnvManager.assertDefined("COLL_DISCORD_AUTHENTICATION"),
             WSPingFreqMs: parseInt(EnvManager.assertDefined("WS_PING_FREQ_SEC")),
             WSPingTimeoutMs: parseInt(EnvManager.assertDefined("WS_PING_TIMEOUT_MS")),
             MCPingRoleId: EnvManager.assertDefined("MC_PING_ROLE_ID"),
-            LogChannelId: EnvManager.assertDefined("PUBLIC_LOG_CHANNEL"),
-            WSGlobalDataFreqMs: parseInt(EnvManager.assertDefined("GLOBAL_DATA_FREQ_MS"))
+            logChannelId: EnvManager.assertDefined("PUBLIC_LOG_CHANNEL"),
+            WSGlobalDataFreqMs: parseInt(EnvManager.assertDefined("GLOBAL_DATA_FREQ_MS")),
+            infoChannelId: EnvManager.assertDefined("INFO_CHANNEL")
         };
 
         this.logger = new Logger();
@@ -64,6 +68,8 @@ export class Application {
             auth: this.mongoDatabase.collection(this.env.coll_auth),
             performance: this.mongoDatabase.collection(this.env.coll_perf)
         };
+
+        new PeriodicMessage();
     }
 }
 

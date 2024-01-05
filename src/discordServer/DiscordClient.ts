@@ -2,11 +2,13 @@ import { CacheType, Client, Interaction, TextChannel } from "discord.js";
 import { Application } from "../Application.js";
 import { CommandLoader } from "./CommandLoader.js";
 import { Logger } from "../logging/Logger.js";
+import { disconnect } from "process";
 
 export class DiscordClient {
     public static instance: Client;
     
     public publicLogChannel!: TextChannel;
+    public infoChannel!: TextChannel
 
     constructor() {
         this.initializeDiscordClient();
@@ -24,7 +26,11 @@ export class DiscordClient {
         await DiscordClient.instance.login(Application.instance.env.token);
 
         this.publicLogChannel = (await DiscordClient.instance.channels.fetch(
-            Application.instance.env.LogChannelId
+            Application.instance.env.logChannelId
+        )) as TextChannel;
+
+        this.infoChannel = (await DiscordClient.instance.channels.fetch(
+            Application.instance.env.infoChannelId
         )) as TextChannel;
     }
 

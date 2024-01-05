@@ -12,15 +12,20 @@ class WSInteractionResponder_DeathByEntity implements BaseWSInteraction {
     public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
         let data = buffer as MinecraftServerInteraction.deathByEntity;
 
+        let deathMessage = "";
+
         let killer: MinecraftUser | null = null;
         if (data.isByPlayer) {
             killer = await MinecraftUser.getUserByUUID(data.killer)!;
+            deathMessage = `${MinecraftUser.getUserByUUID(data.killed)} was killed by ${killer!.displayName}`;
+        } else {
+            deathMessage = data.msg;
         }
 
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()
             .setColor(EmbedColors.red)
-            .setTitle(`${data.msg}`);
+            .setTitle(`${deathMessage}`);
 
         await Application.instance.discordServer.publicLogChannel.send({ embeds: [messageEmbed] });
         await Application.instance.collections.deaths.insertOne(data);
