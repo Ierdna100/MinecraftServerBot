@@ -34,12 +34,12 @@ class Application {
         catch (error) {
             console.log(error);
             console.log(`Full error log can be found at ./logs/commandRegisteringLog.json`);
-            fs.writeFileSync("./logs/commandRegisteringLog.json", JSON.stringify(error, null, "\t"));
+            // fs.writeFileSync("./logs/commandRegisteringLog.json", JSON.stringify(error, null, "\t"));
             process.exit(1);
         }
 
         console.log("Full list of commands and options can be found at ./logs/currentlyRegisteredCommands.json");
-        fs.writeFileSync("./logs/currentlyRegisteredCommands.json", JSON.stringify(currentCommands, null, "\t"));
+        // fs.writeFileSync("./logs/currentlyRegisteredCommands.json", JSON.stringify(currentCommands, null, "\t"));
     }
 }
 
