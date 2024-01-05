@@ -16,8 +16,6 @@ export class WebsocketConnection {
     public pingTime: Date;
 
     constructor(ws: WebSocket) {
-        PeriodicMessage.instance.initializePeriodicMessaging();
-
         WebsocketConnection.connection = this;
         this.pingTime = new Date();
         this.ws = ws;
@@ -65,6 +63,7 @@ export class WebsocketConnection {
         });
 
         this.pingClient();
+        PeriodicMessage.instance.initializePeriodicMessaging();
     }
 
     public async sendAuthData() {
