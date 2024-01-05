@@ -64,7 +64,6 @@ export class WebsocketConnection {
         });
 
         this.pingClient();
-        PeriodicMessage.instance.fetchNewestData();
     }
 
     public async sendAuthData() {

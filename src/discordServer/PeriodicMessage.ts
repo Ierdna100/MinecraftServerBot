@@ -14,10 +14,12 @@ export class PeriodicMessage {
 
     constructor() {
         PeriodicMessage.instance = this;
+
+        this.initializePeriodicMessaging();
     }
 
     public async initializePeriodicMessaging() {
-        var channel = await DiscordClient.instance.channels.fetch("1138754184192204881")
+        var channel = await DiscordClient.instance.channels.fetch("1138754184192204881");
 
         if (channel == null || !channel.isTextBased()) {
             throw new Error("Provided channel for continously updated message isn't text based!");
