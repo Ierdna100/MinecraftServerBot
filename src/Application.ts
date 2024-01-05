@@ -5,6 +5,7 @@ import { Logger } from "./logging/Logger.js";
 import * as MongoDB from "mongodb";
 import { Server, WebSocket } from "ws";
 import { WSServer } from "./websocketServer/websocketServer.js";
+import { PeriodicMessage } from "./discordServer/PeriodicMessage.js";
 
 export class Application {
     public static instance: Application;
@@ -63,6 +64,8 @@ export class Application {
             auth: this.mongoDatabase.collection(this.env.coll_auth),
             performance: this.mongoDatabase.collection(this.env.coll_perf)
         };
+
+        new PeriodicMessage();
     }
 }
 

@@ -4,17 +4,22 @@ import { WebsocketConnection } from "../websocketServer/WebsocketConnection.js";
 import { WebsocketOpcodes } from "../dto/WebsocketOpcodes.js";
 import { MinecraftServerInteraction } from "../dto/HTTPEndpointsStruct.js";
 import { EmbedColors } from "./EmbedColors.js";
+import { DiscordClient } from "./DiscordClient.js";
 
 export class PeriodicMessage {
     public static instance: PeriodicMessage;
 
-    private channel: TextChannel;
+    private channel: TextChannel | undefined;
     private messageToUpdate: Message | undefined;
 
-    constructor(channel: Channel) {
+    constructor() {
         PeriodicMessage.instance = this;
+    }
 
-        if (!channel.isTextBased()) {
+    public async initializePeriodicMessaging() {
+        var channel = await DiscordClient.instance.channels.fetch("1138754184192204881")
+
+        if (channel == null || !channel.isTextBased()) {
             throw new Error("Provided channel for continously updated message isn't text based!");
             return;
         }
@@ -48,7 +53,7 @@ export class PeriodicMessage {
         ]
 
         if (this.messageToUpdate == undefined) {
-            this.messageToUpdate = await this.channel.send({ embeds: messageEmbeds });
+            this.messageToUpdate = await this.channel!.send({ embeds: messageEmbeds });
             return;
         }
 
