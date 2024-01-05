@@ -41,7 +41,8 @@ export class Application {
             WSPingFreqMs: parseInt(EnvManager.assertDefined("WS_PING_FREQ_SEC")),
             WSPingTimeoutMs: parseInt(EnvManager.assertDefined("WS_PING_TIMEOUT_MS")),
             MCPingRoleId: EnvManager.assertDefined("MC_PING_ROLE_ID"),
-            LogChannelId: EnvManager.assertDefined("PUBLIC_LOG_CHANNEL")
+            LogChannelId: EnvManager.assertDefined("PUBLIC_LOG_CHANNEL"),
+            WSGlobalDataFreqMs: parseInt(EnvManager.assertDefined("GLOBAL_DATA_FREQ_MS"))
         };
 
         this.logger = new Logger();

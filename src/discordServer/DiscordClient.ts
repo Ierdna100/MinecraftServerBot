@@ -5,6 +5,7 @@ import { Logger } from "../logging/Logger.js";
 
 export class DiscordClient {
     public static instance: Client;
+    
     public publicLogChannel!: TextChannel;
 
     constructor() {

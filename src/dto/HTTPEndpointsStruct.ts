@@ -2,6 +2,15 @@ export namespace MinecraftServerInteraction {
     export interface Base {
         timestamp: Date;
     }
+    
+    export interface GlobalData extends Base {
+        ip: string,
+        seed: string,
+        maxPlayers: number,
+        currentPlayers: number,
+        version: string,
+        MOTD: string
+    }
 
     export interface Message extends Base {
         message: string;
