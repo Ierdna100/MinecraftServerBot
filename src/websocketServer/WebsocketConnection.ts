@@ -5,7 +5,7 @@ import { WSInteractionsLoader } from "./WSInteractionsLoader.js";
 import { Application } from "../Application.js";
 import { WebSocketCloseCodes } from "../dto/WebsocketCloseCodes.js";
 import { MongoModel_MinecraftUser } from "../dto/MongoModels.js";
-import { InteractionTypes } from "../dto/InteractionTypes.js";
+import { WebsocketOpcodes } from "../dto/WebsocketOpcodes.js";
 import { MinecraftServerInteraction } from "../dto/HTTPEndpointsStruct.js";
 
 export class WebsocketConnection {
@@ -24,7 +24,7 @@ export class WebsocketConnection {
         ws.on("message", (buffer: string) => {
             let data = JSON.parse(buffer) as IBaseWSInteraction;
 
-            if (data.opcode == InteractionTypes.allowedMembers) {
+            if (data.opcode == WebsocketOpcodes.allowedMembers) {
                 this.sendAuthData();
                 return;
             }
@@ -81,7 +81,7 @@ export class WebsocketConnection {
             }
 
             const fullData = {
-                opcode: InteractionTypes.allowedMembers,
+                opcode: WebsocketOpcodes.allowedMembers,
                 data: allValidUsers
             };
 

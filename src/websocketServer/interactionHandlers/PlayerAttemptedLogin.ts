@@ -1,12 +1,12 @@
 import { Application } from "../../Application.js";
 import { MinecraftServerInteraction } from "../../dto/HTTPEndpointsStruct.js";
 import { BaseWSInteraction } from "../../dto/BaseWSInteraction.js";
-import { InteractionTypes } from "../../dto/InteractionTypes.js";
+import { WebsocketOpcodes } from "../../dto/WebsocketOpcodes.js";
 import { MongoModel_MinecraftUser } from "../../dto/MongoModels.js";
 import { WebsocketConnection } from "../WebsocketConnection.js";
 
 class WSInteractionResponder_PlayerAttemptedLogin implements BaseWSInteraction {
-    public interactionType = InteractionTypes.playerAttemptedLogin;
+    public interactionType = WebsocketOpcodes.playerAttemptedLogin;
 
     public async reply(buffer: MinecraftServerInteraction.playerAttemptedLogin): Promise<void> {
         const existingUser = (await Application.instance.collections.auth.findOne({

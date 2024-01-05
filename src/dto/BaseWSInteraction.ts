@@ -1,13 +1,13 @@
 import { MinecraftServerInteraction } from "./HTTPEndpointsStruct.js";
-import { InteractionTypes } from "./InteractionTypes.js";
+import { WebsocketOpcodes } from "./WebsocketOpcodes.js";
 
 export abstract class BaseWSInteraction {
-    public abstract interactionType: InteractionTypes;
+    public abstract interactionType: WebsocketOpcodes;
 
     public abstract reply(buffer: MinecraftServerInteraction.Base): Promise<void>;
 }
 
 export interface IBaseWSInteraction {
-    opcode: number | InteractionTypes;
+    opcode: number | WebsocketOpcodes;
     data: Omit<MinecraftServerInteraction.Base, "timestamp">;
 }

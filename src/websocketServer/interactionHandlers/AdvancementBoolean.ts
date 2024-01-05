@@ -2,12 +2,12 @@ import { EmbedBuilder } from "discord.js";
 import { Application } from "../../Application.js";
 import { MinecraftServerInteraction } from "../../dto/HTTPEndpointsStruct.js";
 import { BaseWSInteraction } from "../../dto/BaseWSInteraction.js";
-import { InteractionTypes } from "../../dto/InteractionTypes.js";
+import { WebsocketOpcodes } from "../../dto/WebsocketOpcodes.js";
 import { EmbedColors } from "../../discordServer/EmbedColors.js";
 import { MinecraftUser } from "../../dto/MinecraftUser.js";
 
 class WSInteractionResponder_AdvancementBoolean implements BaseWSInteraction {
-    public interactionType = InteractionTypes.advancementBoolean;
+    public interactionType = WebsocketOpcodes.advancementBoolean;
 
     public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
         const data = buffer as MinecraftServerInteraction.advancementNonProgressibleAcquired;

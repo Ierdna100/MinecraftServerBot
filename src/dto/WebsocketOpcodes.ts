@@ -1,4 +1,4 @@
-export enum InteractionTypes {
+export enum WebsocketOpcodes {
     messageSent = 0,
     death = 1,
     deathByEntity = 2,
@@ -14,5 +14,6 @@ export enum InteractionTypes {
     advancementProgressible = 12,
     serverOverloaded = 13,
     serverStarting = 14,
-    allowedMembers = 15
+    allowedMembers = 15,
+    globalData = 16
 }
