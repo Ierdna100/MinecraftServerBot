@@ -7,12 +7,12 @@ configDotenv.config();
 
 class Application {
     public async registerCommands() {
-        if (process.env.token == undefined || process.env.clientId == undefined) {
+        if (process.env.TOKEN == undefined || process.env.CLIENT_ID == undefined) {
             console.log("Token or clientId not set in .env file!")
             process.exit(1);
         }
 
-        const rest = new REST({ version: '10' }).setToken(process.env.token);
+        const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
         let commands: Pick<SlashCommandBuilder, "name" | "description">[] = [];
 
@@ -28,7 +28,7 @@ class Application {
 
         try {
             console.log("Started refreshing application slash commands...");
-            currentCommands = await rest.put(Routes.applicationCommands(process.env.clientId), { body: commands });
+            currentCommands = await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
             console.log("Successfully reloaded application slash commands.");
         }
         catch (error) {
