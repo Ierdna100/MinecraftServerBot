@@ -14,7 +14,7 @@ import { MongoModel_MinecraftUser } from "../../dto/MongoModels.js";
 class DiscordCommand_RegisterUser extends BaseCommand {
     // prettier-ignore
     commandBuilder: Pick<SlashCommandBuilder, "name" | "toJSON" | "description"> = new SlashCommandBuilder()
-        .setName("help")
+        .setName("register_user")
         .setDescription("Register new user")
             .addUserOption(new SlashCommandUserOption()
                 .setName("id")
