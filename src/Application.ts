@@ -64,8 +64,6 @@ export class Application {
             auth: this.mongoDatabase.collection(this.env.coll_auth),
             performance: this.mongoDatabase.collection(this.env.coll_perf)
         };
-
-        new PeriodicMessage();
     }
 }
 
