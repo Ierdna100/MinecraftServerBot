@@ -42,3 +42,5 @@
 20. starlight
 21. faric API 0.85
     > `taskset -c 0-5 java -Xmx10G -Xms1G -jar fabric-server.jar nogui`
+22. proper auth for discord commands
+23. rework websocket to be able to send data only to MC server

@@ -7,6 +7,7 @@ import { WebSocketCloseCodes } from "../dto/WebsocketCloseCodes.js";
 import { MongoModel_MinecraftUser } from "../dto/MongoModels.js";
 import { WebsocketOpcodes } from "../dto/WebsocketOpcodes.js";
 import { MinecraftServerInteraction } from "../dto/HTTPEndpointsStruct.js";
+import { PeriodicMessage } from "../discordServer/PeriodicMessage.js";
 
 export class WebsocketConnection {
     public static connections: WebsocketConnection[] = [];
@@ -63,6 +64,7 @@ export class WebsocketConnection {
         });
 
         this.pingClient();
+        PeriodicMessage.instance.fetchNewestData();
     }
 
     public async sendAuthData() {
