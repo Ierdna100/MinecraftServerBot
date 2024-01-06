@@ -2,41 +2,43 @@ import { CacheType, Client, Interaction, TextChannel } from "discord.js";
 import { Application } from "../Application.js";
 import { CommandLoader } from "./CommandLoader.js";
 import { Logger } from "../logging/Logger.js";
-import { disconnect } from "process";
+import { PeriodicMessage_MinecraftInfo } from "./periodicMessages/MinecraftInfo.js";
 
 export class DiscordClient {
-    public static instance: Client;
-    
+    public static instance: DiscordClient;
+    public client!: Client;
+
+    public periodicMessages = {
+        infoChannel: new PeriodicMessage_MinecraftInfo(Application.instance.env.infoChannelId)
+    };
+
     public publicLogChannel!: TextChannel;
-    public infoChannel!: TextChannel
 
     constructor() {
+        DiscordClient.instance = this;
+
         this.initializeDiscordClient();
     }
 
     private async initializeDiscordClient() {
-        DiscordClient.instance = new Client({ intents: [] });
+        this.client = new Client({ intents: [] });
 
         CommandLoader.loadCommands();
 
-        DiscordClient.instance.on("ready", () => this.onReady());
-        DiscordClient.instance.on("interactionCreate", (interaction) => this.onInteractionCreate(interaction));
-        DiscordClient.instance.on("error", (error) => this.onError(error));
+        this.client.on("ready", () => this.onReady());
+        this.client.on("interactionCreate", (interaction) => this.onInteractionCreate(interaction));
+        this.client.on("error", (error) => this.onError(error));
 
-        await DiscordClient.instance.login(Application.instance.env.token);
+        await this.client.login(Application.instance.env.token);
 
-        this.publicLogChannel = (await DiscordClient.instance.channels.fetch(
+        this.publicLogChannel = (await this.client.channels.fetch(
             Application.instance.env.logChannelId
-        )) as TextChannel;
-
-        this.infoChannel = (await DiscordClient.instance.channels.fetch(
-            Application.instance.env.infoChannelId
         )) as TextChannel;
     }
 
     private onReady() {
         Logger.info("Discord server started!");
-        Logger.info(`Websocket ready and connected as ${DiscordClient.instance.user?.tag}`);
+        Logger.info(`Websocket ready and connected as ${this.client.user?.tag}`);
     }
 
     private async onInteractionCreate(interaction: Interaction<CacheType>) {

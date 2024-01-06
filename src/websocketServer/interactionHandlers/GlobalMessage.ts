@@ -5,7 +5,7 @@ import { BaseWSInteraction } from "../../dto/BaseWSInteraction.js";
 import { WebsocketOpcodes } from "../../dto/WebsocketOpcodes.js";
 import { EmbedColors } from "../../discordServer/EmbedColors.js";
 import { MinecraftUser } from "../../dto/MinecraftUser.js";
-import { PeriodicMessage } from "../../discordServer/PeriodicMessage.js";
+import { DiscordClient } from "../../discordServer/DiscordClient.js";
 
 class WSInteractionResponder_GlobalData implements BaseWSInteraction {
     public interactionType = WebsocketOpcodes.globalData;
@@ -13,8 +13,11 @@ class WSInteractionResponder_GlobalData implements BaseWSInteraction {
     public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
         let data = buffer as MinecraftServerInteraction.GlobalData;
 
-        await PeriodicMessage.instance.updateMessage(data)
-        setTimeout(PeriodicMessage.instance.fetchNewestData, Application.instance.env.WSGlobalDataFreqMs)
+        await DiscordClient.instance.periodicMessages.infoChannel.updateMessage(data);
+        setTimeout(
+            DiscordClient.instance.periodicMessages.infoChannel.fetchNewestData,
+            Application.instance.env.WSGlobalDataFreqMs
+        );
     }
 }
 

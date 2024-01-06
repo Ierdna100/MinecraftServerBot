@@ -7,7 +7,8 @@ import { WebSocketCloseCodes } from "../dto/WebsocketCloseCodes.js";
 import { MongoModel_MinecraftUser } from "../dto/MongoModels.js";
 import { WebsocketOpcodes } from "../dto/WebsocketOpcodes.js";
 import { MinecraftServerInteraction } from "../dto/HTTPEndpointsStruct.js";
-import { PeriodicMessage } from "../discordServer/PeriodicMessage.js";
+import { PeriodicMessageBase } from "../discordServer/PeriodicMessage.js";
+import { DiscordClient } from "../discordServer/DiscordClient.js";
 
 export class WebsocketConnection {
     public static connection: WebsocketConnection;
@@ -22,48 +23,52 @@ export class WebsocketConnection {
 
         Logger.info("Client connected");
 
-        ws.on("message", (buffer: string) => {
-            let data = JSON.parse(buffer) as IBaseWSInteraction;
-
-            if (data.opcode == WebsocketOpcodes.allowedMembers) {
-                this.sendAuthData();
-                return;
-            }
-
-            for (const interaction of WSInteractionsLoader.interactions) {
-                if (interaction.interactionType == data.opcode) {
-                    const finalData: MinecraftServerInteraction.Base = {
-                        timestamp: new Date(),
-                        ...data.data
-                    };
-
-                    Logger.info("New reply-able interaction received with opcode: " + data.opcode);
-                    console.log(data.data);
-
-                    interaction.reply(finalData);
-                    break;
-                }
-            }
-        });
-
-        ws.on("pong", () => {
-            let currentTime = new Date();
-
-            if (currentTime.getTime() - this.pingTime.getTime() > Application.instance.env.WSPingTimeoutMs) {
-                console.log(true);
-                ws.close(WebSocketCloseCodes.timeout);
-                return;
-            }
-
-            setTimeout(() => this.pingClient(), Application.instance.env.WSPingFreqMs);
-        });
-
-        ws.on("close", () => {
-            Logger.info("Client disconnected");
-        });
+        ws.on("message", this.onMessage);
+        ws.on("pong", this.onPong);
+        ws.on("close", this.onClose);
 
         this.pingClient();
-        PeriodicMessage.instance.initializePeriodicMessaging();
+        DiscordClient.instance.periodicMessages.infoChannel.initializePeriodicMessage();
+    }
+
+    public onMessage(buffer: string) {
+        let data = JSON.parse(buffer) as IBaseWSInteraction;
+
+        if (data.opcode == WebsocketOpcodes.allowedMembers) {
+            this.sendAuthData();
+            return;
+        }
+
+        for (const interaction of WSInteractionsLoader.interactions) {
+            if (interaction.interactionType == data.opcode) {
+                const finalData: MinecraftServerInteraction.Base = {
+                    timestamp: new Date(),
+                    ...data.data
+                };
+
+                Logger.info("New reply-able interaction received with opcode: " + data.opcode);
+                console.log(data.data);
+
+                interaction.reply(finalData);
+                break;
+            }
+        }
+    }
+
+    public onPong() {
+        let currentTime = new Date();
+
+        if (currentTime.getTime() - this.pingTime.getTime() > Application.instance.env.WSPingTimeoutMs) {
+            console.log(true);
+            this.ws.close(WebSocketCloseCodes.timeout);
+            return;
+        }
+
+        setTimeout(() => this.pingClient(), Application.instance.env.WSPingFreqMs);
+    }
+
+    public onClose() {
+        Logger.info("Client disconnected");
     }
 
     public async sendAuthData() {

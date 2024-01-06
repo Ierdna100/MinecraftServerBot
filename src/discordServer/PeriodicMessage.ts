@@ -8,87 +8,35 @@ import { DiscordClient } from "./DiscordClient.js";
 import { Application } from "../Application.js";
 import { MinecraftUser } from "../dto/MinecraftUser.js";
 
-export class PeriodicMessage {
-    public static instance: PeriodicMessage;
+export abstract class PeriodicMessageBase {
+    protected messageToUpdate: Message | undefined;
+    public playersOnline: MinecraftUser[] = [];
 
-    private messageToUpdate: Message | undefined;
-    public playersOnline: MinecraftUser[] = []
+    public channel: TextChannel | undefined;
 
-    constructor() {
-        PeriodicMessage.instance = this;
+    constructor(channelId: string) {
+        this.ctor(channelId);
     }
 
-    public async initializePeriodicMessaging() {
+    private async ctor(channelId: string) {
+        var channel = await DiscordClient.instance.client.channels.fetch(channelId);
+
+        if (channel == null) {
+            throw new Error("Channel provided for periodic message was null!");
+        }
+
+        if (!channel.isTextBased()) {
+            throw new Error("Channel provided for periodic message was not text based!");
+        }
+
+        this.channel = channel as TextChannel;
+    }
+
+    public async initializePeriodicMessage() {
         this.fetchNewestData();
     }
 
-    public async fetchNewestData() {
-        WebsocketConnection.connection.ws.send(JSON.stringify({ opcode: WebsocketOpcodes.globalData }));
-    }
+    public abstract fetchNewestData(): Promise<void>;
 
-    public async updateMessage(data: MinecraftServerInteraction.GlobalData) {
-        const messageEmbeds: EmbedBuilder[] = [
-            new EmbedBuilder()
-                .setColor(EmbedColors.green)
-                .setTitle(`Minecraft server info - **${data.ip}**`)
-                .setDescription(data.MOTD)
-                .addFields(
-                    { name: "Seed: ", value: data.seed },
-                    { name: "Version: ", value: data.version },
-                )
-                .setFooter({ text: "https://github.com/Ierdna100/MinecraftServerBot" })
-                .setTimestamp(data.timestamp),
-            new EmbedBuilder()
-                .setColor(EmbedColors.cyan)
-                .setTitle(`Active players (${data.currentPlayers} / ${data.maxPlayers})`)
-                .setDescription(this.generatePlayerList())
-        ]
-
-        if (this.messageToUpdate == undefined) {
-            this.messageToUpdate = await Application.instance.discordServer.infoChannel.send({ embeds: messageEmbeds });
-            return;
-        }
-
-        this.messageToUpdate.edit({ embeds: messageEmbeds });
-    }
-
-    private generatePlayerList(): string {
-        if (this.playersOnline.length == 0) {
-            return `\`\`\`
-            No players currently online!
-            \`\`\``;
-        }
-
-        let str = "";
-        str += `\`\`\`\n`
-        
-        let idx = 1;
-        for (const user of this.playersOnline) {
-            str += `${idx}. ${user.displayName}\n`
-        }
-
-        str += `\`\`\``
-
-        return str;
-    }
-
-    public async playerJoined(uuid: string) {
-        const newPlayer = await MinecraftUser.getUserByUUID(uuid);
-
-        if (newPlayer == null) {
-            return;
-        }
-
-        this.playersOnline.push(newPlayer);
-    }
-
-    public async playerLeft(uuid: string) {
-        let indexOfUserWithUuid = 0;
-        for (let i = 0; i < this.playersOnline.length; i++) {
-            if (this.playersOnline[i].uuid == uuid) {
-                this.playersOnline.splice(i, 1);
-                return;
-            }
-        }
-    }
+    public abstract updateMessage(data: MinecraftServerInteraction.GlobalData): Promise<void>;
 }

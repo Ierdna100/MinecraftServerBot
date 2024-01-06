@@ -5,6 +5,7 @@ import { BaseWSInteraction } from "../../dto/BaseWSInteraction.js";
 import { WebsocketOpcodes } from "../../dto/WebsocketOpcodes.js";
 import { EmbedColors } from "../../discordServer/EmbedColors.js";
 import { MinecraftUser } from "../../dto/MinecraftUser.js";
+import { DiscordClient } from "../../discordServer/DiscordClient.js";
 
 class WSInteractionResponder_PlayerJoined implements BaseWSInteraction {
     public interactionType = WebsocketOpcodes.playerJoined;
@@ -28,6 +29,8 @@ class WSInteractionResponder_PlayerJoined implements BaseWSInteraction {
 
             player = newUser;
         }
+
+        DiscordClient.instance.periodicMessages.infoChannel.playerJoined(player.uuid!);
 
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()

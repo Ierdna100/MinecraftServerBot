@@ -27,7 +27,7 @@ export class MinecraftUser {
         console.log("rawInput:");
         console.log(rawInput);
 
-        let newUser = new MinecraftUser(await DiscordClient.instance.users.fetch(rawInput.discordUser));
+        let newUser = new MinecraftUser(await DiscordClient.instance.client.users.fetch(rawInput.discordUser));
         newUser.allowedIps = rawInput.allowedIps;
         newUser.displayName = rawInput.displayName;
         newUser.uuid = rawInput.uuid;
