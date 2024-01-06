@@ -14,11 +14,7 @@ export abstract class PeriodicMessageBase {
 
     public channel: TextChannel | undefined;
 
-    constructor(channelId: string) {
-        this.ctor(channelId);
-    }
-
-    private async ctor(channelId: string) {
+    public async initializePeriodicMessage(channelId: string) {
         var channel = await DiscordClient.instance.client.channels.fetch(channelId);
 
         if (channel == null) {
@@ -30,9 +26,7 @@ export abstract class PeriodicMessageBase {
         }
 
         this.channel = channel as TextChannel;
-    }
 
-    public async initializePeriodicMessage() {
         this.fetchNewestData();
     }
 

@@ -9,7 +9,7 @@ export class DiscordClient {
     public client!: Client;
 
     public periodicMessages = {
-        infoChannel: new PeriodicMessage_MinecraftInfo(Application.instance.env.infoChannelId)
+        infoChannel: new PeriodicMessage_MinecraftInfo()
     };
 
     public publicLogChannel!: TextChannel;
