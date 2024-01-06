@@ -7,7 +7,6 @@ import { WebSocketCloseCodes } from "../dto/WebsocketCloseCodes.js";
 import { MongoModel_MinecraftUser } from "../dto/MongoModels.js";
 import { WebsocketOpcodes } from "../dto/WebsocketOpcodes.js";
 import { MinecraftServerInteraction } from "../dto/HTTPEndpointsStruct.js";
-import { PeriodicMessageBase } from "../discordServer/PeriodicMessage.js";
 import { DiscordClient } from "../discordServer/DiscordClient.js";
 
 export class WebsocketConnection {
@@ -23,9 +22,9 @@ export class WebsocketConnection {
 
         Logger.info("Client connected");
 
-        ws.on("message", this.onMessage);
-        ws.on("pong", this.onPong);
-        ws.on("close", this.onClose);
+        ws.on("message", (data: string) => this.onMessage(data));
+        ws.on("pong", () => this.onPong());
+        ws.on("close", () => this.onClose());
 
         this.pingClient();
         DiscordClient.instance.periodicMessages.infoChannel.initializePeriodicMessage(
@@ -33,7 +32,7 @@ export class WebsocketConnection {
         );
     }
 
-    public onMessage(buffer: string) {
+    private onMessage(buffer: string) {
         let data = JSON.parse(buffer) as IBaseWSInteraction;
 
         if (data.opcode == WebsocketOpcodes.allowedMembers) {
@@ -57,7 +56,7 @@ export class WebsocketConnection {
         }
     }
 
-    public onPong() {
+    private onPong() {
         let currentTime = new Date();
 
         if (currentTime.getTime() - this.pingTime.getTime() > Application.instance.env.WSPingTimeoutMs) {
@@ -69,7 +68,7 @@ export class WebsocketConnection {
         setTimeout(() => this.pingClient(), Application.instance.env.WSPingFreqMs);
     }
 
-    public onClose() {
+    private onClose() {
         Logger.info("Client disconnected");
     }
 
