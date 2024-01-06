@@ -10,6 +10,7 @@ import {
 import { BaseCommand } from "../../dto/BaseCommand.js";
 import { Application } from "../../Application.js";
 import { MongoModel_MinecraftUser } from "../../dto/MongoModels.js";
+import { WebsocketConnection } from "../../websocketServer/WebsocketConnection.js";
 
 class DiscordCommand_RegisterUser extends BaseCommand {
     // prettier-ignore
@@ -70,6 +71,9 @@ class DiscordCommand_RegisterUser extends BaseCommand {
             });
             await interaction.reply("Successfully added new user!");
         }
+
+        // Update auth data
+        WebsocketConnection.connection.sendAuthData();
     }
 }
 

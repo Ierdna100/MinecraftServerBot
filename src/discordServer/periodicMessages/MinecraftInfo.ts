@@ -22,12 +22,9 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
                 .setFooter({ text: "https://github.com/Ierdna100/MinecraftServerBot" })
                 .setTimestamp(data.timestamp),
             new EmbedBuilder()
-                .setColor(EmbedColors.cyan)
-                .setTitle(`Player Activity`)
-                .addFields({
-                    name: `Active players (${data.currentPlayers} / ${data.maxPlayers})`,
-                    value: this.generatePlayerList()
-                })
+                .setColor(EmbedColors.blue)
+                .setTitle(`Active players (${data.currentPlayers} / ${data.maxPlayers})`)
+                .setDescription(this.generatePlayerList())
         ];
 
         if (this.messageToUpdate == undefined) {
@@ -42,25 +39,28 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
 
     private generatePlayerList(): string {
         if (this.playersOnline.length == 0) {
-            return `\`\`\`
-            No players currently online!
-            \`\`\``;
+            // prettier-ignore
+            return "```\n" 
+            + "No players currently online!\n" 
+            + "```";
         }
 
-        let str = "";
-        str += `\`\`\`\n`;
+        let str = "```\n";
 
         let idx = 1;
-        for (const user of this.playersOnline) {
-            str += `${idx}. ${user.displayName}\n`;
+        const padQty = this.playersOnline.length == 1 ? 1 : Math.ceil(Math.log10(this.playersOnline.length));
+        for (const player of this.playersOnline) {
+            const paddedIdx = (idx++).toString().padStart(padQty, " ");
+
+            str += `${paddedIdx}. ${player.displayName}\n`;
         }
 
-        str += `\`\`\``;
+        str += "```";
 
         return str;
     }
 
-    public async playerJoined(uuid: string) {
+    public async onPlayerJoined(uuid: string) {
         const newPlayer = await MinecraftUser.getUserByUUID(uuid);
 
         if (newPlayer == null) {
@@ -70,8 +70,7 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
         this.playersOnline.push(newPlayer);
     }
 
-    public async playerLeft(uuid: string) {
-        let indexOfUserWithUuid = 0;
+    public async onPlayerLeft(uuid: string) {
         for (let i = 0; i < this.playersOnline.length; i++) {
             if (this.playersOnline[i].uuid == uuid) {
                 this.playersOnline.splice(i, 1);

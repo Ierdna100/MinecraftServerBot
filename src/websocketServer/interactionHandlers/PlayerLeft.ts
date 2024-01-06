@@ -15,7 +15,7 @@ class WSInteractionResponder_PlayerLeft implements BaseWSInteraction {
 
         let player = (await MinecraftUser.getUserByUUID(data.uuid))!;
 
-        DiscordClient.instance.periodicMessages.infoChannel.playerLeft(player.uuid!);
+        DiscordClient.instance.periodicMessages.infoChannel.onPlayerLeft(player.uuid!);
 
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()

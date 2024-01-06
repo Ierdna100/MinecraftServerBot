@@ -22,10 +22,12 @@ class DiscordCommand_GeneratePlayerMetadata extends BaseCommand {
         userId: string,
         options: Omit<CommandInteractionOptionResolver<CacheType>, "getMessage" | "getFocused">
     ): Promise<void> {
-        if (userId != "337662083523018753") {
-            interaction.reply("You are not an administrator!");
-            return;
-        }
+        // if (userId != "337662083523018753") {
+        //     await interaction.reply("You are not an administrator!");
+        //     return;
+        // }
+
+        await interaction.reply("`501 - Not implemented`");
     }
 }
 
