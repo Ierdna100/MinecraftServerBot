@@ -4,6 +4,7 @@ import { configDotenv } from "dotenv";
 import { Logger } from "./logging/Logger.js";
 import * as MongoDB from "mongodb";
 import { WSServer } from "./websocketServer/websocketServer.js";
+import { BackupManager } from "./backupSystem/BackupManager.js";
 
 export class Application {
     public static instance: Application;
@@ -11,7 +12,8 @@ export class Application {
     public env;
     public logger: Logger;
     public discordServer: DiscordClient;
-    public httpServer: WSServer;
+    public WSServer: WSServer;
+    public backupManager: BackupManager;
 
     private mongoClient: MongoDB.MongoClient;
     private mongoDatabase: MongoDB.Db;
@@ -44,15 +46,23 @@ export class Application {
             MCPingRoleId: EnvManager.assertDefined("MC_PING_ROLE_ID"),
             logChannelId: EnvManager.assertDefined("PUBLIC_LOG_CHANNEL"),
             WSGlobalDataFreqMs: parseInt(EnvManager.assertDefined("GLOBAL_DATA_FREQ_MS")),
-            infoChannelId: EnvManager.assertDefined("INFO_CHANNEL")
+            infoChannelId: EnvManager.assertDefined("INFO_CHANNEL"),
+            worldFileLocation: EnvManager.assertDefined("WORLD_FILE_LOCATION"),
+            backupFileLocation: EnvManager.assertDefined("BACKUP_FILE_LOCATION"),
+            backupFreqInHrs: parseFloat(EnvManager.assertDefined("BACKUP_FREQUENCY_HOURS"))
         };
 
         this.logger = new Logger();
-        this.httpServer = new WSServer();
+        this.WSServer = new WSServer();
         this.discordServer = new DiscordClient();
         this.mongoClient = new MongoDB.MongoClient(this.env.mongo_connectionString);
         this.mongoClient.connect();
         this.mongoDatabase = this.mongoClient.db(this.env.mongo_databaseName);
+        this.backupManager = new BackupManager(
+            this.env.backupFileLocation,
+            this.env.worldFileLocation,
+            this.env.backupFreqInHrs
+        );
         this.collections = {
             messages: this.mongoDatabase.collection(this.env.coll_msg),
             deaths: this.mongoDatabase.collection(this.env.coll_deaths),
