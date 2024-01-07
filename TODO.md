@@ -1,6 +1,5 @@
 1. Commands
     - MINECRAFT:
-        - /initMod: reset up the websocket between the two servers
         - /allowIdling: self-explanatory
         - /warn-day: self-explanatory
     - DISCORD:
@@ -26,10 +25,8 @@
 5. Proper death logs
 6. Add proper logging
 7. Server MOTD randomizer?
-8. server icon and such
-9. Install script
-10. Setgamerules (init script?)
-11. Rename "CollegeMod" to "andreimod" or smth
-12. proper auth for discord commands
-13. rework websocket to be able to send data only to MC server
-14. Players metadata
+8. Install script
+9. Setgamerules (init script?)
+10. Rename "CollegeMod" to "andreimod" or smth
+11. proper auth for discord commands
+12. Players metadata

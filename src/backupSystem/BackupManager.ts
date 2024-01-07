@@ -12,9 +12,7 @@ export class BackupManager {
         this.parentSaveFolder = FileUtils.formatDirName(parentSaveFolderName);
         this.saveRateInHours = saveRateInHours;
 
-        const saveTimeInSec = this.saveRateInHours * 60 * 60 * 1000;
-
-        setTimeout(() => this.backupServer(), saveTimeInSec);
+        setTimeout(() => this.backupServer(), this.saveRateInHours * 60 * 60 * 1000);
         Logger.info(`Backup manager started! Backing up in ${saveRateInHours} hours!`);
     }
 
@@ -22,7 +20,7 @@ export class BackupManager {
         const backupFilepath = `${this.parentSaveFolder}/${this.generateBackupName()}`;
         await ZipLib.archiveFolder(this.worldFolder, backupFilepath);
 
-        setTimeout(() => this.backupServer());
+        setTimeout(() => this.backupServer(), this.saveRateInHours * 60 * 60 * 1000);
     }
 
     public generateBackupName(): string {
