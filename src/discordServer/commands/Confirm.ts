@@ -39,13 +39,14 @@ class DiscordCommand_Confirm extends BaseCommand {
             discordUser: userId
         })) as unknown as MongoModel_MinecraftUser;
 
+        existingUser.allowedIps.push(confirmedIp);
         await Application.instance.collections.auth.replaceOne(
             { _id: existingUser._id },
             {
                 uuid: existingUser.uuid,
                 displayName: existingUser.displayName,
                 discordUser: existingUser.discordUser,
-                allowedIps: existingUser.allowedIps.push(confirmedIp)
+                allowedIps: existingUser.allowedIps
             }
         );
 
