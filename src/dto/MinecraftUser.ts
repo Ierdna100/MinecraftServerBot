@@ -17,15 +17,15 @@ export class MinecraftUser {
     }
 
     public static async getUserByUUID(uuidToMatch: string): Promise<MinecraftUser | null> {
-        Logger.info("The bot crashes here sometimes, uuidToMatch:");
-        console.log(uuidToMatch);
+        // Logger.info("The bot crashes here sometimes, uuidToMatch:");
+        // console.log(uuidToMatch);
 
         const rawInput = (await Application.instance.collections.auth.findOne({
             uuid: uuidToMatch.toString()
         })) as unknown as MongoModel_MinecraftUser;
 
-        console.log("rawInput:");
-        console.log(rawInput);
+        // console.log("rawInput:");
+        // console.log(rawInput);
 
         let newUser = new MinecraftUser(await DiscordClient.instance.client.users.fetch(rawInput.discordUser));
         newUser.allowedIps = rawInput.allowedIps;

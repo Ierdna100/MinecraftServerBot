@@ -49,7 +49,8 @@ export class Application {
             infoChannelId: EnvManager.assertDefined("INFO_CHANNEL"),
             worldFileLocation: EnvManager.assertDefined("WORLD_FILE_LOCATION"),
             backupFileLocation: EnvManager.assertDefined("BACKUP_FILE_LOCATION"),
-            backupFreqInHrs: parseFloat(EnvManager.assertDefined("BACKUP_FREQUENCY_HOURS"))
+            backupFreqInHrs: parseFloat(EnvManager.assertDefined("BACKUP_FREQUENCY_HOURS")),
+            historicalDataPollingRateMin: parseFloat(EnvManager.assertDefined("HISTORICAL_DATA_POLLING_RATE_MINUTES"))
         };
 
         this.logger = new Logger();

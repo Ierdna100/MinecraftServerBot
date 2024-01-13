@@ -5,6 +5,7 @@ import { WebsocketOpcodes } from "../../dto/WebsocketOpcodes.js";
 import { MongoModel_MinecraftUser } from "../../dto/MongoModels.js";
 import { WebsocketConnection } from "../WebsocketConnection.js";
 import { WSServer } from "../websocketServer.js";
+import { MinecraftUser } from "../../dto/MinecraftUser.js";
 
 class WSInteractionResponder_PlayerAttemptedLogin implements BaseWSInteraction {
     public interactionType = WebsocketOpcodes.playerAttemptedLogin;
@@ -22,20 +23,17 @@ class WSInteractionResponder_PlayerAttemptedLogin implements BaseWSInteraction {
             return;
         }
 
+        // We dont do this anymore
         // On first connection, handle IP
-        Application.instance.collections.auth.replaceOne(
-            { _id: existingUser._id },
-            {
-                uuid: buffer.uuid,
-                displayName: existingUser.displayName,
-                discordUser: existingUser.discordUser,
-                allowedIps: [buffer.ip]
-            }
-        );
-
-    
-        console.log("Sending auth data");
-        WebsocketConnection.connection.sendAuthData();
+        // Application.instance.collections.auth.replaceOne(
+        //     { _id: existingUser._id },
+        //     {
+        //         uuid: buffer.uuid,
+        //         displayName: existingUser.displayName,
+        //         discordUser: existingUser.discordUser,
+        //         allowedIps: [buffer.ip]
+        //     }
+        // );
     }
 }
 

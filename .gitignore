@@ -1,5 +1,7 @@
 build/
 node_modules/
 testing/
+cache/
+temp/
 
 .env

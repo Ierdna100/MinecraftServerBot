@@ -9,9 +9,14 @@ import { MinecraftUser } from "../../dto/MinecraftUser.js";
 class WSInteractionResponder_PlayerFailedLoginNoIp implements BaseWSInteraction {
     public interactionType = WebsocketOpcodes.playerFailedLoginNoIp;
 
-    public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
-        return;
+    public async reply(buffer: MinecraftServerInteraction.playerJoined): Promise<void> {
+        const user = MinecraftUser.getUserByUUID(buffer.uuid);
     }
+
+    // console.log("Sending auth data");
+    // WebsocketConnection.connection.sendAuthData();
+
+    private async askUserToConfirmNewIp(minecraftUser: MinecraftUser) {}
 }
 
 export default WSInteractionResponder_PlayerFailedLoginNoIp;
