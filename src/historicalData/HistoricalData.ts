@@ -115,8 +115,8 @@ export class HistoricalData {
         const fullFilename = `./temp/${filename}`;
         fs.writeFileSync(fullFilename, data);
 
-        // await this.interaction.user.send({
-        //     files: [fullFilename]
-        // });
+        await this.interaction.user.send({
+            files: [fullFilename]
+        });
     }
 }
