@@ -3,5 +3,6 @@ node_modules/
 testing/
 cache/
 temp/
+.VSCodeCounter/
 
 .env
