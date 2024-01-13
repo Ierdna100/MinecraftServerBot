@@ -1,6 +1,5 @@
 import { DiscordClient } from "./discordServer/DiscordClient.js";
-import { EnvManager } from "./dto/EnvManager.js";
-import { configDotenv } from "dotenv";
+import { EnvFileFields, EnvManager } from "./dto/EnvManager.js";
 import { Logger } from "./logging/Logger.js";
 import * as MongoDB from "mongodb";
 import { WSServer } from "./websocketServer/websocketServer.js";
@@ -9,7 +8,7 @@ import { BackupManager } from "./backupSystem/BackupManager.js";
 export class Application {
     public static instance: Application;
 
-    public env;
+    public env: EnvFileFields;
     public logger: Logger;
     public discordServer: DiscordClient;
     public WSServer: WSServer;
@@ -21,37 +20,8 @@ export class Application {
 
     constructor() {
         Application.instance = this;
-        configDotenv();
 
-        this.env = {
-            token: EnvManager.assertDefined("TOKEN"),
-            clientId: EnvManager.assertDefined("CLIENT_ID"),
-            WSPort: parseInt(EnvManager.assertDefined("WS_PORT")),
-            mongo_connectionString: EnvManager.assertDefined("DB_CONN_STRING"),
-            mongo_databaseName: EnvManager.assertDefined("DB_NAME"),
-            coll_msg: EnvManager.assertDefined("COLL_NAME_MESSAGES"),
-            coll_deaths: EnvManager.assertDefined("COLL_NAME_DEATHS"),
-            coll_starts: EnvManager.assertDefined("COLL_NAME_SERVER_STARTS"),
-            coll_stops: EnvManager.assertDefined("COLL_NAME_SERVER_STOPS"),
-            coll_leaves: EnvManager.assertDefined("COLL_NAME_PLAYER_LEAVES"),
-            coll_joins: EnvManager.assertDefined("COLL_NAME_PLAYER_JOINS"),
-            coll_advancements: EnvManager.assertDefined("COLL_NAME_ADVANCEMENTS"),
-            coll_overloads: EnvManager.assertDefined("COLL_NAME_SERVER_OVERLOADS"),
-            coll_auth: EnvManager.assertDefined("COLL_NAME_ALLOWED_MEMBERS"),
-            coll_perf: EnvManager.assertDefined("COLL_NAME_PERFORMANCE_REPORTS"),
-            // coll_serverData: EnvManager.assertDefined("COLL_NAME_SERVER_DATA"),
-            // coll_discordAuthentication: EnvManager.assertDefined("COLL_DISCORD_AUTHENTICATION"),
-            WSPingFreqMs: parseInt(EnvManager.assertDefined("WS_PING_FREQ_SEC")),
-            WSPingTimeoutMs: parseInt(EnvManager.assertDefined("WS_PING_TIMEOUT_MS")),
-            MCPingRoleId: EnvManager.assertDefined("MC_PING_ROLE_ID"),
-            logChannelId: EnvManager.assertDefined("PUBLIC_LOG_CHANNEL"),
-            WSGlobalDataFreqMs: parseInt(EnvManager.assertDefined("GLOBAL_DATA_FREQ_MS")),
-            infoChannelId: EnvManager.assertDefined("INFO_CHANNEL"),
-            worldFileLocation: EnvManager.assertDefined("WORLD_FILE_LOCATION"),
-            backupFileLocation: EnvManager.assertDefined("BACKUP_FILE_LOCATION"),
-            backupFreqInHrs: parseFloat(EnvManager.assertDefined("BACKUP_FREQUENCY_HOURS")),
-            historicalDataPollingRateMin: parseFloat(EnvManager.assertDefined("HISTORICAL_DATA_POLLING_RATE_MINUTES"))
-        };
+        this.env = EnvManager.config();
 
         this.logger = new Logger();
         this.WSServer = new WSServer();
