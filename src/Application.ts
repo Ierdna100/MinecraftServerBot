@@ -35,6 +35,7 @@ export class Application {
             this.env.backupFreqInHrs
         );
         this.collections = {
+            serverData: this.mongoDatabase.collection(this.env.coll_serverData),
             discordAuth: this.mongoDatabase.collection(this.env.coll_discordAuthentication),
             messages: this.mongoDatabase.collection(this.env.coll_msg),
             deaths: this.mongoDatabase.collection(this.env.coll_deaths),

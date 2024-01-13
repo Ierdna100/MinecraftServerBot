@@ -6,9 +6,24 @@ import { EmbedColors } from "../EmbedColors.js";
 import { WebsocketConnection } from "../../websocketServer/WebsocketConnection.js";
 import { WebsocketOpcodes } from "../../dto/WebsocketOpcodes.js";
 import { DiscordClient } from "../DiscordClient.js";
+import { Application } from "../../Application.js";
+import { PeriodicMessageReference, PeriodicMessageType } from "../../dto/PeriodicMessageReference.js";
 
 export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
+    protected messageType: PeriodicMessageType = PeriodicMessageType.minecraftInfo;
+
     public async fetchNewestData(): Promise<void> {
+        let possibleMessageToUpdate = (await Application.instance.collections.serverData.findOne({
+            type: PeriodicMessageType.minecraftInfo
+        })) as PeriodicMessageReference | null;
+
+        if (possibleMessageToUpdate != null) {
+            this.messageToUpdate =
+                await Application.instance.discordServer.periodicMessages.infoChannel.channel!.messages.fetch(
+                    possibleMessageToUpdate.messageId
+                );
+        }
+
         WebsocketConnection.connection.ws.send(JSON.stringify({ opcode: WebsocketOpcodes.globalData }));
     }
 
@@ -31,10 +46,14 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
             this.messageToUpdate = await DiscordClient.instance.periodicMessages.infoChannel.channel!.send({
                 embeds: messageEmbeds
             });
+            await Application.instance.collections.serverData.insertOne({
+                messageId: this.messageToUpdate.id,
+                type: PeriodicMessageType.minecraftInfo
+            });
             return;
         }
 
-        this.messageToUpdate.edit({ embeds: messageEmbeds });
+        await this.messageToUpdate.edit({ embeds: messageEmbeds });
     }
 
     private generatePlayerList(): string {

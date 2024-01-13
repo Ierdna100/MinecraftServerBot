@@ -30,7 +30,7 @@ export class EnvManager {
             coll_overloads: EnvManager.assertDefined("COLL_NAME_SERVER_OVERLOADS"),
             coll_auth: EnvManager.assertDefined("COLL_NAME_ALLOWED_MEMBERS"),
             coll_perf: EnvManager.assertDefined("COLL_NAME_PERFORMANCE_REPORTS"),
-            // coll_serverData: EnvManager.assertDefined("COLL_NAME_SERVER_DATA"),
+            coll_serverData: EnvManager.assertDefined("COLL_NAME_SERVER_DATA"),
             coll_discordAuthentication: EnvManager.assertDefined("COLL_DISCORD_AUTHENTICATION"),
             WSPingFreqMs: parseInt(EnvManager.assertDefined("WS_PING_FREQ_SEC")),
             WSPingTimeoutMs: parseInt(EnvManager.assertDefined("WS_PING_TIMEOUT_MS")),
@@ -72,7 +72,8 @@ export class EnvManager {
         "BACKUP_FILE_LOCATION=\n" +
         "BACKUP_FREQUENCY_HOURS=12\n" +
         "HISTORICAL_DATA_POLLING_RATE_MINUTES=60\n" +
-        "COLL_DISCORD_AUTHENTICATION=discordAuthentication";
+        "COLL_DISCORD_AUTHENTICATION=discordAuthentication\n" +
+        "COLL_NAME_SERVER_DATA=serverData";
 }
 
 export interface EnvFileFields {
@@ -102,4 +103,5 @@ export interface EnvFileFields {
     backupFileLocation: string;
     backupFreqInHrs: number;
     historicalDataPollingRateMin: number;
+    coll_serverData: string;
 }

@@ -1,14 +1,11 @@
-import { Channel, EmbedBuilder, Message, TextChannel } from "discord.js";
-import { Logger } from "../logging/Logger.js";
-import { WebsocketConnection } from "../websocketServer/WebsocketConnection.js";
-import { WebsocketOpcodes } from "../dto/WebsocketOpcodes.js";
+import { Message, TextChannel } from "discord.js";
 import { MinecraftServerInteraction } from "../dto/HTTPEndpointsStruct.js";
-import { EmbedColors } from "./EmbedColors.js";
 import { DiscordClient } from "./DiscordClient.js";
-import { Application } from "../Application.js";
 import { MinecraftUser } from "../dto/MinecraftUser.js";
+import { PeriodicMessageType } from "../dto/PeriodicMessageReference.js";
 
 export abstract class PeriodicMessageBase {
+    protected abstract messageType: PeriodicMessageType;
     protected messageToUpdate: Message | undefined;
     public playersOnline: MinecraftUser[] = [];
 

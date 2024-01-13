@@ -38,7 +38,6 @@ class DiscordCommand_Confirm extends BaseCommand {
             discordUser: userId
         })) as unknown as MongoModel_MinecraftUser;
 
-        // On first connection, handle UUID
         await Application.instance.collections.auth.replaceOne(
             { _id: existingUser._id },
             {
