@@ -57,6 +57,8 @@ class DiscordCommand_RegisterUser extends BaseCommand {
                     allowedIps: []
                 }
             );
+            // Update auth data
+            await WebsocketConnection.connection.sendAuthData();
             await interaction.reply("Successfully replaced user's minecraft name!");
             return;
         } else {
@@ -71,11 +73,10 @@ class DiscordCommand_RegisterUser extends BaseCommand {
                 discordUser: newUser.discordUser,
                 displayName: data.minecraftName
             });
+            // Update auth data
+            await WebsocketConnection.connection.sendAuthData();
             await interaction.reply("Successfully added new user!");
         }
-
-        // Update auth data
-        WebsocketConnection.connection.sendAuthData();
     }
 }
 

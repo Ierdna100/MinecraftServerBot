@@ -35,6 +35,8 @@ class DiscordCommand_Confirm extends BaseCommand {
             return;
         }
 
+        WSInteractionResponder_PlayerFailedLoginNoIp.IpsAwaitingConfirmation.delete(userId);
+
         const existingUser = (await Application.instance.collections.auth.findOne({
             discordUser: userId
         })) as unknown as MongoModel_MinecraftUser;

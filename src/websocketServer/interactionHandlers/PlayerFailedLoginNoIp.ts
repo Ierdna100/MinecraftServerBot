@@ -21,9 +21,6 @@ class WSInteractionResponder_PlayerFailedLoginNoIp implements BaseWSInteraction 
         this.askUserToConfirmNewIp(user, buffer.ip);
     }
 
-    // console.log("Sending auth data");
-    // WebsocketConnection.connection.sendAuthData();
-
     private async askUserToConfirmNewIp(minecraftUser: MinecraftUser, newIp: string) {
         await minecraftUser.discordUser.send(
             `A Minecraft account linked to your Discord user recently attempted to connect with IP \`${newIp}\`. ` +
