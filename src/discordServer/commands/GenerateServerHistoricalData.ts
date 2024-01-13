@@ -28,7 +28,7 @@ class DiscordCommand_GenerateServerHistoricalData extends BaseCommand {
             return;
         }
 
-        await interaction.reply({ content: "**Generating response, please wait!**" });
+        await interaction.reply("Generating historical data...");
 
         new HistoricalData(interaction);
         return;

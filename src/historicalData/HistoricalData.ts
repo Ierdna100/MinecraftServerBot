@@ -28,8 +28,6 @@ export class HistoricalData {
     }
 
     private async ctor() {
-        await this.interaction.reply("Generating historical data...");
-
         this.startTime = new Date(
             (
                 (await Application.instance.collections.starts
