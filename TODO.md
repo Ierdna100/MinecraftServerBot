@@ -18,3 +18,4 @@
 9. Rename "CollegeMod" to "andreimod" or smth
 10. Players metadata
 11. New stuff on internal leaderboards
+12. Add logging to DB

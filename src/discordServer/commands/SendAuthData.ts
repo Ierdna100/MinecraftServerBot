@@ -33,7 +33,7 @@ class DiscordCommand_SendAuthData extends BaseCommand {
         }
 
         await WebsocketConnection.connection.sendAuthData();
-        interaction.reply("Successfully cleared active player list!");
+        interaction.reply("Successfully sent auth data!");
     }
 }
 
