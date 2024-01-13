@@ -31,7 +31,7 @@ export class EnvManager {
             coll_auth: EnvManager.assertDefined("COLL_NAME_ALLOWED_MEMBERS"),
             coll_perf: EnvManager.assertDefined("COLL_NAME_PERFORMANCE_REPORTS"),
             // coll_serverData: EnvManager.assertDefined("COLL_NAME_SERVER_DATA"),
-            // coll_discordAuthentication: EnvManager.assertDefined("COLL_DISCORD_AUTHENTICATION"),
+            coll_discordAuthentication: EnvManager.assertDefined("COLL_DISCORD_AUTHENTICATION"),
             WSPingFreqMs: parseInt(EnvManager.assertDefined("WS_PING_FREQ_SEC")),
             WSPingTimeoutMs: parseInt(EnvManager.assertDefined("WS_PING_TIMEOUT_MS")),
             MCPingRoleId: EnvManager.assertDefined("MC_PING_ROLE_ID"),
@@ -71,10 +71,12 @@ export class EnvManager {
         "WORLD_FILE_LOCATION=\n" +
         "BACKUP_FILE_LOCATION=\n" +
         "BACKUP_FREQUENCY_HOURS=12\n" +
-        "HISTORICAL_DATA_POLLING_RATE_MINUTES=60";
+        "HISTORICAL_DATA_POLLING_RATE_MINUTES=60\n" +
+        "COLL_DISCORD_AUTHENTICATION=discordAuthentication";
 }
 
 export interface EnvFileFields {
+    coll_discordAuthentication: string;
     token: string;
     clientId: string;
     WSPort: number;

@@ -11,6 +11,8 @@ import { BaseCommand } from "../../dto/BaseCommand.js";
 import { Application } from "../../Application.js";
 import { MongoModel_MinecraftUser } from "../../dto/MongoModels.js";
 import { WebsocketConnection } from "../../websocketServer/WebsocketConnection.js";
+import { DiscordAuthentication } from "../../administration/DiscordAuthentication.js";
+import { DiscordAuthLevel } from "../../dto/DiscordAuthData.js";
 
 class DiscordCommand_RegisterUser extends BaseCommand {
     // prettier-ignore
@@ -31,8 +33,8 @@ class DiscordCommand_RegisterUser extends BaseCommand {
         userId: string,
         options: Omit<CommandInteractionOptionResolver<CacheType>, "getMessage" | "getFocused">
     ): Promise<void> {
-        if (userId != "337662083523018753") {
-            interaction.reply("You are not an administrator!");
+        if ((await DiscordAuthentication.getUserAuthLevel(userId)) < DiscordAuthLevel.admin) {
+            await interaction.reply("You are not an administrator!");
             return;
         }
 

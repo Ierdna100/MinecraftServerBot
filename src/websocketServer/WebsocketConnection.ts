@@ -78,7 +78,7 @@ export class WebsocketConnection {
             .find({})
             .toArray()) as unknown as MongoModel_MinecraftUser[];
         if (allAuthedUsers != null) {
-            let allValidUsers: { uuid: string | undefined; allowedIps: string[] }[] = [];
+            let allValidUsers: { uuid: string; allowedIps: string[] }[] = [];
             for (const user of allAuthedUsers) {
                 if (user.uuid == undefined || user.uuid == "") {
                     continue;

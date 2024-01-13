@@ -10,9 +10,9 @@ import { MinecraftUser } from "../../dto/MinecraftUser.js";
 class WSInteractionResponder_PlayerAttemptedLogin implements BaseWSInteraction {
     public interactionType = WebsocketOpcodes.playerAttemptedLogin;
 
-    public async reply(buffer: MinecraftServerInteraction.playerAttemptedLogin): Promise<void> {
+    public async reply(data: MinecraftServerInteraction.playerAttemptedLogin): Promise<void> {
         const existingUser = (await Application.instance.collections.auth.findOne({
-            displayName: buffer.displayName
+            displayName: data.displayName
         })) as unknown as MongoModel_MinecraftUser;
 
         if (existingUser == null) {
@@ -23,17 +23,17 @@ class WSInteractionResponder_PlayerAttemptedLogin implements BaseWSInteraction {
             return;
         }
 
-        // We dont do this anymore
-        // On first connection, handle IP
-        // Application.instance.collections.auth.replaceOne(
-        //     { _id: existingUser._id },
-        //     {
-        //         uuid: buffer.uuid,
-        //         displayName: existingUser.displayName,
-        //         discordUser: existingUser.discordUser,
-        //         allowedIps: [buffer.ip]
-        //     }
-        // );
+        // On first connection, handle UUID
+        await Application.instance.collections.auth.replaceOne(
+            { _id: existingUser._id },
+            {
+                uuid: data.uuid,
+                displayName: existingUser.displayName,
+                discordUser: existingUser.discordUser,
+                allowedIps: []
+            }
+        );
+        return;
     }
 }
 

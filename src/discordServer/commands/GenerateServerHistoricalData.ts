@@ -9,6 +9,8 @@ import {
 } from "discord.js";
 import { BaseCommand } from "../../dto/BaseCommand.js";
 import { HistoricalData } from "../../historicalData/HistoricalData.js";
+import { DiscordAuthentication } from "../../administration/DiscordAuthentication.js";
+import { DiscordAuthLevel } from "../../dto/DiscordAuthData.js";
 
 class DiscordCommand_GenerateServerHistoricalData extends BaseCommand {
     // prettier-ignore
@@ -21,7 +23,7 @@ class DiscordCommand_GenerateServerHistoricalData extends BaseCommand {
         userId: string,
         options: Omit<CommandInteractionOptionResolver<CacheType>, "getMessage" | "getFocused">
     ): Promise<void> {
-        if (!(userId == "337662083523018753" || userId == "377968976975888384")) {
+        if ((await DiscordAuthentication.getUserAuthLevel(userId)) < DiscordAuthLevel.historicalDataAccess) {
             await interaction.reply("You are not an administrator!");
             return;
         }
