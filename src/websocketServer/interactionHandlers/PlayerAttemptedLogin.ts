@@ -33,6 +33,7 @@ class WSInteractionResponder_PlayerAttemptedLogin implements BaseWSInteraction {
                 allowedIps: []
             }
         );
+
         // Update auth data
         await WebsocketConnection.connection.sendAuthData();
         return;
