@@ -17,7 +17,9 @@ class WSInteractionResponder_DeathByEntity implements BaseWSInteraction {
         let killer: MinecraftUser | null = null;
         if (data.isByPlayer) {
             killer = await MinecraftUser.getUserByUUID(data.killer)!;
-            deathMessage = `${await MinecraftUser.getUserByUUID(data.killed)} was killed by ${killer!.displayName}`;
+            deathMessage = `${(await MinecraftUser.getUserByUUID(data.killed))!.displayName} was killed by ${
+                killer!.displayName
+            }`;
         } else {
             deathMessage = data.msg;
         }
