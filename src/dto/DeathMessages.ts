@@ -5,7 +5,7 @@ export async function generateDeathMessage(key: string, killed: string, killer?:
     const rawMessageStream = new Stream(DeathMessages[key].split(""));
     let output = "";
     while (!rawMessageStream.eof()) {
-        output += rawMessageStream.readUntil("%").join("");
+        output += rawMessageStream.readUntil("%", false).join("");
         rawMessageStream.next(); // Discard '%'
         switch (rawMessageStream.next()) {
             case "1":
