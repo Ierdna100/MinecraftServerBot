@@ -4,9 +4,7 @@ import fs from "fs";
 
 export class ComputeDeathData {
     public static async compute(historicalData: HistoricalData): Promise<void> {
-        const data = JSON.parse(
-            fs.readFileSync("./cache/deathData").toString()
-        ) as MinecraftServerInteraction.deathByEntity[];
+        const data = JSON.parse(fs.readFileSync("./cache/deathData").toString()) as MinecraftServerInteraction.DeathByEntity[];
 
         for (const death of data) {
             for (const player of historicalData.players) {
@@ -16,15 +14,14 @@ export class ComputeDeathData {
 
                 const deathTime = new Date(death.timestamp);
                 const deathTimeFrame = Math.floor(
-                    (deathTime.getTime() - historicalData.startTime.getTime()) /
-                        (1000 * 60 * HistoricalData.pollingFrequencyMinutes)
+                    (deathTime.getTime() - historicalData.startTime.getTime()) / (1000 * 60 * HistoricalData.pollingFrequencyMinutes)
                 );
 
                 for (let i = deathTimeFrame; i < player.deaths.length; i++) {
                     player.deaths[i]++;
                 }
 
-                if (death.isByPlayer) {
+                if (death.killerIsPlayer) {
                     for (const potentialKiller of historicalData.players) {
                         if (potentialKiller.uuid != death.killer) {
                             continue;
@@ -34,10 +31,7 @@ export class ComputeDeathData {
                             potentialKiller.kills[i]++;
                         }
 
-                        potentialKiller.playersKilled.set(
-                            player.name,
-                            potentialKiller.playersKilled.get(player.name)! + 1
-                        );
+                        potentialKiller.playersKilled.set(player.name, potentialKiller.playersKilled.get(player.name)! + 1);
 
                         break;
                     }

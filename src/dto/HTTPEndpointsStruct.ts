@@ -2,14 +2,14 @@ export namespace MinecraftServerInteraction {
     export interface Base {
         timestamp: Date;
     }
-    
+
     export interface GlobalData extends Base {
-        ip: string,
-        seed: string,
-        maxPlayers: number,
-        currentPlayers: number,
-        version: string,
-        MOTD: string
+        ip: string;
+        seed: string;
+        maxPlayers: number;
+        currentPlayers: number;
+        version: string;
+        MOTD: string;
     }
 
     export interface Message extends Base {
@@ -17,28 +17,36 @@ export namespace MinecraftServerInteraction {
         sender: string;
     }
 
-    export interface death extends Base {
+    export interface Death extends Base {
+        deathType: "normal" | "byEntity" | "byPlayer" | "byPlayerWithItem";
+        key: string;
         killed: string;
-        msg: string;
     }
 
-    export interface deathByEntity extends death {
+    export interface DeathByEntity extends Death {
         killer: string;
-        isByPlayer: boolean;
+        killerIsPlayer: boolean;
+        killerType: string;
     }
 
-    export interface playerLeft extends Base {
+    export interface DeathWithItem extends Death {
+        killer: string;
+        itemType: string;
+        itemName: string;
+    }
+
+    export interface PlayerLeft extends Base {
         uuid: string;
         reason: string;
     }
 
-    export interface playerAttemptedLogin extends Base {
+    export interface PlayerAttemptedLogin extends Base {
         ip: string;
         displayName: string;
         uuid: string;
     }
 
-    export interface playerJoined extends playerAttemptedLogin {
+    export interface PlayerJoined extends PlayerAttemptedLogin {
         ip: string;
         displayName: string;
         uuid: string;
@@ -48,23 +56,23 @@ export namespace MinecraftServerInteraction {
         spawnDimension: string;
     }
 
-    export interface playerFailedLogin extends Base {
+    export interface PlayerFailedLogin extends Base {
         ip: string;
         displayName: string;
         uuid: string;
     }
 
-    export interface advancementNonProgressibleAcquired extends Base {
+    export interface AdvancementNonProgressibleAcquired extends Base {
         uuid: string;
         name: string;
     }
 
-    export interface advancementProgressibleUpdated extends advancementNonProgressibleAcquired {
+    export interface AdvancementProgressibleUpdated extends AdvancementNonProgressibleAcquired {
         isDone: boolean;
         progress: string;
     }
 
-    export interface serverOverloadedWarning extends Base {
+    export interface ServerOverloadedWarning extends Base {
         millisecondsBehind: number;
         ticksBehind: number;
     }

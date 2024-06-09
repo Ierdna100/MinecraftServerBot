@@ -4,9 +4,7 @@ import fs from "fs";
 
 export class ComputeAdvancementData {
     public static async compute(historicalData: HistoricalData): Promise<void> {
-        const data = JSON.parse(
-            fs.readFileSync("./cache/advancementData").toString()
-        ) as MinecraftServerInteraction.advancementProgressibleUpdated[];
+        const data = JSON.parse(fs.readFileSync("./cache/advancementData").toString()) as MinecraftServerInteraction.AdvancementProgressibleUpdated[];
 
         for (const advancement of data) {
             for (let i = 0; i < historicalData.players.length; i++) {
@@ -16,8 +14,7 @@ export class ComputeAdvancementData {
 
                 const advancementTime = new Date(advancement.timestamp);
                 const advancementTimeframe = Math.floor(
-                    (advancementTime.getTime() - historicalData.startTime.getTime()) /
-                        (1000 * 60 * HistoricalData.pollingFrequencyMinutes)
+                    (advancementTime.getTime() - historicalData.startTime.getTime()) / (1000 * 60 * HistoricalData.pollingFrequencyMinutes)
                 );
 
                 let valueToAdd = 1;

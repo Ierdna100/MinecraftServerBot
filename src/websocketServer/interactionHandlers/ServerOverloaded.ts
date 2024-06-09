@@ -9,7 +9,7 @@ class WSInteractionResponder_ServerOverloaded implements BaseWSInteraction {
     public interactionType = WebsocketOpcodes.serverOverloaded;
 
     public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
-        let data = buffer as MinecraftServerInteraction.serverOverloadedWarning;
+        let data = buffer as MinecraftServerInteraction.ServerOverloadedWarning;
 
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()

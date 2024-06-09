@@ -11,7 +11,7 @@ class WSInteractionResponder_PlayerLeft implements BaseWSInteraction {
     public interactionType = WebsocketOpcodes.playerLeft;
 
     public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
-        let data = buffer as MinecraftServerInteraction.playerLeft;
+        let data = buffer as MinecraftServerInteraction.PlayerLeft;
 
         let player = (await MinecraftUser.getUserByUUID(data.uuid))!;
 

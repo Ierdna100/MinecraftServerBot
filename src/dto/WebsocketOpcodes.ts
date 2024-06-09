@@ -2,6 +2,7 @@ export enum WebsocketOpcodes {
     messageSent = 0,
     death = 1,
     deathByEntity = 2,
+    deathWithItem = 17,
     serverStarted = 3,
     serverStopWarning = 4,
     serverStopped = 5,

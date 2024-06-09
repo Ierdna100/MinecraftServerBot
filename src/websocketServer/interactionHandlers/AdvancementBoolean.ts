@@ -10,7 +10,7 @@ class WSInteractionResponder_AdvancementBoolean implements BaseWSInteraction {
     public interactionType = WebsocketOpcodes.advancementBoolean;
 
     public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
-        const data = buffer as MinecraftServerInteraction.advancementNonProgressibleAcquired;
+        const data = buffer as MinecraftServerInteraction.AdvancementNonProgressibleAcquired;
 
         const player = (await MinecraftUser.getUserByUUID(data.uuid))!;
 

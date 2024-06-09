@@ -9,25 +9,21 @@ export class ComputeSessions {
     public static async compute(historicalData: HistoricalData): Promise<void> {
         const events: TimePlayedEvent[] = [];
 
-        JSON.parse(fs.readFileSync("./cache/joinsData").toString()).forEach(
-            (e: MinecraftServerInteraction.playerJoined) => {
-                events.push({
-                    uuid: e.uuid,
-                    timestamp: new Date(e.timestamp),
-                    type: TimeEventType.join
-                });
-            }
-        );
+        JSON.parse(fs.readFileSync("./cache/joinsData").toString()).forEach((e: MinecraftServerInteraction.PlayerJoined) => {
+            events.push({
+                uuid: e.uuid,
+                timestamp: new Date(e.timestamp),
+                type: TimeEventType.join
+            });
+        });
 
-        JSON.parse(fs.readFileSync("./cache/leavesData").toString()).forEach(
-            (e: MinecraftServerInteraction.playerLeft) => {
-                events.push({
-                    uuid: e.uuid,
-                    timestamp: new Date(e.timestamp),
-                    type: TimeEventType.leave
-                });
-            }
-        );
+        JSON.parse(fs.readFileSync("./cache/leavesData").toString()).forEach((e: MinecraftServerInteraction.PlayerLeft) => {
+            events.push({
+                uuid: e.uuid,
+                timestamp: new Date(e.timestamp),
+                type: TimeEventType.leave
+            });
+        });
 
         JSON.parse(fs.readFileSync("./cache/stopData").toString()).forEach((e: MinecraftServerInteraction.Base) => {
             events.push({
@@ -36,7 +32,7 @@ export class ComputeSessions {
             });
         });
 
-        JSON.parse(fs.readFileSync("./cache/deathData").toString()).forEach((e: MinecraftServerInteraction.death) => {
+        JSON.parse(fs.readFileSync("./cache/deathData").toString()).forEach((e: MinecraftServerInteraction.Death) => {
             events.push({
                 timestamp: new Date(e.timestamp),
                 type: TimeEventType.death
@@ -45,9 +41,7 @@ export class ComputeSessions {
 
         let timestamps = new Array(historicalData.arrayLength);
         for (let i = 0; i < timestamps.length; i++) {
-            timestamps[i] = new Date(
-                historicalData.startTime.getTime() + i * 1000 * 60 * HistoricalData.pollingFrequencyMinutes
-            );
+            timestamps[i] = new Date(historicalData.startTime.getTime() + i * 1000 * 60 * HistoricalData.pollingFrequencyMinutes);
         }
         timestamps.forEach((e: Date) => {
             events.push({

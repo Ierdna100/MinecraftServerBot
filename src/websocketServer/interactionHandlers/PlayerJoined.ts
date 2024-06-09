@@ -11,7 +11,7 @@ class WSInteractionResponder_PlayerJoined implements BaseWSInteraction {
     public interactionType = WebsocketOpcodes.playerJoined;
 
     public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
-        let data = buffer as MinecraftServerInteraction.playerJoined;
+        let data = buffer as MinecraftServerInteraction.PlayerJoined;
 
         let player = await MinecraftUser.getUserByUUID(data.uuid);
 

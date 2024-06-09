@@ -10,7 +10,7 @@ class WSInteractionResponder_AdvancementProgressible implements BaseWSInteractio
     public interactionType = WebsocketOpcodes.advancementProgressible;
 
     public async reply(buffer: MinecraftServerInteraction.Base): Promise<void> {
-        let data = buffer as MinecraftServerInteraction.advancementProgressibleUpdated;
+        let data = buffer as MinecraftServerInteraction.AdvancementProgressibleUpdated;
 
         let player = (await MinecraftUser.getUserByUUID(data.uuid))!;
 
@@ -22,9 +22,7 @@ class WSInteractionResponder_AdvancementProgressible implements BaseWSInteractio
             messageEmbed.setTitle(`**${player.displayName}** has acquired ${data.name}`);
         } else {
             messageEmbed.setColor(EmbedColors.blue);
-            messageEmbed.setTitle(
-                `**${player.displayName}** has progressed in advancement ${data.name} (${data.progress})`
-            );
+            messageEmbed.setTitle(`**${player.displayName}** has progressed in advancement ${data.name} (${data.progress})`);
         }
 
         await Application.instance.discordServer.publicLogChannel.send({ embeds: [messageEmbed] });

@@ -16,13 +16,17 @@ export class MinecraftUser {
         this.uuid = uuid || undefined;
     }
 
-    public static async getUserByUUID(uuidToMatch: string): Promise<MinecraftUser | null> {
+    public static async getUserByUUID(uuidToMatch: string): Promise<MinecraftUser | undefined> {
         // Logger.info("The bot crashes here sometimes, uuidToMatch:");
         // console.log(uuidToMatch);
 
-        const rawInput = (await Application.instance.collections.auth.findOne({
+        const rawInput = await Application.instance.collections.auth.findOne<MongoModel_MinecraftUser>({
             uuid: uuidToMatch.toString()
-        })) as unknown as MongoModel_MinecraftUser;
+        });
+
+        if (rawInput == null) {
+            return undefined;
+        }
 
         // console.log("rawInput:");
         // console.log(rawInput);

@@ -4,5 +4,6 @@ testing/
 cache/
 temp/
 .VSCodeCounter/
+testServer/
 
 .env
