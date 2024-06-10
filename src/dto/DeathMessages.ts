@@ -27,7 +27,7 @@ export async function generateDeathMessage(
                     const killerUser = await MinecraftUser.getUserByUUID(killer);
                     output += `**${killerUser!.displayName}**`;
                 } else {
-                    output += `**${EntityTypes["entity.minecraft" + killerEntityType!.split(":")[1]]}**`;
+                    output += `**${EntityTypes["entity.minecraft." + killerEntityType!.split(":")[1]]}**`;
                 }
 
                 break;
