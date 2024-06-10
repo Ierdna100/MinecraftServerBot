@@ -41,7 +41,9 @@ export class EnvManager {
             worldFileLocation: EnvManager.assertDefined("WORLD_FILE_LOCATION"),
             backupFileLocation: EnvManager.assertDefined("BACKUP_FILE_LOCATION"),
             backupFreqInHrs: parseFloat(EnvManager.assertDefined("BACKUP_FREQUENCY_HOURS")),
-            historicalDataPollingRateMin: parseFloat(EnvManager.assertDefined("HISTORICAL_DATA_POLLING_RATE_MINUTES"))
+            historicalDataPollingRateMin: parseFloat(EnvManager.assertDefined("HISTORICAL_DATA_POLLING_RATE_MINUTES")),
+            serverIP: EnvManager.assertDefined("SERVER_IP"),
+            WSPassword: EnvManager.assertDefined("WS_PASSWORD")
         };
     }
 
@@ -73,7 +75,9 @@ export class EnvManager {
         "BACKUP_FREQUENCY_HOURS=12\n" +
         "HISTORICAL_DATA_POLLING_RATE_MINUTES=60\n" +
         "COLL_DISCORD_AUTHENTICATION=discordAuthentication\n" +
-        "COLL_NAME_SERVER_DATA=serverData";
+        "COLL_NAME_SERVER_DATA=serverData\n" +
+        "SERVER_IP=\n" +
+        "WS_PASSWORD=\n";
 }
 
 export interface EnvFileFields {
@@ -104,4 +108,6 @@ export interface EnvFileFields {
     backupFreqInHrs: number;
     historicalDataPollingRateMin: number;
     coll_serverData: string;
+    serverIP: string;
+    WSPassword: string;
 }

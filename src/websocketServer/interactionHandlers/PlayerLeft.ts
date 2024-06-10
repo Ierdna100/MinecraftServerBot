@@ -5,7 +5,6 @@ import { BaseWSInteraction } from "../../dto/BaseWSInteraction.js";
 import { WebsocketOpcodes } from "../../dto/WebsocketOpcodes.js";
 import { EmbedColors } from "../../discordServer/EmbedColors.js";
 import { MinecraftUser } from "../../dto/MinecraftUser.js";
-import { DiscordClient } from "../../discordServer/DiscordClient.js";
 
 class WSInteractionResponder_PlayerLeft implements BaseWSInteraction {
     public interactionType = WebsocketOpcodes.playerLeft;
@@ -14,8 +13,6 @@ class WSInteractionResponder_PlayerLeft implements BaseWSInteraction {
         let data = buffer as MinecraftServerInteraction.PlayerLeft;
 
         let player = (await MinecraftUser.getUserByUUID(data.uuid))!;
-
-        DiscordClient.instance.periodicMessages.infoChannel.onPlayerLeft(player.uuid!);
 
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()

@@ -5,6 +5,8 @@ import { WebsocketConnection } from "./WebsocketConnection.js";
 
 export class WSServer {
     public static instance: WSServer;
+    public static connections: WebsocketConnection[];
+
     public server: Server;
 
     constructor() {
@@ -17,6 +19,6 @@ export class WSServer {
     private async initializeServer() {
         await new WSInteractionsLoader().loadInteractionReplies();
 
-        WSServer.instance.server.on("connection", (ws: WebSocket) => new WebsocketConnection(ws));
+        WSServer.instance.server.on("connection", (ws: WebSocket) => WSServer.connections.push(new WebsocketConnection(ws)));
     }
 }

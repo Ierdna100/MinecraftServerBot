@@ -4,6 +4,7 @@ import { BaseWSInteraction } from "../../dto/BaseWSInteraction.js";
 import { WebsocketOpcodes } from "../../dto/WebsocketOpcodes.js";
 import { MongoModel_MinecraftUser } from "../../dto/MongoModels.js";
 import { WebsocketConnection } from "../WebsocketConnection.js";
+import { WSServer } from "../websocketServer.js";
 
 class WSInteractionResponder_PlayerAttemptedLogin implements BaseWSInteraction {
     public interactionType = WebsocketOpcodes.playerAttemptedLogin;
@@ -33,7 +34,7 @@ class WSInteractionResponder_PlayerAttemptedLogin implements BaseWSInteraction {
         );
 
         // Update auth data
-        await WebsocketConnection.connection.sendAuthData();
+        WSServer.connections.forEach((e) => e.sendAuthData());
         return;
     }
 }

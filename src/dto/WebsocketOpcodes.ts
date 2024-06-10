@@ -16,5 +16,7 @@ export enum WebsocketOpcodes {
     serverOverloaded = 13,
     serverStarting = 14,
     allowedMembers = 15,
-    globalData = 16
+    globalData = 16,
+    authenticate = 1000,
+    authenticationSuccess = 1001
 }

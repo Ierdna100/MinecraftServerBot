@@ -13,6 +13,7 @@ import { MongoModel_MinecraftUser } from "../../dto/MongoModels.js";
 import { WebsocketConnection } from "../../websocketServer/WebsocketConnection.js";
 import { DiscordAuthentication } from "../../administration/DiscordAuthentication.js";
 import { DiscordAuthLevel } from "../../dto/DiscordAuthData.js";
+import { WSServer } from "../../websocketServer/websocketServer.js";
 
 class DiscordCommand_RegisterUser extends BaseCommand {
     // prettier-ignore
@@ -58,7 +59,7 @@ class DiscordCommand_RegisterUser extends BaseCommand {
                 }
             );
             // Update auth data
-            await WebsocketConnection.connection.sendAuthData();
+            WSServer.connections.forEach((e) => e.sendAuthData());
             await interaction.reply("Successfully replaced user's minecraft name!");
             return;
         } else {
@@ -73,8 +74,9 @@ class DiscordCommand_RegisterUser extends BaseCommand {
                 discordUser: newUser.discordUser,
                 displayName: data.minecraftName
             });
+
             // Update auth data
-            await WebsocketConnection.connection.sendAuthData();
+            WSServer.connections.forEach((e) => e.sendAuthData());
             await interaction.reply("Successfully added new user!");
         }
     }

@@ -7,7 +7,6 @@ import { PeriodicMessageType } from "../dto/PeriodicMessageReference.js";
 export abstract class PeriodicMessageBase {
     protected abstract messageType: PeriodicMessageType;
     protected messageToUpdate: Message | undefined;
-    public playersOnline: MinecraftUser[] = [];
 
     public channel: TextChannel | undefined;
 
