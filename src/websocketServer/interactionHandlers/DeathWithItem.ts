@@ -16,7 +16,7 @@ class WSInteractionResponder_DeathByEntity implements BaseWSInteraction {
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()
             .setColor(EmbedColors.red)
-            .setTitle(await generateDeathMessage(data.key, data.killed, data.killer, data.itemName));
+            .setTitle(await generateDeathMessage(data.key, data.killed, data.killer, data.killerIsPlayer, data.killerType, data.itemName));
 
         await Application.instance.discordServer.publicLogChannel.send({ embeds: [messageEmbed] });
         await Application.instance.collections.deaths.insertOne(data);

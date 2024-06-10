@@ -29,8 +29,7 @@ export namespace MinecraftServerInteraction {
         killerType: string;
     }
 
-    export interface DeathWithItem extends Death {
-        killer: string;
+    export interface DeathWithItem extends DeathByEntity {
         itemType: string;
         itemName: string;
     }
