@@ -1,3 +1,27 @@
+1. Dynmap?
+
+-   Add to main message:
+
+    -   Uptime
+    -   link to world downloads
+    -   Minecraft time/day
+    -   Last backup time
+
+-   Additionally:
+
+    -   JFR implementation?
+    -   New whitelist system
+    -   restart command
+    -   stop command
+    -   backup command (MC & discord)
+    -   new skin system?
+    -   backup warnings
+
+-   Change datapack with scoreboards:
+    -   Only show:
+        -   Below name: HP
+        -   Server list: Time played (minutes? hours?)
+
 3. Test for Discord log mod
 4. Test death by player
 5. Proper death logs
