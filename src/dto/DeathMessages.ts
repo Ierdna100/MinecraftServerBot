@@ -9,10 +9,16 @@ export async function generateDeathMessage(key: string, killed: string, killer?:
         rawMessageStream.next(); // Discard '%'
         switch (rawMessageStream.next()) {
             case "1":
-                output += `**${(await MinecraftUser.getUserByUUID(killed))!.displayName}**`;
+                const killedUser = await MinecraftUser.getUserByUUID(killed);
+                output += killedUser == undefined ? `**${killed}**` : `**${killedUser.displayName}**`;
                 break;
             case "2":
-                output += `**${(await MinecraftUser.getUserByUUID(killer!))!.displayName}**`;
+                if (killer == undefined) {
+                    console.log("Killer was undefined!");
+                    break;
+                }
+                const killerUser = await MinecraftUser.getUserByUUID(killer);
+                output += killerUser == undefined ? `**${killer}**` : `**${killerUser.displayName}**`;
                 break;
             case "3":
                 output += `*__${itemName!}__*`;
