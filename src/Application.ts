@@ -18,8 +18,6 @@ export class Application {
     private mongoDatabase: MongoDB.Db;
     public collections;
 
-    public startTime = new Date();
-
     constructor() {
         Application.instance = this;
 
@@ -31,7 +29,11 @@ export class Application {
         this.mongoClient = new MongoDB.MongoClient(this.env.mongo_connectionString);
         this.mongoClient.connect();
         this.mongoDatabase = this.mongoClient.db(this.env.mongo_databaseName);
-        this.backupManager = new BackupManager(this.env.backupFileLocation, this.env.worldFileLocation, this.env.backupFreqInHrs);
+        this.backupManager = new BackupManager(
+            this.env.backupFileLocation,
+            this.env.worldFileLocation,
+            this.env.backupFreqInHrs
+        );
         this.collections = {
             serverData: this.mongoDatabase.collection(this.env.coll_serverData),
             discordAuth: this.mongoDatabase.collection(this.env.coll_discordAuthentication),

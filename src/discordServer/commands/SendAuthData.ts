@@ -15,7 +15,6 @@ import { DiscordAuthentication } from "../../administration/DiscordAuthenticatio
 import { PeriodicMessage_MinecraftInfo } from "../periodicMessages/MinecraftInfo.js";
 import { DiscordClient } from "../DiscordClient.js";
 import { WebsocketConnection } from "../../websocketServer/WebsocketConnection.js";
-import { WSServer } from "../../websocketServer/websocketServer.js";
 
 class DiscordCommand_SendAuthData extends BaseCommand {
     // prettier-ignore
@@ -33,7 +32,7 @@ class DiscordCommand_SendAuthData extends BaseCommand {
             return;
         }
 
-        WSServer.connections.forEach((e) => e.sendAuthData());
+        await WebsocketConnection.connection.sendAuthData();
         interaction.reply("Successfully sent auth data!");
     }
 }

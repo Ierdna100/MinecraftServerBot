@@ -1,7 +1,19 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, CacheType, CommandInteractionOptionResolver } from "discord.js";
+import {
+    SlashCommandBuilder,
+    ChatInputCommandInteraction,
+    CacheType,
+    CommandInteractionOptionResolver,
+    SlashCommandUserOption,
+    SlashCommandStringOption,
+    User
+} from "discord.js";
 import { BaseCommand } from "../../dto/BaseCommand.js";
+import { Application } from "../../Application.js";
+import { MongoModel_MinecraftUser } from "../../dto/MongoModels.js";
 import { DiscordAuthLevel } from "../../dto/DiscordAuthData.js";
 import { DiscordAuthentication } from "../../administration/DiscordAuthentication.js";
+import { PeriodicMessage_MinecraftInfo } from "../periodicMessages/MinecraftInfo.js";
+import { DiscordClient } from "../DiscordClient.js";
 
 class DiscordCommand_ClearActivePlayerList extends BaseCommand {
     // prettier-ignore
@@ -19,7 +31,8 @@ class DiscordCommand_ClearActivePlayerList extends BaseCommand {
             return;
         }
 
-        interaction.reply("This command is deprecated.");
+        DiscordClient.instance.periodicMessages.infoChannel.playersOnline = [];
+        interaction.reply("Successfully cleared active player list!");
     }
 }
 

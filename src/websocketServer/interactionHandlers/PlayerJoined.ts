@@ -30,6 +30,8 @@ class WSInteractionResponder_PlayerJoined implements BaseWSInteraction {
             player = newUser;
         }
 
+        DiscordClient.instance.periodicMessages.infoChannel.onPlayerJoined(player.uuid!);
+
         // prettier-ignore
         let messageEmbed = new EmbedBuilder()
             .setColor(EmbedColors.green)

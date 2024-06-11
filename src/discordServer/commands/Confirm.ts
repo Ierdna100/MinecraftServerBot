@@ -16,7 +16,6 @@ import { PeriodicMessage_MinecraftInfo } from "../periodicMessages/MinecraftInfo
 import { DiscordClient } from "../DiscordClient.js";
 import WSInteractionResponder_PlayerFailedLoginNoIp from "../../websocketServer/interactionHandlers/PlayerFailedLoginNoIp.js";
 import { WebsocketConnection } from "../../websocketServer/WebsocketConnection.js";
-import { WSServer } from "../../websocketServer/websocketServer.js";
 
 class DiscordCommand_Confirm extends BaseCommand {
     // prettier-ignore
@@ -53,7 +52,7 @@ class DiscordCommand_Confirm extends BaseCommand {
             }
         );
 
-        WSServer.connections.forEach((e) => e.sendAuthData());
+        WebsocketConnection.connection.sendAuthData();
 
         await interaction.reply("Successfully added your new IP!");
     }
