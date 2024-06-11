@@ -8,32 +8,53 @@ import { MongoModel_MinecraftUser } from "../dto/MongoModels.js";
 import { WebsocketOpcodes } from "../dto/WebsocketOpcodes.js";
 import { MinecraftServerInteraction } from "../dto/HTTPEndpointsStruct.js";
 import { DiscordClient } from "../discordServer/DiscordClient.js";
+import { WebsocketTypes } from "../dto/WebsocketTypes.js";
 
 export class WebsocketConnection {
-    public static connection: WebsocketConnection;
+    public authenticated: boolean;
+    public type: WebsocketTypes = "unauthenticated";
 
     public ws: WebSocket;
     public pingTime: Date;
 
     constructor(ws: WebSocket) {
-        WebsocketConnection.connection = this;
+        this.authenticated = false;
         this.pingTime = new Date();
         this.ws = ws;
 
-        Logger.info("Client connected");
+        Logger.info("New client connected!");
 
         ws.on("message", (data: string) => this.onMessage(data));
         ws.on("pong", () => this.onPong());
         ws.on("close", () => this.onClose());
 
         this.pingClient();
-        DiscordClient.instance.periodicMessages.infoChannel.initializePeriodicMessage(
-            Application.instance.env.infoChannelId
-        );
+        DiscordClient.instance.periodicMessages.infoChannel.initializePeriodicMessage(Application.instance.env.infoChannelId);
     }
 
     private onMessage(buffer: string) {
         let data = JSON.parse(buffer) as IBaseWSInteraction;
+
+        if (data == undefined || data.opcode == undefined) {
+            this.ws.close(WebSocketCloseCodes.noOpcodeProvided);
+            return;
+        }
+
+        if (data.opcode == WebsocketOpcodes.authenticate) {
+            if (this.authenticated) {
+                console.log("Cannot authenticate client twice!");
+                this.ws.close(WebSocketCloseCodes.cannotAuthenticateTwice);
+                return;
+            }
+
+            this.manageAuthentication(data);
+            return;
+        }
+
+        if (!this.authenticated) {
+            this.ws.close(WebSocketCloseCodes.notAuthenticated);
+            return;
+        }
 
         if (data.opcode == WebsocketOpcodes.allowedMembers) {
             this.sendAuthData();
@@ -73,10 +94,10 @@ export class WebsocketConnection {
     }
 
     public async sendAuthData() {
+        if (this.type != "minecraft") return;
+
         console.log("Responding to request to Auth Data");
-        const allAuthedUsers = (await Application.instance.collections.auth
-            .find({})
-            .toArray()) as unknown as MongoModel_MinecraftUser[];
+        const allAuthedUsers = (await Application.instance.collections.auth.find({}).toArray()) as unknown as MongoModel_MinecraftUser[];
         if (allAuthedUsers != null) {
             let allValidUsers: { uuid: string; allowedIps: string[] }[] = [];
             for (const user of allAuthedUsers) {
@@ -100,5 +121,30 @@ export class WebsocketConnection {
     private pingClient() {
         this.pingTime = new Date();
         this.ws.ping();
+    }
+
+    private manageAuthentication(data: IBaseWSInteraction) {
+        if (data.data == undefined) {
+            this.ws.close(WebSocketCloseCodes.noAuthenticationDataProvided);
+            return;
+        }
+
+        const subData = data.data as MinecraftServerInteraction.AuthData;
+
+        if (subData.password == undefined) {
+            this.ws.close(WebSocketCloseCodes.invalidAuthenticationDataProvided);
+            return;
+        }
+
+        if (subData.password != Application.instance.env.WSPassword) {
+            this.ws.close(WebSocketCloseCodes.invalidAuthenticationDataProvided);
+            return;
+        }
+
+        this.ws.send(
+            JSON.stringify({
+                opcode: WebsocketOpcodes.authenticationSuccess
+            })
+        );
     }
 }

@@ -1,15 +1,24 @@
+import { WebsocketTypes } from "./WebsocketTypes.js";
+
 export namespace MinecraftServerInteraction {
     export interface Base {
         timestamp: Date;
     }
 
+    export interface AuthData extends Base {
+        password: string;
+        requestHeaders: WebsocketTypes;
+    }
+
     export interface GlobalData extends Base {
-        ip: string;
         seed: string;
         maxPlayers: number;
-        currentPlayers: number;
+        currentPlayerCount: number;
         version: string;
         MOTD: string;
+        currentPlayers: string[];
+        mcServerUpTimeMillisec: number;
+        day: number;
     }
 
     export interface Message extends Base {

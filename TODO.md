@@ -1,12 +1,5 @@
 1. Dynmap?
 
--   Add to main message:
-
-    -   Uptime
-    -   link to world downloads
-    -   Minecraft time/day
-    -   Last backup time
-
 -   Additionally:
 
     -   JFR implementation?
