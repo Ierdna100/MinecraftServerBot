@@ -5,7 +5,7 @@ import { WebsocketConnection } from "./WebsocketConnection.js";
 
 export class WSServer {
     public static instance: WSServer;
-    public static connections: WebsocketConnection[];
+    public static connections: WebsocketConnection[] = [];
 
     public server: Server;
 
