@@ -53,11 +53,11 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
         // If undefined, it means the server never replied back!
         if (data == undefined) {
             // prettier-ignore
-            messageEmbeds.push(baseMainEmbed
-                .setColor(EmbedColors.red)
-                .setDescription("Server is offline")
-                .setTimestamp(new Date())
-            );
+            messageEmbeds.push(
+                baseMainEmbed
+                    .setColor(EmbedColors.red)
+                    .setDescription("Server is offline")
+                    .setTimestamp(new Date()));
         } else {
             messageEmbeds.push(
                 baseMainEmbed
@@ -81,18 +81,14 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
             );
         }
 
-        const a = (await Application.instance.collections.worldDownloads.find().toArray()) as unknown as MongoModel_WorldDownload[];
-        console.log(a);
-        const b = this.formatWorldDownloads(a);
-        console.log(b);
-
         // prettier-ignore
         messageEmbeds.push(
             new EmbedBuilder()
                 .setColor(EmbedColors.yellow)
                 .setTitle("Previous World Downloads")
-                .setDescription("a string")
-        );
+                .setDescription(
+                    this.formatWorldDownloads(await Application.instance.collections.worldDownloads.find().toArray() as unknown as MongoModel_WorldDownload[])
+            ));
 
         if (this.messageToUpdate == undefined) {
             this.messageToUpdate = await DiscordClient.instance.periodicMessages.infoChannel.channel!.send({

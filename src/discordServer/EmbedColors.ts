@@ -1,6 +1,6 @@
 export enum EmbedColors {
     blue = 0x0006ff,
-    red = 0x0000ff,
+    red = 0xff0000,
     yellow = 0xffff00,
     orange = 0xffa500,
     black = 0x000000,
