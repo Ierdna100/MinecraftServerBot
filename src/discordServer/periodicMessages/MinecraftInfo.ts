@@ -80,12 +80,17 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
             );
         }
 
+        const a = (await Application.instance.collections.worldDownloads.find()) as unknown as MongoModel_WorldDownload[];
+        console.log(a);
+        const b = this.formatWorldDownloads(a);
+        console.log(b);
+
         // prettier-ignore
         messageEmbeds.push(
             new EmbedBuilder()
                 .setColor(EmbedColors.yellow)
                 .setTitle("Previous World Downloads")
-                .setDescription(this.formatWorldDownloads(await Application.instance.collections.worldDownloads.find() as unknown as MongoModel_WorldDownload[]))
+                .setDescription("a string")
         );
 
         if (this.messageToUpdate == undefined) {
