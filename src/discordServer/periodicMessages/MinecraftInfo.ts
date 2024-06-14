@@ -38,9 +38,6 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
     }
 
     public async updateMessage(data: MinecraftServerInteraction.GlobalData | undefined): Promise<void> {
-        Logger.info("update message called with data: ");
-        console.log(data);
-
         if (this.updateMessageCallbackID != undefined) {
             clearTimeout(this.updateMessageCallbackID);
             this.updateMessageCallbackID = undefined;
@@ -83,11 +80,12 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
             );
         }
 
+        // prettier-ignore
         messageEmbeds.push(
             new EmbedBuilder()
                 .setColor(EmbedColors.yellow)
                 .setTitle("Previous World Downloads")
-                .setDescription(this.formatWorldDownloads(Application.instance.collections.worldDownloads.find() as unknown as MongoModel_WorldDownload[]))
+                .setDescription(this.formatWorldDownloads(await Application.instance.collections.worldDownloads.find() as unknown as MongoModel_WorldDownload[]))
         );
 
         if (this.messageToUpdate == undefined) {
