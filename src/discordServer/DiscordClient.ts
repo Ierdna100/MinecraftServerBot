@@ -8,9 +8,10 @@ export class DiscordClient {
     public static instance: DiscordClient;
     public client!: Client;
 
-    public periodicMessages!: {
+    // @ts-ignore
+    public periodicMessages: {
         infoChannel: PeriodicMessage_MinecraftInfo;
-    };
+    } = {};
 
     public publicLogChannel!: TextChannel;
 
