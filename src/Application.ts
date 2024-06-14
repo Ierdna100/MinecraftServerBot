@@ -26,8 +26,6 @@ export class Application {
         this.env = EnvManager.config();
 
         this.logger = new Logger();
-        this.WSServer = new WSServer();
-        this.discordServer = new DiscordClient();
         this.mongoClient = new MongoDB.MongoClient(this.env.mongo_connectionString);
         this.mongoClient.connect();
         this.mongoDatabase = this.mongoClient.db(this.env.mongo_databaseName);
@@ -47,6 +45,8 @@ export class Application {
             performance: this.mongoDatabase.collection(this.env.coll_perf),
             worldDownloads: this.mongoDatabase.collection(this.env.worldDownloads)
         };
+        this.WSServer = new WSServer();
+        this.discordServer = new DiscordClient();
     }
 }
 
