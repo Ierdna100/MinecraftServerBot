@@ -43,7 +43,10 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
             this.updateMessageCallbackID = undefined;
         }
 
-        const lastBackupAt = Math.floor(Application.instance.backupManager.lastBackupAt.getTime() / 1000);
+        const lastBackupAt =
+            Application.instance.backupManager.lastBackupAt != undefined
+                ? Math.floor(Application.instance.backupManager.lastBackupAt.getTime() / 1000)
+                : undefined;
         const messageEmbeds: EmbedBuilder[] = [];
 
         const baseMainEmbed = new EmbedBuilder()
@@ -69,7 +72,7 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
                         { name: "In-game Time: ", value: `Day ${Math.floor(data.day / 24000)} (${this.getDayPeriod(data.day)})` },
                         { name: "Minecraft Server Uptime: ", value: this.formatTime(data.mcServerUpTimeMillisec) },
                         { name: "Discord Server Uptime: ", value: this.formatTime(new Date().getTime() - Application.instance.startTime.getTime()) },
-                        { name: "Last Backup At: ", value: `<t:${lastBackupAt}>, <t:${lastBackupAt}:R>` }
+                        { name: "Last Backup At: ", value: lastBackupAt == undefined ? "No previous backup" : `<t:${lastBackupAt}>, <t:${lastBackupAt}:R>` }
                     )
                     .setTimestamp(data.timestamp)
             );
