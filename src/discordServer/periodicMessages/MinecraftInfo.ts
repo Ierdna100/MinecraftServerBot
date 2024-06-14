@@ -37,10 +37,10 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
                 .addFields(
                     { name: "Seed: ", value: data.seed },
                     { name: "Version: ", value: data.version },
-                    { name: "In-game Time: ", value: `Day ${data.day / 24000} (${this.getDayPeriod(data.day)})` },
+                    { name: "In-game Time: ", value: `Day ${Math.floor(data.day / 24000)} (${this.getDayPeriod(data.day)})` },
                     { name: "Minecraft Server Uptime: ", value: this.formatTime(data.mcServerUpTimeMillisec) },
                     { name: "Discord Server Uptime: ", value: this.formatTime(new Date().getTime() - Application.instance.startTime.getTime()) },
-                    { name: "Last Backup At: ", value: `<t:${Application.instance.backupManager.lastBackupAt.getTime()}>` }
+                    { name: "Last Backup At: ", value: `<t:${Math.floor(Application.instance.backupManager.lastBackupAt.getTime() / 1000)}>` }
                 )
                 .setFooter({ text: "https://github.com/Ierdna100/MinecraftServerBot" })
                 .setTimestamp(data.timestamp),
@@ -50,7 +50,7 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
                 .setDescription("*Coming soon*"),
             new EmbedBuilder()
                 .setColor(EmbedColors.blue)
-                .setTitle(`Active players (${data.currentPlayers} / ${data.maxPlayers})`)
+                .setTitle(`Active players (${data.currentPlayers.length} / ${data.maxPlayers})`)
                 .setDescription(this.generatePlayerList(data.currentPlayers))
         ];
 
@@ -68,19 +68,19 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
         await this.messageToUpdate.edit({ embeds: messageEmbeds });
     }
 
-    private formatTime(time: number): string {
-        const minutes = Math.floor((time / 1000) * 60);
+    private formatTime(milliseconds: number): string {
+        const minutes = Math.floor(milliseconds / (1000 * 60));
         const min_S = minutes > 1 ? "s" : "";
-        const hours = Math.floor((time / 1000) * 60 * 60);
+        const hours = Math.floor(milliseconds / (1000 * 60 * 60));
         const hour_S = hours > 1 ? "s" : "";
-        const days = Math.floor((time / 1000) * 60 * 60 * 24);
+        const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
         const day_S = days > 1 ? "s" : "";
         // If more than an hour
-        if (time > 1000 * 60 * 60) {
+        if (milliseconds > 1000 * 60 * 60) {
             return `${hours} hr${hour_S} ${minutes} min${min_S}`;
         }
         // If more than a day
-        else if (time > 1000 * 60 * 60 * 24) {
+        else if (milliseconds > 1000 * 60 * 60 * 24) {
             return `${days} day${day_S} ${hours} hr${hour_S} ${minutes} min${min_S}`;
         } else {
             return `${minutes} min${min_S}`;
