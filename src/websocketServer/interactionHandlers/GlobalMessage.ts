@@ -14,7 +14,6 @@ class WSInteractionResponder_GlobalData implements BaseWSInteraction {
         let data = buffer as MinecraftServerInteraction.GlobalData;
 
         await DiscordClient.instance.periodicMessages.infoChannel.updateMessage(data);
-        setTimeout(DiscordClient.instance.periodicMessages.infoChannel.fetchNewestData, Application.instance.env.WSGlobalDataFreqMs);
     }
 }
 

@@ -7,11 +7,20 @@ import { DiscordClient } from "../DiscordClient.js";
 import { Application } from "../../Application.js";
 import { PeriodicMessageReference, PeriodicMessageType } from "../../dto/PeriodicMessageReference.js";
 import { WSServer } from "../../websocketServer/websocketServer.js";
+import { MongoModel_WorldDownload } from "../../dto/MongoModels.js";
 
 export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
     protected messageType: PeriodicMessageType = PeriodicMessageType.minecraftInfo;
 
+    private fetchNewestDataCallbackID: number | undefined = undefined;
+    private updateMessageCallbackID: number | undefined = undefined;
+
     public async fetchNewestData(): Promise<void> {
+        if (this.fetchNewestDataCallbackID != undefined) {
+            clearTimeout(this.fetchNewestDataCallbackID);
+            this.fetchNewestDataCallbackID = undefined;
+        }
+
         let possibleMessageToUpdate = (await Application.instance.collections.serverData.findOne({
             type: PeriodicMessageType.minecraftInfo
         })) as PeriodicMessageReference | null;
@@ -23,36 +32,60 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
         }
 
         WSServer.connections.forEach((e) => e.ws.send(JSON.stringify({ opcode: WebsocketOpcodes.globalData })));
+        // wtf is wrong with this? Why does it not think it returns a number?????
+        this.fetchNewestDataCallbackID = setTimeout(() => this.fetchNewestData, Application.instance.env.WSGlobalDataFreqMs) as unknown as number;
+        this.updateMessageCallbackID = setTimeout(() => this.updateMessage, Application.instance.env.WSGlobalDataFreqMs * 0.2, undefined);
     }
 
-    public async updateMessage(data: MinecraftServerInteraction.GlobalData): Promise<void> {
-        Application.instance.WSServer.server;
+    public async updateMessage(data: MinecraftServerInteraction.GlobalData | undefined): Promise<void> {
+        if (this.updateMessageCallbackID != undefined) {
+            clearTimeout(this.updateMessageCallbackID);
+            this.updateMessageCallbackID = undefined;
+        }
 
-        // prettier-ignore
-        const messageEmbeds: EmbedBuilder[] = [
-            new EmbedBuilder()
-                .setColor(EmbedColors.green)
-                .setTitle(`Minecraft server info - **${Application.instance.env.serverIP}**`)
-                .setDescription(data.MOTD)
-                .addFields(
-                    { name: "Seed: ", value: data.seed },
-                    { name: "Version: ", value: data.version },
-                    { name: "In-game Time: ", value: `Day ${Math.floor(data.day / 24000)} (${this.getDayPeriod(data.day)})` },
-                    { name: "Minecraft Server Uptime: ", value: this.formatTime(data.mcServerUpTimeMillisec) },
-                    { name: "Discord Server Uptime: ", value: this.formatTime(new Date().getTime() - Application.instance.startTime.getTime()) },
-                    { name: "Last Backup At: ", value: `<t:${Math.floor(Application.instance.backupManager.lastBackupAt.getTime() / 1000)}>` }
-                )
-                .setFooter({ text: "https://github.com/Ierdna100/MinecraftServerBot" })
-                .setTimestamp(data.timestamp),
+        const lastBackupAt = Math.floor(Application.instance.backupManager.lastBackupAt.getTime() / 1000);
+        const messageEmbeds: EmbedBuilder[] = [];
+
+        const baseMainEmbed = new EmbedBuilder()
+            .setColor(WSServer.connections.some((e) => e.type == "minecraft") ? EmbedColors.green : EmbedColors.red)
+            .setTitle(`Minecraft server info - **${Application.instance.env.serverIP}**`)
+            .setFooter({ text: "https://github.com/Ierdna100/MinecraftServerBot" });
+
+        // If undefined, it means the server never replied back!
+        if (data == undefined) {
+            // prettier-ignore
+            messageEmbeds.push(baseMainEmbed
+                .setDescription("Server is offline")
+                .setTimestamp(new Date())
+            );
+        } else {
+            messageEmbeds.push(
+                baseMainEmbed
+                    .setDescription(data.MOTD)
+                    .addFields(
+                        { name: "Seed: ", value: data.seed },
+                        { name: "Version: ", value: data.version },
+                        { name: "In-game Time: ", value: `Day ${Math.floor(data.day / 24000)} (${this.getDayPeriod(data.day)})` },
+                        { name: "Minecraft Server Uptime: ", value: this.formatTime(data.mcServerUpTimeMillisec) },
+                        { name: "Discord Server Uptime: ", value: this.formatTime(new Date().getTime() - Application.instance.startTime.getTime()) },
+                        { name: "Last Backup At: ", value: `<t:${lastBackupAt}>, <t:${lastBackupAt}:R>` }
+                    )
+                    .setTimestamp(data.timestamp)
+            );
+            messageEmbeds.push(
+                new EmbedBuilder()
+                    .setColor(EmbedColors.green)
+                    .setTitle(`Active players (${data.currentPlayers.length} / ${data.maxPlayers})`)
+                    .setDescription(this.generatePlayerList(data.currentPlayers))
+            );
+        }
+
+        messageEmbeds.push(
             new EmbedBuilder()
                 .setColor(EmbedColors.yellow)
                 .setTitle("Previous World Downloads")
-                .setDescription("*Coming soon*"),
-            new EmbedBuilder()
-                .setColor(EmbedColors.blue)
-                .setTitle(`Active players (${data.currentPlayers.length} / ${data.maxPlayers})`)
-                .setDescription(this.generatePlayerList(data.currentPlayers))
-        ];
+                .setDescription(this.formatWorldDownloads(Application.instance.collections.worldDownloads.find() as unknown as MongoModel_WorldDownload[]))
+        );
 
         if (this.messageToUpdate == undefined) {
             this.messageToUpdate = await DiscordClient.instance.periodicMessages.infoChannel.channel!.send({
@@ -68,13 +101,28 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
         await this.messageToUpdate.edit({ embeds: messageEmbeds });
     }
 
+    private formatWorldDownloads(data: MongoModel_WorldDownload[]): string {
+        if (data.length == 0) {
+            return "*No world downloads available*";
+        }
+
+        let out = "";
+        data.forEach((e) => {
+            out += `[${e.markdownTitle}](${e.link})\n`;
+        });
+        return out;
+    }
+
     private formatTime(milliseconds: number): string {
-        const minutes = Math.floor(milliseconds / (1000 * 60));
+        const minutes = Math.floor(milliseconds / (1000 * 60)) % 60;
         const min_S = minutes > 1 ? "s" : "";
-        const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+
+        const hours = Math.floor(milliseconds / (1000 * 60 * 60)) % 24;
         const hour_S = hours > 1 ? "s" : "";
+
         const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
         const day_S = days > 1 ? "s" : "";
+
         // If more than an hour
         if (milliseconds > 1000 * 60 * 60) {
             return `${hours} hr${hour_S} ${minutes} min${min_S}`;

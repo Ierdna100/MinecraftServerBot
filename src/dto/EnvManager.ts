@@ -43,7 +43,8 @@ export class EnvManager {
             backupFreqInHrs: parseFloat(EnvManager.assertDefined("BACKUP_FREQUENCY_HOURS")),
             historicalDataPollingRateMin: parseFloat(EnvManager.assertDefined("HISTORICAL_DATA_POLLING_RATE_MINUTES")),
             serverIP: EnvManager.assertDefined("SERVER_IP"),
-            WSPassword: EnvManager.assertDefined("WS_PASSWORD")
+            WSPassword: EnvManager.assertDefined("WS_PASSWORD"),
+            worldDownloads: EnvManager.assertDefined("COLL_WORLD_DOWNLOADS")
         };
     }
 
@@ -64,6 +65,7 @@ export class EnvManager {
         "COLL_NAME_ALLOWED_MEMBERS=authentication\n" +
         "COLL_NAME_PERFORMANCE_REPORTS=performance\n" +
         "COLL_SERVER_DATA=serverData\n" +
+        "COLL_WORLD_DOWNLOADS=worldDownloads\n" +
         "PUBLIC_LOG_CHANNEL=\n" +
         "INFO_CHANNEL=\n" +
         "WS_PING_FREQ_SEC=15000\n" +
@@ -110,4 +112,5 @@ export interface EnvFileFields {
     coll_serverData: string;
     serverIP: string;
     WSPassword: string;
+    worldDownloads: string;
 }

@@ -44,7 +44,8 @@ export class Application {
             advancements: this.mongoDatabase.collection(this.env.coll_advancements),
             overloads: this.mongoDatabase.collection(this.env.coll_overloads),
             auth: this.mongoDatabase.collection(this.env.coll_auth),
-            performance: this.mongoDatabase.collection(this.env.coll_perf)
+            performance: this.mongoDatabase.collection(this.env.coll_perf),
+            worldDownloads: this.mongoDatabase.collection(this.env.worldDownloads)
         };
     }
 }
