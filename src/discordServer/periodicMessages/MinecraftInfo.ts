@@ -15,6 +15,11 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
     private fetchNewestDataCallbackID: number | undefined = undefined;
     private updateMessageCallbackID: number | undefined = undefined;
 
+    constructor() {
+        super();
+        this.initializePeriodicMessage(Application.instance.env.infoChannelId);
+    }
+
     public async fetchNewestData(): Promise<void> {
         if (this.fetchNewestDataCallbackID != undefined) {
             clearTimeout(this.fetchNewestDataCallbackID);

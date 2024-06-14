@@ -29,7 +29,6 @@ export class WebsocketConnection {
         ws.on("close", () => this.onClose());
 
         this.pingClient();
-        DiscordClient.instance.periodicMessages.infoChannel.initializePeriodicMessage(Application.instance.env.infoChannelId);
     }
 
     private onMessage(buffer: string) {
