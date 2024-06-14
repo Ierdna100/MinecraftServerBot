@@ -37,6 +37,10 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
         // wtf is wrong with this? Why does it not think it returns a number?????
         this.fetchNewestDataCallbackID = setTimeout(() => this.fetchNewestData, Application.instance.env.WSGlobalDataFreqMs) as unknown as number;
         this.updateMessageCallbackID = setTimeout(() => this.updateMessage, Application.instance.env.WSGlobalDataFreqMs * 0.2, undefined);
+        console.log(this.fetchNewestDataCallbackID);
+        console.log(this.updateMessageCallbackID);
+        console.log(Application.instance.env.WSGlobalDataFreqMs * 0.2);
+        console.log(() => this.updateMessage);
     }
 
     public async updateMessage(data: MinecraftServerInteraction.GlobalData | undefined): Promise<void> {
