@@ -124,8 +124,11 @@ export class WebsocketConnection {
     }
 
     private manageAuthentication(data: IBaseWSInteraction) {
+        console.log("Managing authentication of new websocket, connectiong data:");
+        console.log(data);
         if (data.data == undefined) {
             this.ws.close(WebSocketCloseCodes.noAuthenticationDataProvided);
+            console.log("No authentication data provided for new websocket connection!");
             return;
         }
 
@@ -133,14 +136,17 @@ export class WebsocketConnection {
 
         if (subData.password == undefined) {
             this.ws.close(WebSocketCloseCodes.invalidAuthenticationDataProvided);
+            console.log("Password was undefined on new websocket connection!");
             return;
         }
 
         if (subData.password != Application.instance.env.WSPassword) {
             this.ws.close(WebSocketCloseCodes.invalidAuthenticationDataProvided);
+            console.log("Invalid password on new websocket connection!");
             return;
         }
 
+        console.log("Authenticated successfully, responding...");
         this.ws.send(
             JSON.stringify({
                 opcode: WebsocketOpcodes.authenticationSuccess
