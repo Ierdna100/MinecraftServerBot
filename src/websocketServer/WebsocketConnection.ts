@@ -148,6 +148,7 @@ export class WebsocketConnection {
 
         console.log("Authenticated successfully, responding...");
         this.authenticated = true;
+        this.type = subData.requestHeaders;
         this.ws.send(
             JSON.stringify({
                 opcode: WebsocketOpcodes.authenticationSuccess
