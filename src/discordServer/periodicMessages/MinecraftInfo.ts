@@ -23,35 +23,26 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
     }
 
     public async fetchNewestData(): Promise<void> {
-        Logger.info("Fetch newest data called");
-
-        if (this.fetchNewestDataCallbackID != undefined) {
-            clearTimeout(this.fetchNewestDataCallbackID);
-            this.fetchNewestDataCallbackID = undefined;
-        }
-        Logger.info("3");
-
         let possibleMessageToUpdate = (await Application.instance.collections.serverData.findOne({
             type: PeriodicMessageType.minecraftInfo
         })) as PeriodicMessageReference | null;
-        Logger.info("1");
+
         if (possibleMessageToUpdate != null) {
             this.messageToUpdate = await Application.instance.discordServer.periodicMessages.infoChannel.channel!.messages.fetch(
                 possibleMessageToUpdate.messageId
             );
         }
-        Logger.info("2");
 
         WSServer.connections.forEach((e) => e.ws.send(JSON.stringify({ opcode: WebsocketOpcodes.globalData })));
-        Logger.info("4");
         // wtf is wrong with this? Why does it not think it returns a number?????
         this.fetchNewestDataCallbackID = setTimeout(() => this.fetchNewestData, Application.instance.env.WSGlobalDataFreqMs) as unknown as number;
-        Logger.info("5");
         this.updateMessageCallbackID = setTimeout(() => this.updateMessage, Application.instance.env.WSGlobalDataFreqMs * 0.2, undefined);
-        Logger.info("6");
     }
 
     public async updateMessage(data: MinecraftServerInteraction.GlobalData | undefined): Promise<void> {
+        Logger.info("update message called with data: ");
+        console.log(data);
+
         if (this.updateMessageCallbackID != undefined) {
             clearTimeout(this.updateMessageCallbackID);
             this.updateMessageCallbackID = undefined;
