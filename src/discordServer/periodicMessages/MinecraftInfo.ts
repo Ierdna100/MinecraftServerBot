@@ -47,7 +47,6 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
         const messageEmbeds: EmbedBuilder[] = [];
 
         const baseMainEmbed = new EmbedBuilder()
-            .setColor(WSServer.connections.some((e) => e.type == "minecraft") ? EmbedColors.green : EmbedColors.red)
             .setTitle(`Minecraft server info - **${Application.instance.env.serverIP}**`)
             .setFooter({ text: "https://github.com/Ierdna100/MinecraftServerBot" });
 
@@ -55,12 +54,14 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
         if (data == undefined) {
             // prettier-ignore
             messageEmbeds.push(baseMainEmbed
+                .setColor(EmbedColors.red)
                 .setDescription("Server is offline")
                 .setTimestamp(new Date())
             );
         } else {
             messageEmbeds.push(
                 baseMainEmbed
+                    .setColor(EmbedColors.green)
                     .setDescription(data.MOTD)
                     .addFields(
                         { name: "Seed: ", value: data.seed },
@@ -80,7 +81,7 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
             );
         }
 
-        const a = (await Application.instance.collections.worldDownloads.find()) as unknown as MongoModel_WorldDownload[];
+        const a = (await Application.instance.collections.worldDownloads.find().toArray()) as unknown as MongoModel_WorldDownload[];
         console.log(a);
         const b = this.formatWorldDownloads(a);
         console.log(b);
