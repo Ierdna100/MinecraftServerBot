@@ -8,8 +8,8 @@ export class DiscordClient {
     public static instance: DiscordClient;
     public client!: Client;
 
-    public periodicMessages = {
-        infoChannel: new PeriodicMessage_MinecraftInfo()
+    public periodicMessages!: {
+        infoChannel: PeriodicMessage_MinecraftInfo;
     };
 
     public publicLogChannel!: TextChannel;
@@ -31,9 +31,9 @@ export class DiscordClient {
 
         await this.client.login(Application.instance.env.token);
 
-        this.publicLogChannel = (await this.client.channels.fetch(
-            Application.instance.env.logChannelId
-        )) as TextChannel;
+        this.publicLogChannel = (await this.client.channels.fetch(Application.instance.env.logChannelId)) as TextChannel;
+
+        this.periodicMessages.infoChannel = new PeriodicMessage_MinecraftInfo();
     }
 
     private onReady() {
