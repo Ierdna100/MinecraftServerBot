@@ -8,6 +8,7 @@ import { Application } from "../../Application.js";
 import { PeriodicMessageReference, PeriodicMessageType } from "../../dto/PeriodicMessageReference.js";
 import { WSServer } from "../../websocketServer/websocketServer.js";
 import { MongoModel_WorldDownload } from "../../dto/MongoModels.js";
+import { Logger } from "../../logging/Logger.js";
 
 export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
     protected messageType: PeriodicMessageType = PeriodicMessageType.minecraftInfo;
@@ -18,9 +19,12 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
     constructor() {
         super();
         this.initializePeriodicMessage(Application.instance.env.infoChannelId);
+        Logger.info("Initialized periodic message for Minecraft Info!");
     }
 
     public async fetchNewestData(): Promise<void> {
+        Logger.info("Fetch newest data called");
+
         if (this.fetchNewestDataCallbackID != undefined) {
             clearTimeout(this.fetchNewestDataCallbackID);
             this.fetchNewestDataCallbackID = undefined;
