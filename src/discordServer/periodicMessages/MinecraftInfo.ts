@@ -62,6 +62,15 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
                     .setDescription("Server is offline")
                     .setTimestamp(new Date()));
         } else {
+            console.log([
+                { name: "Seed: ", value: data.seed },
+                { name: "Version: ", value: data.version },
+                { name: "In-game Time: ", value: `Day ${Math.floor(data.day / 24000)} (${this.getDayPeriod(data.day)})` },
+                { name: "Minecraft Server Uptime: ", value: this.formatTime(data.mcServerUpTimeMillisec) },
+                { name: "Discord Server Uptime: ", value: this.formatTime(new Date().getTime() - Application.instance.startTime.getTime()) },
+                { name: "Last Backup At: ", value: lastBackupAt == undefined ? "No previous backup" : `<t:${lastBackupAt}>, <t:${lastBackupAt}:R>` }
+            ]);
+
             messageEmbeds.push(
                 baseMainEmbed
                     .setColor(EmbedColors.green)
