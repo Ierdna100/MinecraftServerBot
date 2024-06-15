@@ -26,10 +26,11 @@ export class BackupManager {
         Logger.info("Backup manager started!");
         const millisecPerHour = 1000 * 60 * 60;
 
+        Logger.info("Last backup at: " + this.lastBackupAt);
+
         if (this.lastBackupAt == undefined) {
             setTimeout(() => this.backupServer(), this.saveRateInHours * millisecPerHour);
             Logger.info(`Backing up in ${saveRateInHours} hours!`);
-            return;
         } else if (this.lastBackupAt.getTime() / millisecPerHour > this.saveRateInHours) {
             this.backupServer();
             setTimeout(() => this.backupServer(), this.saveRateInHours * millisecPerHour);
