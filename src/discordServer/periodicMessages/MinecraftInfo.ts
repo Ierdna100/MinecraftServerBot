@@ -129,16 +129,20 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
         const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
         const day_S = days > 1 ? "s" : "";
 
-        // If more than an hour
-        if (milliseconds > 1000 * 60 * 60) {
-            return `${hours} hr${hour_S} ${minutes} min${min_S}`;
+        let out = "";
+        if (days != 0) {
+            out += `${days} hr${day_S} `;
         }
-        // If more than a day
-        else if (milliseconds > 1000 * 60 * 60 * 24) {
-            return `${days} day${day_S} ${hours} hr${hour_S} ${minutes} min${min_S}`;
-        } else {
-            return `${minutes} min${min_S}`;
+
+        if (hours != 0) {
+            out += `${hours} hr${hour_S} `;
         }
+
+        if (minutes != 0) {
+            out += `${minutes} hr${min_S}`;
+        }
+
+        return out;
     }
 
     private getDayPeriod(time: number) {
