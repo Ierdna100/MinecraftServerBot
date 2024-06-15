@@ -131,7 +131,7 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
 
         let out = "";
         if (days != 0) {
-            out += `${days} hr${day_S} `;
+            out += `${days} day${day_S} `;
         }
 
         if (hours != 0) {
@@ -139,7 +139,7 @@ export class PeriodicMessage_MinecraftInfo extends PeriodicMessageBase {
         }
 
         if (minutes != 0) {
-            out += `${minutes} hr${min_S}`;
+            out += `${minutes} min${min_S}`;
         }
 
         return out;
