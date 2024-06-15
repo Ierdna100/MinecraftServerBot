@@ -30,15 +30,20 @@ export class BackupManager {
 
         if (this.lastBackupAt == undefined) {
             setTimeout(() => this.backupServer(), this.saveRateInHours * millisecPerHour);
-            Logger.info(`Backing up in ${saveRateInHours} hours!`);
-        } else if (this.lastBackupAt.getTime() / millisecPerHour > this.saveRateInHours) {
+            Logger.info(`No previous backup found. Backing up in ${saveRateInHours} hours!`);
+            return;
+        }
+
+        const timeDifference = new Date().getTime() - this.lastBackupAt.getTime();
+
+        if (timeDifference / millisecPerHour > this.saveRateInHours) {
             this.backupServer();
             setTimeout(() => this.backupServer(), this.saveRateInHours * millisecPerHour);
             Logger.info("Backed up server once because the last backup was too long ago!");
             Logger.info(`Backing up again in ${saveRateInHours} hours!`);
         } else {
             const saveRateInMillisec = this.saveRateInHours * millisecPerHour;
-            const backupInMs = saveRateInMillisec - (new Date().getTime() - this.lastBackupAt.getTime());
+            const backupInMs = saveRateInMillisec - timeDifference;
             setTimeout(() => this.backupServer(), this.saveRateInHours * millisecPerHour - this.lastBackupAt.getTime());
             Logger.info(`Backing up in ${saveRateInHours} hours!`);
         }
