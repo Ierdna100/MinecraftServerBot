@@ -1,8 +1,8 @@
 import { Logger } from "../logging/Logger.js";
 import * as ZipLib from "zip-lib";
-import { FileUtils } from "../fileUtils/FileUtils.js";
 import { Application } from "../Application.js";
 import { PeriodicMessageType } from "../dto/PeriodicMessageReference.js";
+import Path from "path";
 
 export class BackupManager {
     public parentSaveFolder!: string;
@@ -15,16 +15,32 @@ export class BackupManager {
     }
 
     public async ctor(parentSaveFolderName: string, worldFolder: string, saveRateInHours: number) {
-        this.worldFolder = FileUtils.formatDirName(worldFolder);
-        this.parentSaveFolder = FileUtils.formatDirName(parentSaveFolderName);
+        this.worldFolder = Path.resolve(worldFolder);
+        this.parentSaveFolder = Path.resolve(parentSaveFolderName);
         this.saveRateInHours = saveRateInHours;
         const possiblePreviousBackupDate = await Application.instance.collections.serverData.findOne<{ date: Date }>({ type: PeriodicMessageType.backupTime });
         if (possiblePreviousBackupDate != null) {
             this.lastBackupAt = possiblePreviousBackupDate.date;
         }
 
-        setTimeout(() => this.backupServer(), this.saveRateInHours * 60 * 60 * 1000);
-        Logger.info(`Backup manager started! Backing up in ${saveRateInHours} hours!`);
+        Logger.info("Backup manager started!");
+        const millisecPerHour = 1000 * 60 * 60;
+
+        if (this.lastBackupAt == undefined) {
+            setTimeout(() => this.backupServer(), this.saveRateInHours * millisecPerHour);
+            Logger.info(`Backing up in ${saveRateInHours} hours!`);
+            return;
+        } else if (this.lastBackupAt.getTime() / millisecPerHour > this.saveRateInHours) {
+            this.backupServer();
+            setTimeout(() => this.backupServer(), this.saveRateInHours * millisecPerHour);
+            Logger.info("Backed up server once because the last backup was too long ago!");
+            Logger.info(`Backing up again in ${saveRateInHours} hours!`);
+        } else {
+            const saveRateInMillisec = this.saveRateInHours * millisecPerHour;
+            const backupInMs = saveRateInMillisec - (new Date().getTime() - this.lastBackupAt.getTime());
+            setTimeout(() => this.backupServer(), this.saveRateInHours * millisecPerHour - this.lastBackupAt.getTime());
+            Logger.info(`Backing up in ${saveRateInHours} hours!`);
+        }
     }
 
     public async backupServer() {
