@@ -15,33 +15,26 @@ import { DiscordAuthentication } from "../../administration/DiscordAuthenticatio
 import { DiscordAuthLevel } from "../../dto/DiscordAuthData.js";
 import { WSServer } from "../../websocketServer/websocketServer.js";
 
-class DiscordCommand_RegisterUser extends BaseCommand {
+class DiscordCommand_RegisterName extends BaseCommand {
     // prettier-ignore
     commandBuilder: Pick<SlashCommandBuilder, "name" | "toJSON" | "description"> = new SlashCommandBuilder()
-        .setName("register_user")
-        .setDescription("Register new user")
-            .addUserOption(new SlashCommandUserOption()
-                .setName("id")
-                .setDescription("Discord ID of user")
-                .setRequired(true))
+        .setName("register_name")
+        .setDescription("Register new Minecraft name")
             .addStringOption(new SlashCommandStringOption()
                 .setName("minecraft_name")
                 .setDescription("Minecraft name")
                 .setRequired(true));
 
     async reply(interaction: CommandInteraction, userId: string, options: CommandOptions): Promise<void> {
-        if ((await DiscordAuthentication.getUserAuthLevel(userId)) < DiscordAuthLevel.admin) {
-            await interaction.reply("You are not an administrator!");
-            return;
+        const minecraftName = options.getString("minecraft_name", true);
+
+        if ((await DiscordAuthentication.getUserAuthLevel(userId)) < DiscordAuthLevel.authRequests) {
+            interaction.reply("You are not authenticated, but your request was sent anyway pending review.");
+            Application.instance.return;
         }
 
-        const data = {
-            discordUser: options.getUser("id", true).id,
-            minecraftName: options.getString("minecraft_name", true)
-        };
-
         const existingUser = (await Application.instance.collections.auth.findOne({
-            discordUser: data.discordUser
+            displayName: minecraftName
         })) as unknown as MongoModel_MinecraftUser;
 
         if (existingUser != null) {
@@ -49,7 +42,7 @@ class DiscordCommand_RegisterUser extends BaseCommand {
                 { _id: existingUser._id },
                 {
                     discordUser: existingUser.discordUser,
-                    displayName: data.minecraftName,
+                    displayName: minecraftName,
                     uuid: undefined,
                     allowedIps: []
                 }
@@ -78,4 +71,4 @@ class DiscordCommand_RegisterUser extends BaseCommand {
     }
 }
 
-export default DiscordCommand_RegisterUser;
+export default DiscordCommand_RegisterName;

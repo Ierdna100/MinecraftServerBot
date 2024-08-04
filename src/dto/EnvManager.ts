@@ -1,7 +1,13 @@
 import { configDotenv } from "dotenv";
 
 export class EnvManager {
-    public static assertDefined(fieldName: string, failSilenty = false): string {
+    public static setupMode = false;
+
+    public static assertDefined(fieldName: string, defaultValue: string = ""): string {
+        if (this.setupMode) {
+            return defaultValue;
+        }
+
         const fieldValue = process.env[fieldName];
 
         if (fieldValue == "" || fieldValue == undefined) {
@@ -11,7 +17,7 @@ export class EnvManager {
         return fieldValue;
     }
 
-    public static config(): EnvFileFields {
+    public static config() {
         configDotenv();
 
         return {
@@ -20,97 +26,44 @@ export class EnvManager {
             WSPort: parseInt(EnvManager.assertDefined("WS_PORT")),
             mongo_connectionString: EnvManager.assertDefined("DB_CONN_STRING"),
             mongo_databaseName: EnvManager.assertDefined("DB_NAME"),
-            coll_msg: EnvManager.assertDefined("COLL_NAME_MESSAGES"),
-            coll_deaths: EnvManager.assertDefined("COLL_NAME_DEATHS"),
-            coll_starts: EnvManager.assertDefined("COLL_NAME_SERVER_STARTS"),
-            coll_stops: EnvManager.assertDefined("COLL_NAME_SERVER_STOPS"),
-            coll_leaves: EnvManager.assertDefined("COLL_NAME_PLAYER_LEAVES"),
-            coll_joins: EnvManager.assertDefined("COLL_NAME_PLAYER_JOINS"),
-            coll_advancements: EnvManager.assertDefined("COLL_NAME_ADVANCEMENTS"),
-            coll_overloads: EnvManager.assertDefined("COLL_NAME_SERVER_OVERLOADS"),
-            coll_auth: EnvManager.assertDefined("COLL_NAME_ALLOWED_MEMBERS"),
-            coll_perf: EnvManager.assertDefined("COLL_NAME_PERFORMANCE_REPORTS"),
-            coll_serverData: EnvManager.assertDefined("COLL_NAME_SERVER_DATA"),
-            coll_discordAuthentication: EnvManager.assertDefined("COLL_DISCORD_AUTHENTICATION"),
-            WSPingFreqMs: parseInt(EnvManager.assertDefined("WS_PING_FREQ_SEC")),
-            WSPingTimeoutMs: parseInt(EnvManager.assertDefined("WS_PING_TIMEOUT_MS")),
+            coll_msg: EnvManager.assertDefined("COLL_NAME_MESSAGES", "messages"),
+            coll_deaths: EnvManager.assertDefined("COLL_NAME_DEATHS", "deaths"),
+            coll_starts: EnvManager.assertDefined("COLL_NAME_SERVER_STARTS", "server_starts"),
+            coll_stops: EnvManager.assertDefined("COLL_NAME_SERVER_STOPS", "server_stops"),
+            coll_leaves: EnvManager.assertDefined("COLL_NAME_PLAYER_LEAVES", "leaves"),
+            coll_joins: EnvManager.assertDefined("COLL_NAME_PLAYER_JOINS", "joins"),
+            coll_advancements: EnvManager.assertDefined("COLL_NAME_ADVANCEMENTS", "advancements"),
+            coll_overloads: EnvManager.assertDefined("COLL_NAME_SERVER_OVERLOADS", "overloads"),
+            coll_auth: EnvManager.assertDefined("COLL_NAME_ALLOWED_MEMBERS", "allowed_members"),
+            coll_perf: EnvManager.assertDefined("COLL_NAME_PERFORMANCE_REPORTS", "performance_reports"),
+            coll_serverData: EnvManager.assertDefined("COLL_NAME_SERVER_DATA", "server_data"),
+            coll_discordAuthentication: EnvManager.assertDefined("COLL_DISCORD_AUTHENTICATION", "discord_auth"),
+            WSPingFreqMs: parseInt(EnvManager.assertDefined("WS_PING_FREQ_MILLISEC", "15000")),
+            WSPingTimeoutMs: parseInt(EnvManager.assertDefined("WS_PING_TIMEOUT_MS", "60000")),
             MCPingRoleId: EnvManager.assertDefined("MC_PING_ROLE_ID"),
             logChannelId: EnvManager.assertDefined("PUBLIC_LOG_CHANNEL"),
-            WSGlobalDataFreqMs: parseInt(EnvManager.assertDefined("GLOBAL_DATA_FREQ_MS")),
+            WSGlobalDataFreqMs: parseInt(EnvManager.assertDefined("GLOBAL_DATA_FREQ_MS", "30000")),
             infoChannelId: EnvManager.assertDefined("INFO_CHANNEL"),
             worldFileLocation: EnvManager.assertDefined("WORLD_FILE_LOCATION"),
             backupFileLocation: EnvManager.assertDefined("BACKUP_FILE_LOCATION"),
-            backupFreqInHrs: parseFloat(EnvManager.assertDefined("BACKUP_FREQUENCY_HOURS")),
-            historicalDataPollingRateMin: parseFloat(EnvManager.assertDefined("HISTORICAL_DATA_POLLING_RATE_MINUTES")),
+            backupFreqInHrs: parseFloat(EnvManager.assertDefined("BACKUP_FREQUENCY_HOURS", "24")),
+            historicalDataPollingRateMin: parseFloat(EnvManager.assertDefined("HISTORICAL_DATA_POLLING_RATE_MINUTES", "60")),
             serverIP: EnvManager.assertDefined("SERVER_IP"),
             WSPassword: EnvManager.assertDefined("WS_PASSWORD"),
-            worldDownloads: EnvManager.assertDefined("COLL_WORLD_DOWNLOADS")
+            worldDownloads: EnvManager.assertDefined("COLL_WORLD_DOWNLOADS", "world_downloads")
         };
     }
 
-    public static envTemplate =
-        "TOKEN=\n" +
-        "CLIENT_ID=\n" +
-        "WS_PORT=5000\n" +
-        "DB_CONN_STRING=\n" +
-        "DB_NAME=\n" +
-        "COLL_NAME_MESSAGES=messages\n" +
-        "COLL_NAME_DEATHS=deaths\n" +
-        "COLL_NAME_SERVER_STARTS=starts\n" +
-        "COLL_NAME_SERVER_STOPS=stops\n" +
-        "COLL_NAME_PLAYER_LEAVES=playerLeaves\n" +
-        "COLL_NAME_PLAYER_JOINS=playerJoins\n" +
-        "COLL_NAME_ADVANCEMENTS=advancements\n" +
-        "COLL_NAME_SERVER_OVERLOADS=serverOverloads\n" +
-        "COLL_NAME_ALLOWED_MEMBERS=authentication\n" +
-        "COLL_NAME_PERFORMANCE_REPORTS=performance\n" +
-        "COLL_SERVER_DATA=serverData\n" +
-        "COLL_WORLD_DOWNLOADS=worldDownloads\n" +
-        "PUBLIC_LOG_CHANNEL=\n" +
-        "INFO_CHANNEL=\n" +
-        "WS_PING_FREQ_SEC=15000\n" +
-        "WS_PING_TIMEOUT_MS=500\n" +
-        "MC_PING_ROLE_ID=\n" +
-        "GLOBAL_DATA_FREQ_MS=30000\n" +
-        "WORLD_FILE_LOCATION=\n" +
-        "BACKUP_FILE_LOCATION=\n" +
-        "BACKUP_FREQUENCY_HOURS=12\n" +
-        "HISTORICAL_DATA_POLLING_RATE_MINUTES=60\n" +
-        "COLL_DISCORD_AUTHENTICATION=discordAuthentication\n" +
-        "COLL_NAME_SERVER_DATA=serverData\n" +
-        "SERVER_IP=\n" +
-        "WS_PASSWORD=\n";
-}
+    public static getTemplate(): string {
+        this.setupMode = true;
+        const configData = EnvManager.config();
 
-export interface EnvFileFields {
-    coll_discordAuthentication: string;
-    token: string;
-    clientId: string;
-    WSPort: number;
-    mongo_connectionString: string;
-    mongo_databaseName: string;
-    coll_msg: string;
-    coll_deaths: string;
-    coll_starts: string;
-    coll_stops: string;
-    coll_leaves: string;
-    coll_joins: string;
-    coll_advancements: string;
-    coll_overloads: string;
-    coll_auth: string;
-    coll_perf: string;
-    WSPingFreqMs: number;
-    WSPingTimeoutMs: number;
-    MCPingRoleId: string;
-    logChannelId: string;
-    WSGlobalDataFreqMs: number;
-    infoChannelId: string;
-    worldFileLocation: string;
-    backupFileLocation: string;
-    backupFreqInHrs: number;
-    historicalDataPollingRateMin: number;
-    coll_serverData: string;
-    serverIP: string;
-    WSPassword: string;
-    worldDownloads: string;
+        let out = "";
+        for (const key in configData) {
+            out += `${key}=${configData[key as keyof typeof configData]}\n`;
+        }
+
+        this.setupMode = false;
+        return out;
+    }
 }

@@ -5,6 +5,7 @@ export interface DiscordAuthData {
 
 export enum DiscordAuthLevel {
     admin = 4,
-    historicalDataAccess = 1,
+    historicalDataAccess = 3,
+    authRequests = 1,
     none = 0
 }

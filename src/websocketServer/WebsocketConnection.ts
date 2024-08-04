@@ -93,7 +93,7 @@ export class WebsocketConnection {
     }
 
     public async sendAuthData() {
-        if (this.type != "minecraft") return;
+        if (this.type != "mod_auth") return;
 
         console.log("Responding to request to Auth Data");
         const allAuthedUsers = (await Application.instance.collections.auth.find({}).toArray()) as unknown as MongoModel_MinecraftUser[];

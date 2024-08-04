@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "discord.js";
 import { MinecraftServerInteraction } from "../../dto/HTTPEndpointsStruct.js";
 import { PeriodicMessageBase } from "../PeriodicMessage.js";
-import { EmbedColors } from "../EmbedColors.js";
+import { EmbedColors } from "../../dto/EmbedColors.js";
 import { WebsocketOpcodes } from "../../dto/WebsocketOpcodes.js";
 import { DiscordClient } from "../DiscordClient.js";
 import { Application } from "../../Application.js";

@@ -7,7 +7,7 @@ import {
     SlashCommandStringOption,
     User
 } from "discord.js";
-import { BaseCommand } from "../../dto/BaseCommand.js";
+import { BaseCommand, CommandInteraction, CommandOptions } from "../../dto/BaseCommand.js";
 import { Application } from "../../Application.js";
 import { MongoModel_MinecraftUser } from "../../dto/MongoModels.js";
 import { DiscordAuthLevel } from "../../dto/DiscordAuthData.js";
@@ -24,11 +24,7 @@ class DiscordCommand_Confirm extends BaseCommand {
         .setName("confirm")
         .setDescription("Confirm a new IP")
 
-    async reply(
-        interaction: ChatInputCommandInteraction<CacheType>,
-        userId: string,
-        options: Omit<CommandInteractionOptionResolver<CacheType>, "getMessage" | "getFocused">
-    ): Promise<void> {
+    async reply(interaction: CommandInteraction, userId: string, options: CommandOptions): Promise<void> {
         const confirmedIp = WSInteractionResponder_PlayerFailedLoginNoIp.IpsAwaitingConfirmation.get(userId);
 
         if (confirmedIp == undefined) {

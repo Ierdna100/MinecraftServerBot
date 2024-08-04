@@ -1,12 +1,17 @@
 import { CacheType, Client, Interaction, TextChannel } from "discord.js";
 import { Application } from "../Application.js";
-import { CommandLoader } from "./CommandLoader.js";
 import { Logger } from "../logging/Logger.js";
 import { PeriodicMessage_MinecraftInfo } from "./periodicMessages/MinecraftInfo.js";
+import { HandlerLoader } from "./HandlerLoader.js";
+import { BaseCommand } from "../dto/BaseCommand.js";
+import { BaseButton } from "../dto/BaseButton.js";
 
 export class DiscordClient {
     public static instance: DiscordClient;
     public client!: Client;
+
+    public commands = new HandlerLoader<BaseCommand>();
+    public buttons = new HandlerLoader<BaseButton>();
 
     // @ts-ignore
     public periodicMessages: {
@@ -24,7 +29,8 @@ export class DiscordClient {
     private async initializeDiscordClient() {
         this.client = new Client({ intents: [] });
 
-        CommandLoader.loadCommands();
+        this.commands.loadHandlers("commands");
+        this.buttons.loadHandlers("buttons");
 
         this.client.on("ready", () => this.onReady());
         this.client.on("interactionCreate", (interaction) => this.onInteractionCreate(interaction));
@@ -43,22 +49,31 @@ export class DiscordClient {
     }
 
     private async onInteractionCreate(interaction: Interaction<CacheType>) {
-        if (!interaction.isChatInputCommand()) {
-            return;
-        }
-
         const userId = interaction.user.id;
-        const options = interaction.options;
 
-        for (const command of CommandLoader.commands) {
-            if (command.commandBuilder.name == interaction.commandName) {
-                await command.reply(interaction, userId, options);
-                return;
+        if (interaction.isChatInputCommand()) {
+            const options = interaction.options;
+
+            for (const command of this.commands.handlers) {
+                if (command.commandBuilder.name == interaction.commandName) {
+                    await command.reply(interaction, userId, options);
+                    return;
+                }
             }
-        }
 
-        Logger.warn(`Command ${interaction.commandName} is not handled!`);
-        await interaction.reply({ content: "`500 - Internal Server Error`" });
+            Logger.warn(`Command ${interaction.commandName} is not handled!`);
+            await interaction.reply({ content: "`500 - Internal Server Error`" });
+        } else if (interaction.isButton()) {
+            for (const button of this.buttons.handlers) {
+                if (button.builder.customId == interaction.customId) {
+                    await button.handle(interaction, userId);
+                    return;
+                }
+            }
+
+            Logger.warn(`Button ${interaction.customId} is not handled!`);
+            await interaction.reply({ content: "`500 - Internal Server Error`" });
+        }
     }
 
     private async onError(error: Error) {

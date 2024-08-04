@@ -7,7 +7,7 @@ import {
     SlashCommandStringOption,
     User
 } from "discord.js";
-import { BaseCommand } from "../../dto/BaseCommand.js";
+import { BaseCommand, CommandInteraction, CommandOptions } from "../../dto/BaseCommand.js";
 import { Application } from "../../Application.js";
 import { MongoModel_MinecraftUser } from "../../dto/MongoModels.js";
 import { DiscordAuthLevel } from "../../dto/DiscordAuthData.js";
@@ -23,11 +23,7 @@ class DiscordCommand_SendAuthData extends BaseCommand {
         .setName("send_auth_data")
         .setDescription("Sends auth data in case of failure")
 
-    async reply(
-        interaction: ChatInputCommandInteraction<CacheType>,
-        userId: string,
-        options: Omit<CommandInteractionOptionResolver<CacheType>, "getMessage" | "getFocused">
-    ): Promise<void> {
+    async reply(interaction: CommandInteraction, userId: string, options: CommandOptions): Promise<void> {
         if ((await DiscordAuthentication.getUserAuthLevel(userId)) < DiscordAuthLevel.admin) {
             await interaction.reply("You are not an administrator!");
             return;

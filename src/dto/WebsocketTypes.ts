@@ -1,1 +1,1 @@
-export type WebsocketTypes = "unauthenticated" | "minecraft";
+export type WebsocketTypes = "unauthenticated" | "mod_auth" | "mod_logger";

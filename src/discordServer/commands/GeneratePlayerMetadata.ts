@@ -7,7 +7,7 @@ import {
     SlashCommandStringOption,
     User
 } from "discord.js";
-import { BaseCommand } from "../../dto/BaseCommand.js";
+import { BaseCommand, CommandInteraction, CommandOptions } from "../../dto/BaseCommand.js";
 import { Application } from "../../Application.js";
 import { MongoModel_MinecraftUser } from "../../dto/MongoModels.js";
 
@@ -17,11 +17,7 @@ class DiscordCommand_GeneratePlayerMetadata extends BaseCommand {
         .setName("generate_player_metadata")
         .setDescription("Generates new player metadata")
 
-    async reply(
-        interaction: ChatInputCommandInteraction<CacheType>,
-        userId: string,
-        options: Omit<CommandInteractionOptionResolver<CacheType>, "getMessage" | "getFocused">
-    ): Promise<void> {
+    async reply(interaction: CommandInteraction, userId: string, options: CommandOptions): Promise<void> {
         // if (userId != "337662083523018753") {
         //     await interaction.reply("You are not an administrator!");
         //     return;

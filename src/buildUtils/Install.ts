@@ -10,7 +10,7 @@ class Application {
             fs.mkdirSync("./temp");
         } catch (e) {}
 
-        fs.writeFileSync("./.env", EnvManager.envTemplate);
+        fs.writeFileSync("./.env", EnvManager.getTemplate());
     }
 }
 

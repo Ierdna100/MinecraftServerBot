@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, CacheType, CommandInteractionOptionResolver } from "discord.js";
-import { BaseCommand } from "../../dto/BaseCommand.js";
+import { BaseCommand, CommandInteraction, CommandOptions } from "../../dto/BaseCommand.js";
 import { DiscordAuthLevel } from "../../dto/DiscordAuthData.js";
 import { DiscordAuthentication } from "../../administration/DiscordAuthentication.js";
 
@@ -9,11 +9,7 @@ class DiscordCommand_ClearActivePlayerList extends BaseCommand {
         .setName("clear_active_players")
         .setDescription("Clears active players list")
 
-    async reply(
-        interaction: ChatInputCommandInteraction<CacheType>,
-        userId: string,
-        options: Omit<CommandInteractionOptionResolver<CacheType>, "getMessage" | "getFocused">
-    ): Promise<void> {
+    async reply(interaction: CommandInteraction, userId: string, options: CommandOptions): Promise<void> {
         if ((await DiscordAuthentication.getUserAuthLevel(userId)) < DiscordAuthLevel.admin) {
             await interaction.reply("You are not an administrator!");
             return;

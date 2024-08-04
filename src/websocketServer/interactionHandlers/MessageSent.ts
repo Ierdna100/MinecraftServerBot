@@ -3,7 +3,7 @@ import { Application } from "../../Application.js";
 import { MinecraftServerInteraction } from "../../dto/HTTPEndpointsStruct.js";
 import { BaseWSInteraction } from "../../dto/BaseWSInteraction.js";
 import { WebsocketOpcodes } from "../../dto/WebsocketOpcodes.js";
-import { EmbedColors } from "../../discordServer/EmbedColors.js";
+import { EmbedColors } from "../../dto/EmbedColors.js";
 import { MinecraftUser } from "../../dto/MinecraftUser.js";
 
 class WSInteractionResponder_Message implements BaseWSInteraction {

@@ -3,16 +3,17 @@ import {
     CacheType,
     ChatInputCommandInteraction,
     CommandInteractionOptionResolver,
+    MessagePayload,
+    InteractionReplyOptions
 } from "discord.js";
+
+export type CommandInteraction = ChatInputCommandInteraction<CacheType>;
+export type CommandOptions = Omit<CommandInteractionOptionResolver<CacheType>, "getMessage" | "getFocused">;
 
 abstract class BaseCommand {
     abstract commandBuilder: Pick<SlashCommandBuilder, "name" | "description" | "toJSON">;
 
-    abstract reply(
-        interaction: ChatInputCommandInteraction<CacheType>,
-        userId: string,
-        options: Omit<CommandInteractionOptionResolver<CacheType>, "getMessage" | "getFocused">
-    ): Promise<void>;
+    abstract reply(interaction: CommandInteraction, userId: string, options: CommandOptions): Promise<void>;
 }
 
 export { BaseCommand };

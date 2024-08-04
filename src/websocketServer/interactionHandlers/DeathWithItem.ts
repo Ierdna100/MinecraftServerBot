@@ -2,7 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import { BaseWSInteraction } from "../../dto/BaseWSInteraction.js";
 import { MinecraftServerInteraction } from "../../dto/HTTPEndpointsStruct.js";
 import { WebsocketOpcodes } from "../../dto/WebsocketOpcodes.js";
-import { EmbedColors } from "../../discordServer/EmbedColors.js";
+import { EmbedColors } from "../../dto/EmbedColors.js";
 import { generateDeathMessage } from "../../dto/DeathMessages.js";
 import { Application } from "../../Application.js";
 
