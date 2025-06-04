@@ -1,15 +1,11 @@
-// import { DiscordClient } from "../bkp/discordServer/DiscordClient.js";
-// import { EnvManager } from "../bkp/dto/EnvManager.js";
 import { ANSICodes } from "./dto/ANSICodes.js";
+import { EnvFileFields, EnvManager } from "./EnvManager.js";
 import { Logger } from "./logging/Logger.js";
-// import * as MongoDB from "mongodb";
-// import { WSServer } from "../bkp/websocketServer/websocketServer.js";
-// import { BackupManager } from "../bkp/backupSystem/BackupManager.js";
 
 export class Application {
-    // public static instance: Application;
+    public static instance: Application;
 
-    // public env: EnvFileFields;
+    public env!: EnvFileFields;
     // public logger: Logger;
     // public discordServer: DiscordClient;
     // public WSServer: WSServer;
@@ -22,8 +18,13 @@ export class Application {
     // public startTime = new Date();
 
     constructor() {
-        // Application.instance = this;
-        // this.env = EnvManager.config();
+        Application.instance = this;
+        try {
+            this.env = EnvManager.readAndParse();
+        } catch (error: any) {
+            Logger.fatal(error);
+            return;
+        }
         // this.logger = new Logger();
         // this.mongoClient = new MongoDB.MongoClient(this.env.mongo_connectionString);
         // this.mongoClient.connect();
@@ -46,12 +47,6 @@ export class Application {
         // this.backupManager = new BackupManager(this.env.backupFileLocation, this.env.worldFileLocation, this.env.backupFreqInHrs);
         // this.WSServer = new WSServer();
         // this.discordServer = new DiscordClient();
-
-        Logger.log(`testing`, ANSICodes.ForeGreen);
-        Logger.logToPublicDiscord("uwu");
-        Logger.logToPrivateDiscord("uwu");
-        Logger.log("testing");
-        Logger.log("testing");
     }
 }
 

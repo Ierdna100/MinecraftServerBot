@@ -9,44 +9,36 @@ export class Logger {
     public static level = LogLevels.Details | LogLevels.Info | LogLevels.Errors | LogLevels.Warnings;
     public static printTimestamp = true;
 
-    public static logDetail(message: string, color = ANSICodes.Default, backgroundColor = ANSICodes.Default) {
+    public static detail(message: string, color = ANSICodes.Default, backgroundColor = ANSICodes.Default) {
         if ((Logger.level & LogLevels.Details) != 0) Logger.__internalLog(`[DETAIL] ${message}`, color, backgroundColor);
     }
 
-    public static log(message: string, color = ANSICodes.Default, backgroundColor = ANSICodes.Default) {
+    public static info(message: string, color = ANSICodes.Default, backgroundColor = ANSICodes.Default) {
         if ((Logger.level & LogLevels.Info) != 0) Logger.__internalLog(`[INFO] ${message}`, color, backgroundColor);
     }
 
-    public static logError(message: string, color = ANSICodes.ForeRed, backgroundColor = ANSICodes.Default) {
+    public static fatal(message: string, color = ANSICodes.ForeRed, backgroundColor = ANSICodes.Default) {
+        Logger.__internalLog(`[FATAL] ${message}`, color, backgroundColor);
+    }
+
+    public static error(message: string, color = ANSICodes.ForeRed, backgroundColor = ANSICodes.Default) {
         if ((Logger.level & LogLevels.Errors) != 0) Logger.__internalLog(`[ERROR] ${message}`, color, backgroundColor);
     }
 
-    public static logWarning(message: string, color = ANSICodes.ForeYellow, backgroundColor = ANSICodes.Default) {
+    public static warn(message: string, color = ANSICodes.ForeYellow, backgroundColor = ANSICodes.Default) {
         if ((Logger.level & LogLevels.Warnings) != 0) Logger.__internalLog(`[WARN] ${message}`, color, backgroundColor);
     }
 
-    public static logToPublicDiscord(message: string, printToConsole = true, color: ColorResolvable = "Aqua") {
+    public static broadcastPublic(message: string, printToConsole = true, color: ColorResolvable = "Aqua") {
         if (printToConsole) {
             Logger.__internalLog(`[PUBLIC] ${message}`, ANSICodes.ForeBlack, ANSICodes.BackCyan);
         }
     }
 
-    public static logToPrivateDiscord(message: string, printToConsole = true, color: ColorResolvable = "Aqua", pingModerator = false) {
+    public static broadcastPrivate(message: string, printToConsole = true, color: ColorResolvable = "Aqua", pingModerator = false) {
         if (printToConsole) {
             Logger.__internalLog(`[PRIVATE] ${message}`, ANSICodes.ForeBlack, ANSICodes.BackMagneta);
         }
-    }
-
-    public static info(data: string): void {
-        console.log(Logger.getLogTime() + data);
-    }
-
-    public static error(data: Error): void {
-        console.error("\u001b[31m" + Logger.getLogTime() + data.message + "\u001b[0m");
-    }
-
-    public static warn(data: string): void {
-        console.warn("\u001b[33m" + Logger.getLogTime() + data);
     }
 
     private static getLogTime(): string {
