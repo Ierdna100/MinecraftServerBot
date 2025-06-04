@@ -1,4 +1,6 @@
 build/
+bin/
+bkp/
 node_modules/
 testing/
 cache/
