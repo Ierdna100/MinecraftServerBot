@@ -7,5 +7,6 @@ cache/
 temp/
 .VSCodeCounter/
 testServer/
+logs/
 
 .env
