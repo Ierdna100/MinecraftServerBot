@@ -1,0 +1,26 @@
+kind: pipeline
+type: kubernetes
+name: default
+
+metadata:
+  namespace: drone
+
+steps:
+  - name: build-docker
+    image: plugins/docker
+    when:
+      branch:
+        - main
+      event:
+        include:
+          - push
+          - tag
+    settings:
+      repo: ghcr.io/Ierdna100/MinecraftServerBot
+      registry: ghcr.io
+      tags:
+        #- ${DRONE_TAG}
+        - latest
+      username: Ierdna100
+      password:
+        from_secret: github-token
