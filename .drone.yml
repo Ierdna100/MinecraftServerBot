@@ -16,11 +16,11 @@ steps:
           - push
           - tag
     settings:
-      repo: ghcr.io/Ierdna100/MinecraftServerBot
+      repo: ghcr.io/ierdna100/minecraftserverbot
       registry: ghcr.io
       tags:
         #- ${DRONE_TAG}
         - latest
-      username: Ierdna100
+      username: ierdna100
       password:
         from_secret: github-token
