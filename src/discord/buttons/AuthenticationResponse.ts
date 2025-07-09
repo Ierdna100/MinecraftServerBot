@@ -53,7 +53,7 @@ export class ButtonFactory_AcceptAuthentication extends ButtonFactoryBase {
 
                 MongoManager.collections.authenticatedUsers.insertOne({
                     discordUserId: userToAuthenticate.discordUserId,
-                    accounts: [{ minecraftName: userToAuthenticate.minecraftName, ipAddresses: [] }]
+                    accounts: [{ minecraftName: userToAuthenticate.minecraftName, ipAddresses: [], banned: false, minecraftUUID: "" }]
                 });
 
                 return editControlMessage(interaction, "Status: Authentication accepted", EmbedColors.green);
@@ -77,7 +77,7 @@ export class ButtonFactory_AcceptAuthentication extends ButtonFactoryBase {
 
                 Logger.info(`User with ID ${userToAuthenticate.discordUserId} was successfully authenticated!`);
 
-                existingUser.accounts.push({ minecraftName: userToAuthenticate.minecraftName, ipAddresses: [] });
+                existingUser.accounts.push({ minecraftName: userToAuthenticate.minecraftName, ipAddresses: [], banned: false, minecraftUUID: "" });
                 MongoManager.collections.authenticatedUsers.replaceOne({ _id: existingUser._id }, existingUser);
 
                 return editControlMessage(interaction, "Status: Authentication accepted", EmbedColors.green);
