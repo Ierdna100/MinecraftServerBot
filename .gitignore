@@ -1,9 +1,14 @@
 build/
+bin/*
+!bin/Install.js
+bkp/
 node_modules/
 testing/
 cache/
 temp/
 .VSCodeCounter/
 testServer/
+logs/
 
 .env
+.env.json
