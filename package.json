@@ -5,10 +5,10 @@
     "main": "index.js",
     "scripts": {
         "build": "npx tsc",
-        "run": "node ./build/Application.js",
+        "run": "node ./bin/Application.js",
         "bnr": "npm run build & npm run run",
-        "register": "node ./build/buildUtils/Register.js",
-        "install": "node ./build/buildUtils/Install.js",
+        "register": "node ./bin/RegisterCommands.js",
+        "install": "node ./bin/Install.js",
         "init": "npm run install & npm run build & npm run register",
         "prettier-watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}"
     },
@@ -21,7 +21,7 @@
     },
     "dependencies": {
         "body-parser": "^1.20.2",
-        "discord.js": "^14.14.1",
+        "discord.js": "^14.21.0",
         "dotenv": "^16.3.1",
         "mongodb": "^6.3.0",
         "typescript": "^5.3.3",
