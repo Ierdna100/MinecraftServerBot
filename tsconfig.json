@@ -4,7 +4,7 @@
         "module": "ESNext",
         "moduleResolution": "Node",
         "checkJs": true,
-        "outDir": "build/",
+        "outDir": "bin/",
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "strict": true,
@@ -12,5 +12,6 @@
         "noImplicitThis": true,
         "skipLibCheck": true
     },
-    "include": ["src/"]
+    "include": ["./src/"],
+    "exclude": ["./bkp/"]
 }

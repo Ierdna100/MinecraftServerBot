@@ -16,19 +16,17 @@
         -   Server list: Time played (minutes? hours?)
 
 3. Test for Discord log mod
-4. Test death by player
-5. Proper death logs
-6. Add proper logging
-7. Server MOTD randomizer?
-8. Setgamerules (init script?)
-9. Rename "CollegeMod" to "andreimod" or smth
-10. Players metadata
+4. Add proper logging
+5. Server MOTD randomizer?
+6. Setgamerules (init script?)
+7. Rename "CollegeMod" to "andreimod" or smth
+8. Players metadata
     - Deaths
     - Kills
     - Time Played
     - Time Played This Session
-11. New stuff on internal leaderboards
-12. Add logging to DB
+9. New stuff on internal leaderboards
+10. Add logging to DB
 
 -   HTTP endpoint to restart WS connection
 -   Console args:

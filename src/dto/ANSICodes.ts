@@ -1,9 +1,11 @@
 export enum ANSICodes {
+    StartCharacter = "\u001b",
     Underline = "\u001b[4m",
     Bold = "\u001b[2m",
     Strike = "\u001b[9m",
     Italics = "\u001b[3m",
     Default = "\u001b[0m",
+    Clear = Default,
     ForeBlack = "\u001b[30m",
     ForeRed = "\u001b[31m",
     ForeGreen = "\u001b[32m",
