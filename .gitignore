@@ -1,6 +1,5 @@
 build/
-bin/*
-!bin/Install.js
+bin/
 bkp/
 node_modules/
 testing/
