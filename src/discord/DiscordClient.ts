@@ -33,7 +33,7 @@ export default class DiscordClient {
     }
 
     public async initialize() {
-        this.client = new Client({ intents: [IntentsBitField.Flags.Guilds] });
+        this.client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.DirectMessages] });
 
         Logger.info("Initializing Discord client...", ANSICodes.ForeCyan);
 
