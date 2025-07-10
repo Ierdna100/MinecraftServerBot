@@ -10,7 +10,7 @@
         "register": "node ./bin/RegisterCommands.js",
         "postbuild": "node ./bin/Install.js",
         "init": "npm run install & npm run build & npm run register",
-        "prettier-watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}",
+        "prettier-watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}"
     },
     "author": "",
     "license": "ISC",
