@@ -1,11 +1,11 @@
-import { Server } from "ws";
+import { WebSocketServer } from "ws";
 import { EnvManager } from "../EnvManager.js";
 import WebsocketConnection from "./WebsocketConnection.js";
 
 export default class WSServer {
     public static instance: WSServer;
 
-    public server: Server;
+    public server: WebSocketServer;
     private connections: WebsocketConnection[] = [];
 
     constructor() {
@@ -13,7 +13,7 @@ export default class WSServer {
     }
 
     public initialize() {
-        this.server = new Server({ port: EnvManager.env.websocketPort });
+        this.server = new WebSocketServer({ port: EnvManager.env.websocketPort });
         this.server.on("connection", (websocket) => new WebsocketConnection(websocket));
     }
 
