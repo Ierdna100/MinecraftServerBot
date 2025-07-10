@@ -37,7 +37,13 @@ export default class SlashCommand_RequestAuthentication extends SlashCommandBase
             }
         }
 
-        const autoAuthenticate = (interaction.member?.roles as GuildMemberRoleManager).cache.has(EnvManager.env.autoAuthenticateRoleId);
+        // If not in a DM
+        let autoAuthenticate = !interaction.channel!.isDMBased();
+        // And is in the server with the bot
+        autoAuthenticate &&= DiscordClient.instance.publicBroadcastChannel.guild.members.cache.has(userId);
+        // And has role for auto-authentication
+        autoAuthenticate &&= (interaction.member?.roles as GuildMemberRoleManager).cache.has(EnvManager.env.autoAuthenticateRoleId);
+
         if (autoAuthenticate) {
             if (existingUser != null) {
                 existingUser.accounts.push({ minecraftName: minecraftName, banned: false, minecraftUUID: "", ipAddresses: [] });
