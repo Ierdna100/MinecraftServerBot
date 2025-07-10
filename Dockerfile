@@ -10,5 +10,6 @@ COPY tsconfig.json /app
 
 RUN npm install
 RUN npm run build
+RUN npm run postbuild
 
 ENTRYPOINT ["npm", "run", "run"]
