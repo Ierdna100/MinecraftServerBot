@@ -12,10 +12,10 @@ export class Application {
 
     constructor() {
         Application.instance = this;
-        try {
-            EnvManager.readAndParse();
-        } catch (error: any) {
-            Logger.fatal(error);
+
+        const success = EnvManager.readAndParse();
+        if (!success.success) {
+            success.errors.forEach((e) => Logger.fatal(e));
             return;
         }
 

@@ -2,16 +2,18 @@ import fs from "fs";
 import { Logger } from "./logging/Logger.js";
 import { ANSICodes } from "./dto/ANSICodes.js";
 
-const envFilepath = "./.env.json";
+const envFilepath = "./env/.env.json";
 
 export class EnvManager {
     public static env: EnvFileFields;
 
-    public static readAndParse() {
+    public static readAndParse(): { success: true } | { success: false; errors: string[] } {
         if (!fs.existsSync(envFilepath)) {
             fs.writeFileSync(envFilepath, JSON.stringify(new EnvFileFields(), null, "\t"));
             throw new Error("Environnement file does not exist! Automatically created file, please fill it in!");
         }
+
+        const errors: string[] = [];
 
         const envFileJSON = JSON.parse(fs.readFileSync(envFilepath).toString());
 
@@ -35,21 +37,32 @@ export class EnvManager {
             if (typeof envFileFields[key as keyof EnvFileFields] == "number") {
                 const value = parseFloat(envFileJSON[key]);
                 if (Number.isNaN(value)) {
-                    throw new Error(`Environnement variable with key '${key}' was expected to be a number, but parsing it returned NaN!`);
+                    errors.push(`Environnement variable with key '${key}' was expected to be a number, but parsing it returned NaN!`);
+                    continue;
                 }
                 (envFileFields[key as keyof EnvFileFields] as number) = value;
-            } else {
-                (envFileFields[key as keyof EnvFileFields] as any) = envFileJSON[key];
+            } else if (typeof envFileFields[key as keyof EnvFileFields] == "string") {
+                const value = (envFileJSON[key] as string).trim();
+                if (value == "") {
+                    errors.push(`Environnement variable with key '${key}' was expected to be a string, but it is empty!`);
+                    continue;
+                }
+                (envFileFields[key as keyof EnvFileFields] as any) = value;
             }
 
             remainingFieldKeys.splice(remainingFieldKeys.indexOf(key), 1);
         }
 
         if (remainingFieldKeys.length != 0) {
-            throw new Error(`Environnement variable with key '${remainingFieldKeys[0]}' not set to a value! Please fill out the .env file!`);
+            errors.push(`Environnement variable with key '${remainingFieldKeys[0]}' not set to a value! Please fill out the .env file!`);
+        }
+
+        if (errors.length != 0) {
+            return { success: false, errors: errors };
         }
 
         EnvManager.env = envFileFields;
+        return { success: true };
     }
 }
 

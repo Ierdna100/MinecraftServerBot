@@ -5,6 +5,9 @@ export default class Application {
         if (!fs.existsSync("./logs")) {
             fs.mkdirSync("./logs");
         }
+        if (!fs.existsSync("./env")) {
+            fs.mkdirSync("./env");
+        }
         try {
             EnvManager.readAndParse();
         } catch {} //ignore
