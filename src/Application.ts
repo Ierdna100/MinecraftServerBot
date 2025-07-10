@@ -20,10 +20,9 @@ export class Application {
         }
 
         Logger.info("Initializing Discord bridge");
-        new MongoManager();
-        new DiscordClient();
-        new WSServer();
-        Logger.info("Discord bridge initialized and ready!");
+        new MongoManager().initialize();
+        new DiscordClient().initialize();
+        new WSServer().initialize();
     }
 }
 

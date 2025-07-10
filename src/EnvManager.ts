@@ -76,7 +76,7 @@ export class EnvFileFields {
     coll_overloads = "overloads";
     coll_allowedMembers = "allowedMembers";
     coll_awaitingMembers = "awaitingMembers";
-    cool_bannedIps = "ipBans";
+    coll_bannedIps = "ipBans";
     coll_confirmingIps = "ipConfirms";
 
     publicBroadcastChannelId = "";

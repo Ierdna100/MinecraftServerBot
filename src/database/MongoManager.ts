@@ -29,7 +29,7 @@ export default class MongoManager {
             authenticatedUsers: this.db.collection<Schema_AuthenticatedUser>(EnvManager.env.coll_allowedMembers),
             awaitingAuthenticationUsers: this.db.collection<Schema_AwaitingAuthenticationUser>(EnvManager.env.coll_awaitingMembers),
             awaitingIPConfirms: this.db.collection<Schema_IPConfirmation>(EnvManager.env.coll_confirmingIps),
-            bannedIPs: this.db.collection<Schema_IPBans>(EnvManager.env.cool_bannedIps)
+            bannedIPs: this.db.collection<Schema_IPBans>(EnvManager.env.coll_bannedIps)
         };
         Logger.detail("Mongo client ready!");
     }
