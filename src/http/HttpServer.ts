@@ -3,7 +3,7 @@ import { Logger } from "../logging/Logger.js";
 import { EnvManager } from "../EnvManager.js";
 
 export default class HTTPServer {
-    constructor() {
+    public initialize() {
         const server = express();
 
         server.get("/health", (req, res) => this.healthCheck(req, res));

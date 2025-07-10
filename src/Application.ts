@@ -2,6 +2,7 @@ import MongoManager from "./database/MongoManager.js";
 import DiscordClient from "./discord/DiscordClient.js";
 import { ANSICodes } from "./dto/ANSICodes.js";
 import { EnvFileFields, EnvManager } from "./EnvManager.js";
+import HTTPServer from "./http/HttpServer.js";
 import { Logger } from "./logging/Logger.js";
 import WSServer from "./wss/WSServer.js";
 
@@ -23,6 +24,7 @@ export class Application {
         new MongoManager().initialize();
         new DiscordClient().initialize();
         new WSServer().initialize();
+        new HTTPServer().initialize();
     }
 }
 
