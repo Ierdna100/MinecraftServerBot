@@ -1,11 +1,12 @@
 import { RawData, WebSocket } from "ws";
 import WSServer from "./WSServer.js";
 import { Logger } from "../logging/Logger.js";
-import { WebsocketData } from "./dto/MessageSchemas.js";
 import { websocketResponses } from "./InteractionHandlers.js";
+import { WSOpcodes } from "./dto/WSOpcodes.js";
 
 export default class WebsocketConnection {
-    private websocket: WebSocket;
+    public websocket: WebSocket;
+    private ready = false;
 
     constructor(ws: WebSocket) {
         WSServer.instance.registerConnection(this);
@@ -18,15 +19,25 @@ export default class WebsocketConnection {
         ws.on("message", (ws: WebSocket, data: RawData, isBinary: boolean) => this.onMessage(data.toString()));
     }
 
-    private onMessage(data: string) {
-        let structuredData = JSON.parse(data) as WebsocketData;
+    public authenticate() {
+        this.ready = true;
+    }
 
-        for (const handler of websocketResponses) {
-            if (handler.opCode == structuredData.opcode) {
-                handler.handle(this.websocket, structuredData);
-                break;
-            }
+    public reply(opcode: WSOpcodes, data: any | null) {
+        if (!this.ready) return;
+        this.websocket.send(JSON.stringify({ opcode: opcode, data: data }));
+    }
+
+    private onMessage(data: string) {
+        let structuredData = JSON.parse(data) as { opcode: number; data: any };
+
+        const handler = websocketResponses[structuredData.opcode as WSOpcodes];
+        if (handler == undefined) {
+            Logger.fatal(`Invalid Websocket opcode '${structuredData.opcode}'`);
+            throw new Error(`Invalid Websocket opcode '${structuredData.opcode}'`);
         }
+
+        handler.handle(this, structuredData.data);
     }
 
     private onClose(code: number, reason: string) {}

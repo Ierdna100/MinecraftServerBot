@@ -1,9 +1,9 @@
 import { WebSocket } from "ws";
 import { WSOpcodes } from "../dto/WSOpcodes.js";
-import { WebsocketData } from "../dto/MessageSchemas.js";
+import WebsocketConnection from "../WebsocketConnection.js";
 
-export default abstract class BaseWSInteractionHandler<T extends WebsocketData> {
-    abstract opCode: T["opcode"];
+export default abstract class BaseWSInteractionHandler {
+    abstract opCode: WSOpcodes;
 
-    abstract handle(socket: WebSocket, data: T): Promise<void>;
+    abstract handle(conn: WebsocketConnection, data: any): Promise<void>;
 }

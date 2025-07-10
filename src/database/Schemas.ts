@@ -16,3 +16,9 @@ export type Schema_AwaitingAuthenticationUser = {
     discordUserId: string;
     minecraftName: string;
 };
+
+export type Schema_IPConfirmation = {
+    userToModifyMongoId: string;
+    minecraftName: string;
+    ipToAdd: string;
+};

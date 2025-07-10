@@ -9,11 +9,14 @@ import {
     WSPlayerJoinSuccessHandler
 } from "./interactionHandlers/PlayerJoinHandler.js";
 
-// prettier-ignore
-export const websocketResponses: Record<WSOpcodes, BaseWSInteractionHandler> = [
-    new WSAuthenticationHandler(),
-    new WSPlayerJoinSuccessHandler(),
-    new WSPlayerJoinFailIPBannedHandler(),
-    new WSPlayerJoinFailNotWhitelistedHandler(),
-    new WSPlayerJoinFailUnregisteredIPHandler(),
-];
+type WSResMap = {
+    [K in WSOpcodes]: BaseWSInteractionHandler;
+};
+
+export const websocketResponses: Partial<WSResMap> = {
+    [WSOpcodes.M2D_AuthenticationRequest]: new WSAuthenticationHandler(),
+    [WSOpcodes.M2D_PlayerJoinSuccess]: new WSPlayerJoinSuccessHandler(),
+    [WSOpcodes.M2D_PlayerJoinFail_IPBanned]: new WSPlayerJoinFailIPBannedHandler(),
+    [WSOpcodes.M2D_PlayerJoinFail_NotWhitelisted]: new WSPlayerJoinFailNotWhitelistedHandler(),
+    [WSOpcodes.M2D_PlayerJoinFail_UnregisteredIP]: new WSPlayerJoinFailUnregisteredIPHandler()
+};
