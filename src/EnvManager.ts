@@ -60,6 +60,8 @@ export class EnvFileFields {
     token = "";
     clientId = "";
 
+    httpPort = 8000;
+
     websocketPort = 7500;
     websocketPassword = crypto.randomUUID();
 

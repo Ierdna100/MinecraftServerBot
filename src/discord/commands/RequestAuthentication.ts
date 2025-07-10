@@ -40,13 +40,13 @@ export default class SlashCommand_RequestAuthentication extends SlashCommandBase
         const autoAuthenticate = (interaction.member?.roles as GuildMemberRoleManager).cache.has(EnvManager.env.autoAuthenticateRoleId);
         if (autoAuthenticate) {
             if (existingUser != null) {
-                existingUser.accounts.push({ minecraftName: minecraftName, ipAddresses: [] });
+                existingUser.accounts.push({ minecraftName: minecraftName, banned: false, minecraftUUID: "", ipAddresses: [] });
                 await MongoManager.collections.authenticatedUsers.replaceOne({ _id: existingUser._id }, existingUser);
                 return this.success("Your new account is now authenticated!");
             } else {
                 await MongoManager.collections.authenticatedUsers.insertOne({
                     discordUserId: userId,
-                    accounts: [{ minecraftName: minecraftName, ipAddresses: [] }]
+                    accounts: [{ minecraftName: minecraftName, banned: false, minecraftUUID: "", ipAddresses: [] }]
                 });
                 return this.success("Your account is now authenticated!");
             }

@@ -6,5 +6,4 @@ export default class Application {
         EnvManager.readAndParse();
     }
 }
-
 new Application();
