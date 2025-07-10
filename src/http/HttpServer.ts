@@ -12,5 +12,7 @@ export default class HTTPServer {
         });
     }
 
-    private healthCheck(req: Request, res: Response) {}
+    private healthCheck(req: Request, res: Response) {
+        res.status(200).send();
+    }
 }
