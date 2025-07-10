@@ -5,7 +5,9 @@ import { ANSICodes } from "./dto/ANSICodes.js";
 const envFilepath = "./.env.json";
 
 export class EnvManager {
-    public static readAndParse(): EnvFileFields {
+    public static env: EnvFileFields;
+
+    public static readAndParse() {
         if (!fs.existsSync(envFilepath)) {
             fs.writeFileSync(envFilepath, JSON.stringify(new EnvFileFields(), null, "\t"));
             throw new Error("Environnement file does not exist! Automatically created file, please fill it in!");
@@ -47,26 +49,44 @@ export class EnvManager {
             throw new Error(`Environnement variable with key '${remainingFieldKeys[0]}' not set to a value! Please fill out the .env file!`);
         }
 
-        return envFileFields;
+        EnvManager.env = envFileFields;
     }
 }
 
 export class EnvFileFields {
-    public firstWeek = 0;
-    public token = "";
-    public clientId = "";
-    public dbConnectionString = "";
-    public dbName = "";
-    public updateChannelId = "";
-    public updateFreqSec = 0;
+    mongoConnectionString = "mongodb://localhost:27017";
+    mongoDatabaseName = "minecraft";
 
-    public coll_auth = "";
-    public coll_bans = "";
-    public coll_daysoff = "";
-    public coll_schedules = "";
-    public coll_periodicMessages = "";
-    public coll_scheduleLogs = "";
-    public coll_flippedDays = "";
+    token = "";
+    clientId = "";
+
+    httpPort = 8000;
+
+    websocketPort = 7500;
+    websocketPassword = crypto.randomUUID();
+
+    coll_serverData = "serverData";
+    coll_messages = "messages";
+    coll_deaths = "deaths";
+    coll_starts = "serverStarts";
+    coll_stops = "serverStops";
+    coll_disconnects = "playerDisconnects";
+    coll_connects = "playerConnects";
+    coll_advancements = "advancements";
+    coll_overloads = "overloads";
+    coll_allowedMembers = "allowedMembers";
+    coll_awaitingMembers = "awaitingMembers";
+    cool_bannedIps = "ipBans";
+    coll_confirmingIps = "ipConfirms";
+
+    publicBroadcastChannelId = "";
+    privateBroadcastChannelId = "";
+    authenticationRequestsChannelId = "";
+
+    authenticationRequestsPingRoleId = "";
+    autoAuthenticateRoleId = "";
+
+    backupTimeHours = 2400;
 
     constructor() {}
 }

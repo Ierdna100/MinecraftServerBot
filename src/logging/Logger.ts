@@ -1,7 +1,8 @@
 import { ANSICodes } from "../dto/ANSICodes.js";
 import fs, { WriteStream } from "fs";
 import { LogLevels } from "../dto/LogLevels.js";
-import { ColorResolvable } from "discord.js";
+import { ColorResolvable, MessageCreateOptions, MessagePayload } from "discord.js";
+import DiscordClient from "../discord/DiscordClient.js";
 
 export class Logger {
     private static lastFileDate: Date;
@@ -13,7 +14,7 @@ export class Logger {
         if ((Logger.level & LogLevels.Details) != 0) Logger.__internalLog(`[DETAIL] ${message}`, color, backgroundColor);
     }
 
-    public static info(message: string, color = ANSICodes.Default, backgroundColor = ANSICodes.Default) {
+    public static info(message: string, color = ANSICodes.ForeCyan, backgroundColor = ANSICodes.Default) {
         if ((Logger.level & LogLevels.Info) != 0) Logger.__internalLog(`[INFO] ${message}`, color, backgroundColor);
     }
 
@@ -29,16 +30,22 @@ export class Logger {
         if ((Logger.level & LogLevels.Warnings) != 0) Logger.__internalLog(`[WARN] ${message}`, color, backgroundColor);
     }
 
-    public static broadcastPublic(message: string, printToConsole = true, color: ColorResolvable = "Aqua") {
+    public static broadcastPublic(message: MessageCreateOptions, printToConsole = true) {
         if (printToConsole) {
-            Logger.__internalLog(`[PUBLIC] ${message}`, ANSICodes.ForeBlack, ANSICodes.BackCyan);
+            Logger.__internalLog(`[PUBLIC] ${message.content}`, ANSICodes.ForeBlack, ANSICodes.BackCyan);
         }
+
+        if (!DiscordClient.instance.ready) return;
+        DiscordClient.instance.publicBroadcastChannel.send(message);
     }
 
-    public static broadcastPrivate(message: string, printToConsole = true, color: ColorResolvable = "Aqua", pingModerator = false) {
+    public static broadcastPrivate(message: MessageCreateOptions, printToConsole = true) {
         if (printToConsole) {
-            Logger.__internalLog(`[PRIVATE] ${message}`, ANSICodes.ForeBlack, ANSICodes.BackMagneta);
+            Logger.__internalLog(`[PRIVATE] ${message.content}`, ANSICodes.ForeBlack, ANSICodes.BackMagneta);
         }
+
+        if (!DiscordClient.instance.ready) return;
+        DiscordClient.instance.privateBroadcastChannel.send(message);
     }
 
     private static getLogTime(): string {
@@ -93,7 +100,7 @@ export class Logger {
         let filepath = `./logs/${filename}`;
 
         if (fs.existsSync(filepath)) {
-            Logger.logStream = fs.createWriteStream(filepath, { flags: "a" });
+            Logger.logStream = fs.createWriteStream(filepath, { flags: "a" }); // flag "a": append to file
             Logger.lastFileDate = timestamp;
             return;
         } else {

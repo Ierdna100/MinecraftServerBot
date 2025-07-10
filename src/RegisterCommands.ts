@@ -1,23 +1,23 @@
 import { REST, Routes } from "discord.js";
-import * as configDotenv from "dotenv";
 import fs from "fs";
-import { BaseCommand } from "./dto/BaseCommand.js";
+import { EnvManager } from "./EnvManager.js";
+import { slashComamnds } from "./discord/InteractionHandlers.js";
 
 async function refreshCommands() {
-    configDotenv.config();
+    EnvManager.readAndParse();
 
-    let commands = [];
-
-    for (const file of fs.readdirSync("./build/discordServer/commands")) {
-        let command: { default: new () => BaseCommand } = await import(`./discordServer/commands/${file}`);
-        commands.push(new command.default().commandBuilder.toJSON());
-    }
-
-    const rest = new REST().setToken(process.env.TOKEN || "");
+    const rest = new REST().setToken(EnvManager.env.token || "");
 
     console.log("Refreshing commands");
 
-    await rest.put(Routes.applicationCommands(process.env.CLIENT_ID || ""), { body: commands });
+    let commands = [];
+
+    for (const command of slashComamnds) {
+        commands.push(command.commandBuilder);
+        console.log(`Found command '${command.commandBuilder.name}': '${command.commandBuilder.description}'`);
+    }
+
+    await rest.put(Routes.applicationCommands(EnvManager.env.clientId || ""), { body: commands });
 
     console.log("Finished refreshing commands");
 }
