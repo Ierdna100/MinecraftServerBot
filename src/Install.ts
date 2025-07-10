@@ -1,5 +1,7 @@
 import fs from "fs";
 import { EnvManager } from "./EnvManager.js";
+import { Logger } from "./logging/Logger.js";
+
 export default class Application {
     constructor() {
         if (!fs.existsSync("./logs")) {
@@ -8,9 +10,10 @@ export default class Application {
         if (!fs.existsSync("./env")) {
             fs.mkdirSync("./env");
         }
-        try {
-            EnvManager.readAndParse();
-        } catch {} //ignore
+        const success = EnvManager.readAndParse();
+        if (!success.success) {
+            success.errors.forEach((e) => Logger.fatal(e));
+        }
     }
 }
 

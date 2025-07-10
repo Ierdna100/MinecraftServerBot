@@ -8,12 +8,13 @@ export class EnvManager {
     public static env: EnvFileFields;
 
     public static readAndParse(): { success: true } | { success: false; errors: string[] } {
+        const errors: string[] = [];
+
         if (!fs.existsSync(envFilepath)) {
             fs.writeFileSync(envFilepath, JSON.stringify(new EnvFileFields(), null, "\t"));
-            throw new Error("Environnement file does not exist! Automatically created file, please fill it in!");
+            errors.push("Environnement file does not exist! Automatically created file, please fill it in!");
+            return { success: false, errors: errors };
         }
-
-        const errors: string[] = [];
 
         const envFileJSON = JSON.parse(fs.readFileSync(envFilepath).toString());
 

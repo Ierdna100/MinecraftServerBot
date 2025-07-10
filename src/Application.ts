@@ -13,8 +13,6 @@ export class Application {
     constructor() {
         Application.instance = this;
 
-        Logger.info(process.cwd());
-
         const success = EnvManager.readAndParse();
         if (!success.success) {
             success.errors.forEach((e) => Logger.fatal(e));
