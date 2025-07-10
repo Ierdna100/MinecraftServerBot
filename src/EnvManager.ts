@@ -1,6 +1,7 @@
 import fs from "fs";
 import { Logger } from "./logging/Logger.js";
 import { ANSICodes } from "./dto/ANSICodes.js";
+import path from "path";
 
 const envFilepath = "./env/.env.json";
 
@@ -10,6 +11,7 @@ export class EnvManager {
     public static readAndParse(): { success: true } | { success: false; errors: string[] } {
         const errors: string[] = [];
 
+        Logger.detail(`Using env file at ${path.resolve(envFilepath)}`);
         if (!fs.existsSync(envFilepath)) {
             fs.writeFileSync(envFilepath, JSON.stringify(new EnvFileFields(), null, "\t"));
             errors.push("Environnement file does not exist! Automatically created file, please fill it in!");
