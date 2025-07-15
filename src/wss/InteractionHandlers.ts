@@ -1,4 +1,3 @@
-import { WebsocketData } from "./dto/MessageSchemas.js";
 import { WSOpcodes } from "./dto/WSOpcodes.js";
 import WSAuthenticationHandler from "./interactionHandlers/AuthenticationHandler.js";
 import BaseWSInteractionHandler from "./interactionHandlers/BaseInteractionHandler.js";

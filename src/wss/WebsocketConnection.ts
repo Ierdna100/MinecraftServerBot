@@ -13,13 +13,18 @@ export default class WebsocketConnection {
 
         this.websocket = ws;
 
-        ws.on("open", () => Logger.info(`New websocket connectioned opened.`));
-        ws.on("error", (ws: WebSocket, error: Error) => this.onError(error));
-        ws.on("close", (ws: WebSocket, code: number, reason: Buffer) => this.onClose(code, reason.toString()));
-        ws.on("message", (ws: WebSocket, data: RawData, isBinary: boolean) => this.onMessage(data.toString()));
+        ws.on("open", () => this.onConnection());
+        ws.on("error", (error: Error) => this.onError(error));
+        ws.on("close", (code: number, reason: Buffer) => this.onClose(code, reason.toString()));
+        ws.on("message", (data: RawData, isBinary: boolean) => this.onMessage(data.toString()));
+    }
+
+    public onConnection() {
+        Logger.info(`New websocket connectioned opened.`);
     }
 
     public authenticate() {
+        Logger.info(`New websocket connectioned authenticated.`);
         this.ready = true;
     }
 
@@ -37,10 +42,15 @@ export default class WebsocketConnection {
             throw new Error(`Invalid Websocket opcode '${structuredData.opcode}'`);
         }
 
+        Logger.detail(`Received websocket opcode ${structuredData.opcode} with data ${JSON.stringify(structuredData.data)}`);
         handler.handle(this, structuredData.data);
     }
 
-    private onClose(code: number, reason: string) {}
+    private onClose(code: number, reason: string) {
+        Logger.info(`Websocket closed with code ${code}: ${reason.trim() == "" ? "No reason" : reason}`);
+    }
 
-    private onError(error: Error) {}
+    private onError(error: Error) {
+        Logger.error(error.stack == undefined ? error.message : error.stack);
+    }
 }

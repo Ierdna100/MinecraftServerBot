@@ -1,6 +1,7 @@
 import { WebSocketServer } from "ws";
 import { EnvManager } from "../EnvManager.js";
 import WebsocketConnection from "./WebsocketConnection.js";
+import { Logger } from "../logging/Logger.js";
 
 export default class WSServer {
     public static instance: WSServer;
@@ -13,6 +14,7 @@ export default class WSServer {
     }
 
     public initialize() {
+        Logger.info("Initializing websocket...");
         this.server = new WebSocketServer({ port: EnvManager.env.websocketPort });
         this.server.on("connection", (websocket) => new WebsocketConnection(websocket));
     }
