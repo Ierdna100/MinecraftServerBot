@@ -50,7 +50,15 @@ export class EnvManager {
                     errors.push(`Environnement variable with key '${key}' was expected to be a string, but it is empty!`);
                     continue;
                 }
-                (envFileFields[key as keyof EnvFileFields] as any) = value;
+                (envFileFields[key as keyof EnvFileFields] as string) = value;
+            } else if (typeof envFileFields[key as keyof EnvFileFields] == "boolean") {
+                const value = envFileJSON[key] as boolean;
+                // let value: boolean | undefined = undefined;
+                // if (value == undefined) {
+                //     errors.push(`Environnement variable with key '${key}' was expected to be a boolean, but it is neither 'true' nor 'false'!`);
+                //     continue;
+                // }
+                (envFileFields[key as keyof EnvFileFields] as boolean) = value;
             }
 
             remainingFieldKeys.splice(remainingFieldKeys.indexOf(key), 1);
@@ -75,6 +83,9 @@ export class EnvFileFields {
 
     token = "";
     clientId = "";
+
+    logDetails = true;
+    logTimestamps = true;
 
     httpPort = 8000;
 

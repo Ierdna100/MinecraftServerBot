@@ -1,5 +1,6 @@
 import { ButtonFactory_AcceptAuthentication, ButtonFactory_RejectAuthentication } from "./buttons/AuthenticationResponse.js";
 import ButtonFactoryBase from "./buttons/ButtonBase.js";
+import { ButtonFactory_ConfirmIP, ButtonFactory_DenyIP } from "./buttons/UnregisteredIPResponse.js";
 import SlashCommand_Info from "./commands/Info.js";
 import SlashCommand_RequestAuthentication from "./commands/RequestAuthentication.js";
 import SlashCommandBase from "./commands/SlashCommandBase.js";
@@ -13,5 +14,7 @@ export const slashComamnds: SlashCommandBase[] = [
 // prettier-ignore
 export const buttons: ButtonFactoryBase[] = [
     new ButtonFactory_AcceptAuthentication(),
-    new ButtonFactory_RejectAuthentication()
+    new ButtonFactory_RejectAuthentication(),
+    new ButtonFactory_ConfirmIP(),
+    new ButtonFactory_DenyIP()
 ]
