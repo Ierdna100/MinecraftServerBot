@@ -19,6 +19,7 @@ export class Application {
             success.errors.forEach((e) => Logger.fatal(e));
             return;
         }
+        Logger.initializeLevelsFromSettings();
 
         Logger.info("Initializing Discord bridge");
         new MongoManager().initialize();

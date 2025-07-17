@@ -8,22 +8,22 @@ import { ActionRowBuilder, ButtonBuilder, EmbedBuilder } from "discord.js";
 import { Logger } from "../../logging/Logger.js";
 import MongoManager from "../../database/MongoManager.js";
 import { ButtonFactory_ConfirmIP, ButtonFactory_DenyIP } from "../../discord/buttons/UnregisteredIPResponse.js";
+import { EmbedColors } from "../../dto/EmbedColors.js";
 
 export class WSPlayerJoinSuccessHandler extends BaseWSInteractionHandler {
     public opCode = WSOpcodes.M2D_PlayerJoinSuccess as const;
 
     public async handle(conn: WebsocketConnection, data: PlayerJoin_Success): Promise<void> {
-        const publicEmbed = new EmbedBuilder().setTitle(`**${data.name}** joined the game!`);
         const privateEmbed = new EmbedBuilder()
             .setTitle(`**${data.name}** joined the game!`)
             .setFields([
                 { name: "IP", value: data.ip },
                 { name: "UUID", value: data.uuid }
             ])
+            .setColor(EmbedColors.green)
             .setTimestamp(new Date());
 
-        DiscordClient.instance.publicBroadcastChannel.send({ embeds: [publicEmbed] });
-        DiscordClient.instance.privateBroadcastChannel.send({ embeds: [privateEmbed] });
+        Logger.broadcastPrivate({ embeds: [privateEmbed] });
     }
 }
 
@@ -37,9 +37,10 @@ export class WSPlayerJoinFailIPBannedHandler extends BaseWSInteractionHandler {
                 { name: "IP", value: data.ip },
                 { name: "UUID", value: data.uuid }
             ])
+            .setColor(EmbedColors.red)
             .setTimestamp(new Date());
 
-        DiscordClient.instance.privateBroadcastChannel.send({ embeds: [privateEmbed] });
+        Logger.broadcastPrivate({ embeds: [privateEmbed] });
     }
 }
 
@@ -53,9 +54,10 @@ export class WSPlayerJoinFailNotWhitelistedHandler extends BaseWSInteractionHand
                 { name: "IP", value: data.ip },
                 { name: "UUID", value: data.uuid }
             ])
+            .setColor(EmbedColors.red)
             .setTimestamp(new Date());
 
-        DiscordClient.instance.privateBroadcastChannel.send({ embeds: [privateEmbed] });
+        Logger.broadcastPrivate({ embeds: [privateEmbed] });
     }
 }
 
@@ -69,9 +71,10 @@ export class WSPlayerJoinFailUnregisteredIPHandler extends BaseWSInteractionHand
                 { name: "IP", value: data.ip },
                 { name: "UUID", value: data.uuid }
             ])
+            .setColor(EmbedColors.red)
             .setTimestamp(new Date());
 
-        DiscordClient.instance.privateBroadcastChannel.send({ embeds: [privateEmbed] });
+        Logger.broadcastPrivate({ embeds: [privateEmbed] });
 
         const fullUser = await MongoManager.collections.authenticatedUsers.findOne({ accounts: { $elemMatch: { minecraftName: data.name } } });
         if (fullUser == null) {
@@ -101,9 +104,7 @@ export class WSPlayerJoinFailUnregisteredIPHandler extends BaseWSInteractionHand
 
         if (!success) {
             Logger.warn(`User with ID ${fullUser.discordUserId} is not reachable to confirm a new IP!`);
-            DiscordClient.instance.privateBroadcastChannel.send(
-                `User <@${fullUser.discordUserId}> (${fullUser.discordUserId}) is not reachable to confirm a new IP!`
-            );
+            Logger.broadcastPrivate(`User <@${fullUser.discordUserId}> (${fullUser.discordUserId}) is not reachable to confirm a new IP!`);
         }
     }
 }

@@ -47,7 +47,7 @@ export default class DiscordClient {
     public async onReady() {
         this.ready = true;
 
-        this.publicBroadcastChannel = await this.verifyChannel(EnvManager.env.privateBroadcastChannelId, "the public broadcasting channel");
+        this.publicBroadcastChannel = await this.verifyChannel(EnvManager.env.publicBroadcastChannelId, "the public broadcasting channel");
         this.privateBroadcastChannel = await this.verifyChannel(EnvManager.env.privateBroadcastChannelId, "the private broadcasting channel");
         this.authenticationRequestsChannel = await this.verifyChannel(EnvManager.env.authenticationRequestsChannelId, "the authentication requests channel");
 
@@ -78,13 +78,19 @@ export default class DiscordClient {
             for (const command of slashComamnds) {
                 if (command.commandBuilder.name == interaction.commandName) {
                     interaction.reply(await command.reply(interaction, userId, options));
+                    return;
                 }
             }
         } else if (interaction.isButton()) {
             const [relatedDatabaseObjectId, customButtonId] = interaction.customId.split(buttonIdSeparator);
+            Logger.detail("Button received!");
+            Logger.detail(`${relatedDatabaseObjectId} ${customButtonId}`);
             for (const button of buttons) {
+                Logger.detail(button.customButtonId);
                 if (button.customButtonId == customButtonId) {
+                    Logger.detail("Button matched!");
                     interaction.update(await button.onInteract(interaction, new ObjectId(relatedDatabaseObjectId), userId));
+                    return;
                 }
             }
         }
