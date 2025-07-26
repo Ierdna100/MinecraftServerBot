@@ -15,7 +15,7 @@ export class WSServerStartedHandler extends BaseWSInteractionHandler {
         // prettier-ignore
         const embed = new EmbedBuilder()
             .setTitle(`@here **Server started!**`)
-            .setColor(Colors.Green)
+            .setColor(Colors.DarkGreen)
             .setTimestamp(new Date());
 
         Logger.broadcastPublic({ embeds: [embed] });
@@ -45,7 +45,7 @@ export class WSServerStoppingHandler extends BaseWSInteractionHandler {
         // prettier-ignore
         const embed = new EmbedBuilder()
             .setTitle(`@here **Server stopping!**`)
-            .setColor(Colors.Green)
+            .setColor(Colors.DarkGreen)
             .setTimestamp(new Date());
 
         Logger.broadcastPublic({ embeds: [embed] });
@@ -59,7 +59,7 @@ export class WSGameSavedHandler extends BaseWSInteractionHandler {
         // prettier-ignore
         const embed = new EmbedBuilder()
             .setTitle(data.force ? `**Game saved forcefully.**` : `**Game saved automatically.**`)
-            .setColor(Colors.Green)
+            .setColor(Colors.DarkGreen)
             .setTimestamp(new Date());
 
         Logger.broadcastPrivate({ embeds: [embed] });

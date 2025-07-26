@@ -4,7 +4,7 @@ import { WSOpcodes } from "../dto/WSOpcodes.js";
 import BaseWSInteractionHandler from "./BaseInteractionHandler.js";
 import WebsocketConnection from "../WebsocketConnection.js";
 import DiscordClient from "../../discord/DiscordClient.js";
-import { ActionRowBuilder, ButtonBuilder, EmbedBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, Colors, EmbedBuilder } from "discord.js";
 import { Logger } from "../../logging/Logger.js";
 import MongoManager from "../../database/MongoManager.js";
 import { ButtonFactory_ConfirmIP, ButtonFactory_DenyIP } from "../../discord/buttons/UnregisteredIPResponse.js";
@@ -23,7 +23,7 @@ export class WSPlayerJoinSuccessHandler extends BaseWSInteractionHandler {
                 { name: "IP", value: data.ip },
                 { name: "UUID", value: data.uuid }
             ])
-            .setColor(EmbedColors.green)
+            .setColor(Colors.DarkGreen)
             .setTimestamp(new Date());
 
         Logger.broadcastPrivate({ embeds: [privateEmbed] });
@@ -40,13 +40,13 @@ export class WSPlayerJoinHandler extends BaseWSInteractionHandler {
                 { name: "IP", value: data.ip },
                 { name: "UUID", value: data.uuid }
             ])
-            .setColor(EmbedColors.green)
+            .setColor(Colors.DarkGreen)
             .setTimestamp(new Date());
 
         // prettier-ignore
         const publicEmbed = new EmbedBuilder()
             .setTitle(`**${data.name}** joined the game!`)
-            .setColor(EmbedColors.green)
+            .setColor(Colors.DarkGreen)
             .setTimestamp(new Date());
 
         MongoManager.collections.authenticatedUsers.findOneAndUpdate(
@@ -75,7 +75,7 @@ export class WSPlayerJoinFailIPBannedHandler extends BaseWSInteractionHandler {
                 { name: "IP", value: data.ip },
                 { name: "UUID", value: data.uuid }
             ])
-            .setColor(EmbedColors.red)
+            .setColor(Colors.Red)
             .setTimestamp(new Date());
 
         Logger.broadcastPrivate({ embeds: [privateEmbed] });
@@ -92,7 +92,7 @@ export class WSPlayerJoinFailNotWhitelistedHandler extends BaseWSInteractionHand
                 { name: "IP", value: data.ip },
                 { name: "UUID", value: data.uuid }
             ])
-            .setColor(EmbedColors.red)
+            .setColor(Colors.Red)
             .setTimestamp(new Date());
 
         Logger.broadcastPrivate({ embeds: [privateEmbed] });
@@ -109,7 +109,7 @@ export class WSPlayerJoinFailUnregisteredIPHandler extends BaseWSInteractionHand
                 { name: "IP", value: data.ip },
                 { name: "UUID", value: data.uuid }
             ])
-            .setColor(EmbedColors.red)
+            .setColor(Colors.Red)
             .setTimestamp(new Date());
 
         Logger.broadcastPrivate({ embeds: [privateEmbed] });

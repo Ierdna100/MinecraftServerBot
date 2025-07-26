@@ -1,4 +1,4 @@
-import { EmbedBuilder } from "discord.js";
+import { Colors, EmbedBuilder } from "discord.js";
 import { WSOpcodes } from "../dto/WSOpcodes.js";
 import WebsocketConnection from "../WebsocketConnection.js";
 import BaseWSInteractionHandler from "./BaseInteractionHandler.js";
@@ -20,7 +20,7 @@ export default class WSPlayerLeftHandler extends BaseWSInteractionHandler {
         // prettier-ignore
         const embed = new EmbedBuilder()
             .setTitle(`**${user.accounts[0].minecraftName}** left the game: ${data.reason}!`)
-            .setColor(EmbedColors.red)
+            .setColor(Colors.Red)
             .setTimestamp(new Date());
 
         Logger.broadcastPublic({ embeds: [embed] });
