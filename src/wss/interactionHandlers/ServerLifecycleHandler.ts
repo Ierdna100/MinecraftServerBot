@@ -28,7 +28,7 @@ export class WSServerStoppedHandler extends BaseWSInteractionHandler {
         // prettier-ignore
         const embed = new EmbedBuilder()
             .setTitle(`**Server stopped.**`)
-            .setColor(Colors.Red)
+            .setColor(EmbedColors.Red)
             .setTimestamp(new Date());
 
         Logger.broadcastPublic({ embeds: [embed] });
