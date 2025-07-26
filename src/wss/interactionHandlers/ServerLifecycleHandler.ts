@@ -5,6 +5,7 @@ import { WSOpcodes } from "../dto/WSOpcodes.js";
 import WebsocketConnection from "../WebsocketConnection.js";
 import BaseWSInteractionHandler from "./BaseInteractionHandler.js";
 import { ServerInfoPermanentMessage } from "../../discord/permamessages/PermanentMessages.js";
+import { EmbedColors } from "../../dto/EmbedColors.js";
 
 export class WSServerStartedHandler extends BaseWSInteractionHandler {
     public opCode = WSOpcodes.M2D_ServerStarted as const;
@@ -14,8 +15,8 @@ export class WSServerStartedHandler extends BaseWSInteractionHandler {
 
         // prettier-ignore
         const embed = new EmbedBuilder()
-            .setTitle(`@here **Server started!**`)
-            .setColor(Colors.DarkGreen)
+            .setTitle(`@everyone **Server started!**`)
+            .setColor(EmbedColors.Green)
             .setTimestamp(new Date());
 
         Logger.broadcastPublic({ embeds: [embed] });
@@ -44,8 +45,8 @@ export class WSServerStoppingHandler extends BaseWSInteractionHandler {
 
         // prettier-ignore
         const embed = new EmbedBuilder()
-            .setTitle(`@here **Server stopping!**`)
-            .setColor(Colors.DarkGreen)
+            .setTitle(`@everyone **Server stopping!**`)
+            .setColor(EmbedColors.Green)
             .setTimestamp(new Date());
 
         Logger.broadcastPublic({ embeds: [embed] });
@@ -59,7 +60,7 @@ export class WSGameSavedHandler extends BaseWSInteractionHandler {
         // prettier-ignore
         const embed = new EmbedBuilder()
             .setTitle(data.force ? `**Game saved forcefully.**` : `**Game saved automatically.**`)
-            .setColor(Colors.DarkGreen)
+            .setColor(EmbedColors.Green)
             .setTimestamp(new Date());
 
         Logger.broadcastPrivate({ embeds: [embed] });

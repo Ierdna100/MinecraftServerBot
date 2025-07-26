@@ -20,7 +20,7 @@ export default abstract class SlashCommandBase {
     protected success(message: string, title: string): InteractionReplyOptions;
     protected success(message: string, title: string, onlyEmbed: true): EmbedBuilder;
     protected success(message: string, title = "Success!", onlyEmbed = false): InteractionReplyOptions | EmbedBuilder {
-        const embedBuilder = new EmbedBuilder().setTitle(title).setDescription(message).setColor(EmbedColors.green).setTimestamp(new Date());
+        const embedBuilder = new EmbedBuilder().setTitle(title).setDescription(message).setColor(EmbedColors.Green).setTimestamp(new Date());
         if (onlyEmbed) {
             return embedBuilder;
         }
@@ -32,7 +32,7 @@ export default abstract class SlashCommandBase {
     protected failure(message: string, title: string): InteractionReplyOptions;
     protected failure(message: string, title: string, onlyEmbed: true): EmbedBuilder;
     protected failure(message: string, title = "Something went wrong!", onlyEmbed = false): InteractionReplyOptions | EmbedBuilder {
-        const embedBuilder = new EmbedBuilder().setTitle(title).setDescription(message).setColor(EmbedColors.red).setTimestamp(new Date());
+        const embedBuilder = new EmbedBuilder().setTitle(title).setDescription(message).setColor(EmbedColors.Red).setTimestamp(new Date());
         if (onlyEmbed) {
             return embedBuilder;
         }
@@ -44,7 +44,7 @@ export default abstract class SlashCommandBase {
     protected awaiting(message: string, title: string): InteractionReplyOptions;
     protected awaiting(message: string, title: string, onlyEmbed: true): EmbedBuilder;
     protected awaiting(message: string, title = "Processing Your Request...", onlyEmbed = false): InteractionReplyOptions | EmbedBuilder {
-        const embedBuilder = new EmbedBuilder().setTitle(title).setDescription(message).setColor(EmbedColors.yellow).setTimestamp(new Date());
+        const embedBuilder = new EmbedBuilder().setTitle(title).setDescription(message).setColor(EmbedColors.Yellow).setTimestamp(new Date());
         if (onlyEmbed) {
             return embedBuilder;
         }

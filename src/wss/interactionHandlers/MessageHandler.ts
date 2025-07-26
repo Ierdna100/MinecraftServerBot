@@ -5,10 +5,15 @@ import { WSOpcodes } from "../dto/WSOpcodes.js";
 import WebsocketConnection from "../WebsocketConnection.js";
 import BaseWSInteractionHandler from "./BaseInteractionHandler.js";
 
+/**
+ * @deprecated
+ */
 export default class WSMessageHandler extends BaseWSInteractionHandler {
     public opCode = WSOpcodes.M2D_Message as const;
 
     public async handle(conn: WebsocketConnection, data: Message): Promise<void> {
+        return;
+
         if (data.uuid != null) {
             return;
         }

@@ -83,7 +83,7 @@ export default class SlashCommand_RequestAuthentication extends SlashCommandBase
         const embed = new EmbedBuilder()
             .setTitle("Authentication Request")
             .setDescription("Status: Awaiting authentication")
-            .setColor(EmbedColors.yellow)
+            .setColor(EmbedColors.Yellow)
             .setTimestamp(new Date())
             .addFields([
                 {

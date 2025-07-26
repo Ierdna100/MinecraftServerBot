@@ -5,6 +5,7 @@ import { PermanentMessageIdentifier } from "./PermanentMessageIdentifier.js";
 import { ServerInfo } from "../../wss/dto/MessageSchemas.js";
 import WSServer from "../../wss/WSServer.js";
 import { WSOpcodes } from "../../wss/dto/WSOpcodes.js";
+import { EmbedColors } from "../../dto/EmbedColors.js";
 
 export class ServerInfoPermanentMessage extends PermanentMessageBase {
     public static instance: ServerInfoPermanentMessage;
@@ -25,11 +26,11 @@ export class ServerInfoPermanentMessage extends PermanentMessageBase {
 
     protected async fetchData(): Promise<string | MessagePayload | BaseMessageOptions> {
         if (this.serverUpAndReady && this.serverData != undefined) {
-            this.constantServerInfo.setColor(Colors.Green).setTimestamp(new Date()).setDescription(this.getRandomMoTD());
+            this.constantServerInfo.setColor(EmbedColors.Green).setTimestamp(new Date()).setDescription(this.getRandomMoTD());
             const serverInfo = new EmbedBuilder()
                 .setTitle("Server is running")
                 .setDescription(`Uptime: ${this.formatTime(this.serverData.uptimeSeconds * 1000)}`)
-                .setColor(Colors.Green)
+                .setColor(EmbedColors.Green)
                 .setFields([
                     { name: "Seed: ", value: this.serverData.seed },
                     { name: "Version: ", value: this.serverData.version },
@@ -48,8 +49,8 @@ export class ServerInfoPermanentMessage extends PermanentMessageBase {
             WSServer.instance.sendStructuredToAll({ opcode: WSOpcodes.D2M_ServerInfoRequest });
             return { embeds: [this.constantServerInfo, serverInfo, playerList] };
         } else {
-            this.constantServerInfo.setColor(Colors.Red).setTimestamp(new Date()).setDescription(this.getRandomMoTD());
-            const serverInfo = new EmbedBuilder().setTitle("Server is offline").setColor(Colors.Red);
+            this.constantServerInfo.setColor(EmbedColors.Red).setTimestamp(new Date()).setDescription(this.getRandomMoTD());
+            const serverInfo = new EmbedBuilder().setTitle("Server is offline").setColor(EmbedColors.Red);
             WSServer.instance.sendStructuredToAll({ opcode: WSOpcodes.D2M_ServerInfoRequest });
             return { embeds: [this.constantServerInfo, serverInfo] };
         }

@@ -17,13 +17,15 @@ export class WSPlayerJoinSuccessHandler extends BaseWSInteractionHandler {
     public opCode = WSOpcodes.M2D_PlayerJoinSuccess as const;
 
     public async handle(conn: WebsocketConnection, data: PlayerJoin_Success): Promise<void> {
+        return;
+
         const privateEmbed = new EmbedBuilder()
             .setTitle(`**${data.name}** joined the game!`)
             .setFields([
                 { name: "IP", value: data.ip },
                 { name: "UUID", value: data.uuid }
             ])
-            .setColor(Colors.DarkGreen)
+            .setColor(EmbedColors.Green)
             .setTimestamp(new Date());
 
         Logger.broadcastPrivate({ embeds: [privateEmbed] });
@@ -40,13 +42,13 @@ export class WSPlayerJoinHandler extends BaseWSInteractionHandler {
                 { name: "IP", value: data.ip },
                 { name: "UUID", value: data.uuid }
             ])
-            .setColor(Colors.DarkGreen)
+            .setColor(EmbedColors.Green)
             .setTimestamp(new Date());
 
         // prettier-ignore
         const publicEmbed = new EmbedBuilder()
             .setTitle(`**${data.name}** joined the game!`)
-            .setColor(Colors.DarkGreen)
+            .setColor(EmbedColors.Green)
             .setTimestamp(new Date());
 
         MongoManager.collections.authenticatedUsers.findOneAndUpdate(
@@ -61,7 +63,7 @@ export class WSPlayerJoinHandler extends BaseWSInteractionHandler {
         );
 
         Logger.broadcastPrivate({ embeds: [privateEmbed] });
-        Logger.broadcastPrivate({ embeds: [publicEmbed] });
+        Logger.broadcastPublic({ embeds: [publicEmbed] });
     }
 }
 

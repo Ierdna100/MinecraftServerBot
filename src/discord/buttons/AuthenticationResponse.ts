@@ -33,7 +33,7 @@ export class ButtonFactory_AcceptAuthentication extends ButtonFactoryBase {
             return editControlMessage(
                 interaction,
                 "Status: Authentication rejected - Invalid database state (user to authenticate did not exist)",
-                EmbedColors.red
+                EmbedColors.Red
             );
         } else {
             const existingUser = await MongoManager.collections.authenticatedUsers.findOne({ discordUserId: userToAuthenticate.discordUserId });
@@ -46,7 +46,7 @@ export class ButtonFactory_AcceptAuthentication extends ButtonFactoryBase {
 
                 if (!success) {
                     Logger.warn(`User with ID ${userToAuthenticate.discordUserId} cannot be contacted by bot! Unable to authenticate!`);
-                    return editControlMessage(interaction, "Status: Authentication rejected - User cannot be contacted by bot.", EmbedColors.red);
+                    return editControlMessage(interaction, "Status: Authentication rejected - User cannot be contacted by bot.", EmbedColors.Red);
                 }
 
                 Logger.info(`User with ID ${userToAuthenticate.discordUserId} was successfully authenticated!`);
@@ -56,12 +56,12 @@ export class ButtonFactory_AcceptAuthentication extends ButtonFactoryBase {
                     accounts: [{ minecraftName: userToAuthenticate.minecraftName, ipAddresses: [], banned: false, minecraftUUID: "" }]
                 });
 
-                return editControlMessage(interaction, "Status: Authentication accepted", EmbedColors.green);
+                return editControlMessage(interaction, "Status: Authentication accepted", EmbedColors.Green);
             } else {
                 for (const account of existingUser.accounts) {
                     if (account.minecraftName == userToAuthenticate.minecraftName) {
                         Logger.warn(`User with ID ${executorId} attempted to authenticate a user but the user was already authenticated!`);
-                        return editControlMessage(interaction, "Status: Authentication rejected - User was already authenticated!.", EmbedColors.green);
+                        return editControlMessage(interaction, "Status: Authentication rejected - User was already authenticated!.", EmbedColors.Green);
                     }
                 }
 
@@ -72,7 +72,7 @@ export class ButtonFactory_AcceptAuthentication extends ButtonFactoryBase {
 
                 if (!success) {
                     Logger.warn(`User with ID ${userToAuthenticate.discordUserId} cannot be contacted by bot! Unable to authenticate!`);
-                    return editControlMessage(interaction, "Status: Authentication rejected - User cannot be contacted by bot.", EmbedColors.red);
+                    return editControlMessage(interaction, "Status: Authentication rejected - User cannot be contacted by bot.", EmbedColors.Red);
                 }
 
                 Logger.info(`User with ID ${userToAuthenticate.discordUserId} was successfully authenticated!`);
@@ -80,7 +80,7 @@ export class ButtonFactory_AcceptAuthentication extends ButtonFactoryBase {
                 existingUser.accounts.push({ minecraftName: userToAuthenticate.minecraftName, ipAddresses: [], banned: false, minecraftUUID: "" });
                 MongoManager.collections.authenticatedUsers.replaceOne({ _id: existingUser._id }, existingUser);
 
-                return editControlMessage(interaction, "Status: Authentication accepted", EmbedColors.green);
+                return editControlMessage(interaction, "Status: Authentication accepted", EmbedColors.Green);
             }
         }
     }
@@ -102,11 +102,11 @@ export class ButtonFactory_RejectAuthentication extends ButtonFactoryBase {
             return editControlMessage(
                 interaction,
                 "Status: Authentication rejected - Invalid database state (user to authenticate did not exist)",
-                EmbedColors.red
+                EmbedColors.Red
             );
         } else {
             Logger.info(`User with ID ${userToAuthenticate.discordUserId} was successfully rejected!`);
-            return editControlMessage(interaction, "Status: Authentication rejected - Moderator approval failed.", EmbedColors.red);
+            return editControlMessage(interaction, "Status: Authentication rejected - Moderator approval failed.", EmbedColors.Red);
         }
     }
 }
