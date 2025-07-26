@@ -2,6 +2,7 @@ FROM node:22
 
 WORKDIR /app
 
+COPY data /app/data
 COPY src /app/src
 COPY package.json /app
 COPY package-lock.json /app
