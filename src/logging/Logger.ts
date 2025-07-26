@@ -42,11 +42,7 @@ export class Logger {
 
     public static broadcastPublic(message: MessageCreateOptions, printToConsole = true) {
         if (printToConsole) {
-            if (typeof message == "string") {
-                Logger.__internalLog(`[PUBLIC] ${message}`, ANSICodes.ForeBlack, ANSICodes.BackCyan);
-            } else {
-                Logger.__internalLog(`[PUBLIC] ${message.content}`, ANSICodes.ForeBlack, ANSICodes.BackCyan);
-            }
+            Logger.__internalLog(`[PUBLIC] ${JSON.stringify(message)}`, ANSICodes.ForeBlack, ANSICodes.BackCyan);
         }
 
         if (!DiscordClient.instance.ready) return;
@@ -55,17 +51,7 @@ export class Logger {
 
     public static broadcastPrivate(message: MessageCreateOptions | string, printToConsole = true) {
         if (printToConsole) {
-            if (typeof message == "string") {
-                Logger.__internalLog(`[PRIVATE] ${message}`, ANSICodes.ForeBlack, ANSICodes.BackMagneta);
-            } else {
-                if (message.content == undefined) {
-                    const firstEmbed = message.embeds![0] as APIEmbed;
-                    const description = firstEmbed.description == undefined ? "" : `: ${firstEmbed.description}`;
-                    Logger.__internalLog(`[PRIVATE] ${firstEmbed.title}${description}`, ANSICodes.ForeBlack, ANSICodes.BackMagneta);
-                } else {
-                    Logger.__internalLog(`[PRIVATE] ${message.content}`, ANSICodes.ForeBlack, ANSICodes.BackMagneta);
-                }
-            }
+            Logger.__internalLog(`[PRIVATE] ${JSON.stringify(message)}`, ANSICodes.ForeBlack, ANSICodes.BackMagneta);
         }
 
         if (!DiscordClient.instance.ready) return;
