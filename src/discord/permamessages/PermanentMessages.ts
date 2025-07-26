@@ -1,0 +1,122 @@
+import { MessagePayload, BaseMessageOptions, EmbedBuilder, Colors, TextChannel, WebSocketManager } from "discord.js";
+import { EnvManager } from "../../EnvManager.js";
+import { PermanentMessageBase } from "./PermanentMessageBase.js";
+import { PermanentMessageIdentifier } from "./PermanentMessageIdentifier.js";
+import { ServerInfo } from "../../wss/dto/MessageSchemas.js";
+import WSServer from "../../wss/WSServer.js";
+import { WSOpcodes } from "../../wss/dto/WSOpcodes.js";
+
+export class ServerInfoPermanentMessage extends PermanentMessageBase {
+    public static instance: ServerInfoPermanentMessage;
+
+    public serverUpAndReady = false;
+    public serverData: ServerInfo | undefined = undefined;
+
+    // prettier-ignore
+    private constantServerInfo = new EmbedBuilder()
+        .setTitle(`${EnvManager.env.serverInfoEmbedTitle} - ${EnvManager.env.serverInfoEmbedIp}`)
+        .setDescription(this.getRandomMoTD())
+        .setFooter({ text: "https://github.com/Ierdna100/MinecraftServerBot" });
+
+    constructor(channel: TextChannel) {
+        super(PermanentMessageIdentifier.ServerInfo, channel, EnvManager.env.updateFreqServerInfoMillisec);
+        ServerInfoPermanentMessage.instance = this;
+    }
+
+    protected async fetchData(): Promise<string | MessagePayload | BaseMessageOptions> {
+        if (this.serverUpAndReady && this.serverData != undefined) {
+            this.constantServerInfo.setColor(Colors.Green).setTimestamp(new Date()).setDescription(this.getRandomMoTD());
+            const serverInfo = new EmbedBuilder()
+                .setTitle("Server is running")
+                .setDescription(`Uptime: ${this.formatTime(this.serverData.uptimeSeconds * 1000)}`)
+                .setColor(Colors.Green)
+                .setFields([
+                    { name: "Seed: ", value: this.serverData.seed },
+                    { name: "Version: ", value: this.serverData.version },
+                    {
+                        name: "In-game time: ",
+                        value: `Day ${Math.floor(this.serverData.serverTimeOfDay / 24000)} (${this.getDayPeriod(this.serverData.serverTimeOfDay)})`
+                    },
+                    { name: "Last backup at: ", value: "Backup system offline | No previous backup." }
+                ]);
+
+            const playerList = new EmbedBuilder()
+                .setColor(Colors.Blue)
+                .setTitle(`Online players (${this.serverData.currentPlayerCount} / ${this.serverData.maxPlayers})`)
+                .setDescription(this.generatePlayerList(this.serverData.currentPlayers));
+
+            WSServer.instance.sendStructuredToAll({ opcode: WSOpcodes.D2M_ServerInfoRequest });
+            return { embeds: [this.constantServerInfo, serverInfo, playerList] };
+        } else {
+            this.constantServerInfo.setColor(Colors.Red).setTimestamp(new Date()).setDescription(this.getRandomMoTD());
+            const serverInfo = new EmbedBuilder().setTitle("Server is offline").setColor(Colors.Red);
+            WSServer.instance.sendStructuredToAll({ opcode: WSOpcodes.D2M_ServerInfoRequest });
+            return { embeds: [this.constantServerInfo, serverInfo] };
+        }
+    }
+
+    private generatePlayerList(players: string[]): string {
+        if (players.length == 0) {
+            // prettier-ignore
+            return "```\n" 
+            + "No players currently online!\n" 
+            + "```";
+        }
+
+        let str = "```\n";
+
+        let idx = 1;
+        const padQty = players.length == 1 ? 1 : Math.ceil(Math.log10(players.length));
+        for (const player of players) {
+            const paddedIdx = (idx++).toString().padStart(padQty, " ");
+
+            str += `${paddedIdx}. ${player}\n`;
+        }
+
+        str += "```";
+
+        return str;
+    }
+
+    private getRandomMoTD(): string {
+        return EnvManager.env.serverInfoMoTDList[Math.floor(Math.random() * EnvManager.env.serverInfoMoTDList.length)];
+    }
+
+    private getDayPeriod(time: number) {
+        time = time % 24000;
+        if (time > 23000) return "sunrise";
+        if (time > 18000) return "midnight";
+        if (time > 13000) return "night";
+        if (time > 12000) return "sunset";
+        if (time > 6000) return "noon";
+        if (time > 1000) return "day";
+        else return "sunrise";
+    }
+
+    private formatTime(milliseconds: number): string {
+        const minutes = Math.floor(milliseconds / (1000 * 60)) % 60;
+        const min_S = minutes > 1 ? "s" : "";
+
+        const hours = Math.floor(milliseconds / (1000 * 60 * 60)) % 24;
+        const hour_S = hours > 1 ? "s" : "";
+
+        const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
+        const day_S = days > 1 ? "s" : "";
+
+        let out = "";
+        if (days != 0) {
+            out += `${days} day${day_S} `;
+        }
+
+        if (hours != 0) {
+            out += `${hours} hr${hour_S} `;
+        }
+
+        if (minutes != 0) {
+            out += `${minutes} min${min_S}`;
+        }
+
+        if (out == "") return "0 min";
+        return out;
+    }
+}

@@ -5,6 +5,7 @@ import { buttons, slashComamnds } from "./InteractionHandlers.js";
 import { ANSICodes } from "../dto/ANSICodes.js";
 import { buttonIdSeparator } from "./buttons/ButtonBase.js";
 import { ObjectId } from "mongodb";
+import { ServerInfoPermanentMessage } from "./permamessages/PermanentMessages.js";
 
 export default class DiscordClient {
     public static instance: DiscordClient;
@@ -13,7 +14,7 @@ export default class DiscordClient {
 
     public publicBroadcastChannel: TextChannel;
     public privateBroadcastChannel: TextChannel;
-
+    public serverInfoChannel: TextChannel;
     public authenticationRequestsChannel: TextChannel;
 
     public ready = false;
@@ -47,9 +48,12 @@ export default class DiscordClient {
     public async onReady() {
         this.ready = true;
 
-        this.publicBroadcastChannel = await this.verifyChannel(EnvManager.env.privateBroadcastChannelId, "the public broadcasting channel");
+        this.publicBroadcastChannel = await this.verifyChannel(EnvManager.env.publicBroadcastChannelId, "the public broadcasting channel");
         this.privateBroadcastChannel = await this.verifyChannel(EnvManager.env.privateBroadcastChannelId, "the private broadcasting channel");
         this.authenticationRequestsChannel = await this.verifyChannel(EnvManager.env.authenticationRequestsChannelId, "the authentication requests channel");
+        this.serverInfoChannel = await this.verifyChannel(EnvManager.env.serverInfoChannelId, "the server info channel");
+
+        new ServerInfoPermanentMessage(this.serverInfoChannel);
 
         Logger.info("Discord client ready!", ANSICodes.ForeGreen);
     }
@@ -78,13 +82,19 @@ export default class DiscordClient {
             for (const command of slashComamnds) {
                 if (command.commandBuilder.name == interaction.commandName) {
                     interaction.reply(await command.reply(interaction, userId, options));
+                    return;
                 }
             }
         } else if (interaction.isButton()) {
             const [relatedDatabaseObjectId, customButtonId] = interaction.customId.split(buttonIdSeparator);
+            Logger.detail("Button received!");
+            Logger.detail(`${relatedDatabaseObjectId} ${customButtonId}`);
             for (const button of buttons) {
+                Logger.detail(button.customButtonId);
                 if (button.customButtonId == customButtonId) {
+                    Logger.detail("Button matched!");
                     interaction.update(await button.onInteract(interaction, new ObjectId(relatedDatabaseObjectId), userId));
+                    return;
                 }
             }
         }

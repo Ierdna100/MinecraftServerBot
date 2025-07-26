@@ -1,14 +1,20 @@
 import { ANSICodes } from "../dto/ANSICodes.js";
 import fs, { WriteStream } from "fs";
 import { LogLevels } from "../dto/LogLevels.js";
-import { ColorResolvable, MessageCreateOptions, MessagePayload } from "discord.js";
+import { APIEmbed, MessageCreateOptions, MessagePayload } from "discord.js";
 import DiscordClient from "../discord/DiscordClient.js";
+import { EnvManager } from "../EnvManager.js";
 
 export class Logger {
     private static lastFileDate: Date;
     private static logStream: WriteStream;
     public static level = LogLevels.Details | LogLevels.Info | LogLevels.Errors | LogLevels.Warnings;
     public static printTimestamp = true;
+
+    public static initializeLevelsFromSettings() {
+        this.level = (EnvManager.env.logDetails ? LogLevels.Details : 0) | LogLevels.Info | LogLevels.Errors | LogLevels.Warnings;
+        this.printTimestamp = EnvManager.env.logTimestamps;
+    }
 
     public static detail(message: string, color = ANSICodes.Default, backgroundColor = ANSICodes.Default) {
         if ((Logger.level & LogLevels.Details) != 0) Logger.__internalLog(`[DETAIL] ${message}`, color, backgroundColor);
@@ -32,16 +38,30 @@ export class Logger {
 
     public static broadcastPublic(message: MessageCreateOptions, printToConsole = true) {
         if (printToConsole) {
-            Logger.__internalLog(`[PUBLIC] ${message.content}`, ANSICodes.ForeBlack, ANSICodes.BackCyan);
+            if (typeof message == "string") {
+                Logger.__internalLog(`[PUBLIC] ${message}`, ANSICodes.ForeBlack, ANSICodes.BackCyan);
+            } else {
+                Logger.__internalLog(`[PUBLIC] ${message.content}`, ANSICodes.ForeBlack, ANSICodes.BackCyan);
+            }
         }
 
         if (!DiscordClient.instance.ready) return;
         DiscordClient.instance.publicBroadcastChannel.send(message);
     }
 
-    public static broadcastPrivate(message: MessageCreateOptions, printToConsole = true) {
+    public static broadcastPrivate(message: MessageCreateOptions | string, printToConsole = true) {
         if (printToConsole) {
-            Logger.__internalLog(`[PRIVATE] ${message.content}`, ANSICodes.ForeBlack, ANSICodes.BackMagneta);
+            if (typeof message == "string") {
+                Logger.__internalLog(`[PRIVATE] ${message}`, ANSICodes.ForeBlack, ANSICodes.BackMagneta);
+            } else {
+                if (message.content == undefined) {
+                    const firstEmbed = message.embeds![0] as APIEmbed;
+                    const description = firstEmbed.description == undefined ? "" : `: ${firstEmbed.description}`;
+                    Logger.__internalLog(`[PRIVATE] ${firstEmbed.title}${description}`, ANSICodes.ForeBlack, ANSICodes.BackMagneta);
+                } else {
+                    Logger.__internalLog(`[PRIVATE] ${message.content}`, ANSICodes.ForeBlack, ANSICodes.BackMagneta);
+                }
+            }
         }
 
         if (!DiscordClient.instance.ready) return;

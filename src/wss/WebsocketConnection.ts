@@ -3,6 +3,8 @@ import WSServer from "./WSServer.js";
 import { Logger } from "../logging/Logger.js";
 import { websocketResponses } from "./InteractionHandlers.js";
 import { WSOpcodes } from "./dto/WSOpcodes.js";
+import { CloseCodes } from "./dto/WSCloseCodes.js";
+import BaseWSInteractionHandler from "./interactionHandlers/BaseInteractionHandler.js";
 
 export default class WebsocketConnection {
     public websocket: WebSocket;
@@ -13,13 +15,10 @@ export default class WebsocketConnection {
 
         this.websocket = ws;
 
-        ws.on("open", () => this.onConnection());
         ws.on("error", (error: Error) => this.onError(error));
         ws.on("close", (code: number, reason: Buffer) => this.onClose(code, reason.toString()));
         ws.on("message", (data: RawData, isBinary: boolean) => this.onMessage(data.toString()));
-    }
 
-    public onConnection() {
         Logger.info(`New websocket connectioned opened.`);
     }
 
@@ -29,20 +28,43 @@ export default class WebsocketConnection {
     }
 
     public reply(opcode: WSOpcodes, data: any | null) {
-        if (!this.ready) return;
+        if (!this.ready) {
+            return;
+        }
+        Logger.detail(`Replying: ${JSON.stringify({ opcode: opcode, data: data })}`);
         this.websocket.send(JSON.stringify({ opcode: opcode, data: data }));
     }
 
     private onMessage(data: string) {
+        Logger.detail(`Received websocket message: ${data}`);
         let structuredData = JSON.parse(data) as { opcode: number; data: any };
 
-        const handler = websocketResponses[structuredData.opcode as WSOpcodes];
-        if (handler == undefined) {
-            Logger.fatal(`Invalid Websocket opcode '${structuredData.opcode}'`);
-            throw new Error(`Invalid Websocket opcode '${structuredData.opcode}'`);
+        let handler: BaseWSInteractionHandler;
+        if (structuredData.opcode == WSOpcodes.M2D_AuthenticationRequest) {
+            Logger.detail(`Received websocket opcode ${structuredData.opcode}`);
+            if (this.ready) {
+                Logger.warn("Websocket tried to authenticate twice. Closing.");
+                this.websocket.close(CloseCodes.AlreadyAuthenticated, "Already authenticated.");
+                return;
+            }
+            handler = websocketResponses[structuredData.opcode]!;
+        } else {
+            Logger.detail(`Received websocket opcode ${structuredData.opcode} with data ${JSON.stringify(structuredData.data)}`);
+            if (!this.ready) {
+                Logger.warn("Websocket not authenticated. Closing.");
+                this.websocket.close(CloseCodes.NotAuthenticated, "Not authenticated.");
+                return;
+            }
+
+            const possibleHandler = websocketResponses[structuredData.opcode as WSOpcodes];
+            if (possibleHandler == undefined) {
+                Logger.warn(`Invalid Websocket opcode '${structuredData.opcode}'`);
+                this.websocket.close(CloseCodes.InvalidOpCode, "Invalid OpCode.");
+                return;
+            }
+            handler = possibleHandler;
         }
 
-        Logger.detail(`Received websocket opcode ${structuredData.opcode} with data ${JSON.stringify(structuredData.data)}`);
         handler.handle(this, structuredData.data);
     }
 

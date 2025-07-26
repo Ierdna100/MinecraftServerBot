@@ -1,4 +1,3 @@
-import { WebSocket } from "ws";
 import { WSOpcodes } from "../dto/WSOpcodes.js";
 import WebsocketConnection from "../WebsocketConnection.js";
 
