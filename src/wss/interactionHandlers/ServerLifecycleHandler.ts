@@ -15,7 +15,7 @@ export class WSServerStartedHandler extends BaseWSInteractionHandler {
 
         // prettier-ignore
         const embed = new EmbedBuilder()
-            .setTitle(`@everyone **Server started!**`)
+            .setTitle(`**Server started!**`)
             .setColor(EmbedColors.Green)
             .setTimestamp(new Date());
 
@@ -45,7 +45,7 @@ export class WSServerStoppingHandler extends BaseWSInteractionHandler {
 
         // prettier-ignore
         const embed = new EmbedBuilder()
-            .setTitle(`@everyone **Server stopping!**`)
+            .setTitle(`**Server stopping!**`)
             .setColor(EmbedColors.Green)
             .setTimestamp(new Date());
 

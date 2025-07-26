@@ -43,6 +43,7 @@ export abstract class PermanentMessageBase {
             this.message = await this.channel.send(contents);
             this.messageSnowflake = this.message.id;
             this.newMessageUponEdit = false;
+            MongoManager.collections.permanentMessages.insertOne({ identifier: this.uniqueIdentifier, messageId: this.messageSnowflake });
         } catch (error: any) {
             Logger.warn(`Unable to create new message with snowflake for permanent message with unique identifier '${this.uniqueIdentifier}'`);
             Logger.detail(error);
