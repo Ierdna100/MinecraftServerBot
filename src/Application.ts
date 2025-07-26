@@ -13,23 +13,22 @@ export class Application {
     public env!: EnvFileFields;
 
     constructor() {
-        // Application.instance = this;
+        Application.instance = this;
+        Logger.detail(`Current working directory: ${process.cwd()}`);
 
-        // const success = EnvManager.readAndParse();
-        // if (!success.success) {
-        //     success.errors.forEach((e) => Logger.fatal(e));
-        //     return;
-        // }
-        // Logger.initializeLevelsFromSettings();
+        const success = EnvManager.readAndParse();
+        if (!success.success) {
+            success.errors.forEach((e) => Logger.fatal(e));
+            return;
+        }
+        Logger.initializeLevelsFromSettings();
 
-        // Logger.info("Initializing Discord bridge");
-        // LanguageManager.initialize();
-        // new MongoManager().initialize();
-        // new DiscordClient().initialize();
-        // new WSServer().initialize();
-        // new HTTPServer().initialize();
-
+        Logger.info("Initializing Discord bridge");
         LanguageManager.initialize();
+        new MongoManager().initialize();
+        new DiscordClient().initialize();
+        new WSServer().initialize();
+        new HTTPServer().initialize();
     }
 }
 

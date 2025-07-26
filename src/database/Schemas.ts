@@ -22,3 +22,8 @@ export type Schema_IPConfirmation = {
     minecraftName: string;
     ipToAdd: string;
 };
+
+export type Schema_PermanentMessage = {
+    identifier: number;
+    messageId: string;
+};

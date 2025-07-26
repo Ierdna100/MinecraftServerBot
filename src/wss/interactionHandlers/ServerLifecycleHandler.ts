@@ -4,11 +4,14 @@ import { Empty, GameSaved, Message } from "../dto/MessageSchemas.js";
 import { WSOpcodes } from "../dto/WSOpcodes.js";
 import WebsocketConnection from "../WebsocketConnection.js";
 import BaseWSInteractionHandler from "./BaseInteractionHandler.js";
+import { ServerInfoPermanentMessage } from "../../discord/permamessages/PermanentMessages.js";
 
 export class WSServerStartedHandler extends BaseWSInteractionHandler {
     public opCode = WSOpcodes.M2D_ServerStarted as const;
 
     public async handle(conn: WebsocketConnection, data: Empty): Promise<void> {
+        ServerInfoPermanentMessage.instance.serverUpAndReady = true;
+
         // prettier-ignore
         const embed = new EmbedBuilder()
             .setTitle(`@here **Server started!**`)
@@ -37,6 +40,8 @@ export class WSServerStoppingHandler extends BaseWSInteractionHandler {
     public opCode = WSOpcodes.M2D_ServerStopping as const;
 
     public async handle(conn: WebsocketConnection, data: Empty): Promise<void> {
+        ServerInfoPermanentMessage.instance.serverUpAndReady = false;
+
         // prettier-ignore
         const embed = new EmbedBuilder()
             .setTitle(`@here **Server stopping!**`)

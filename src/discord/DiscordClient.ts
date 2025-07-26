@@ -5,6 +5,7 @@ import { buttons, slashComamnds } from "./InteractionHandlers.js";
 import { ANSICodes } from "../dto/ANSICodes.js";
 import { buttonIdSeparator } from "./buttons/ButtonBase.js";
 import { ObjectId } from "mongodb";
+import { ServerInfoPermanentMessage } from "./permamessages/PermanentMessages.js";
 
 export default class DiscordClient {
     public static instance: DiscordClient;
@@ -13,7 +14,7 @@ export default class DiscordClient {
 
     public publicBroadcastChannel: TextChannel;
     public privateBroadcastChannel: TextChannel;
-
+    public serverInfoChannel: TextChannel;
     public authenticationRequestsChannel: TextChannel;
 
     public ready = false;
@@ -50,6 +51,9 @@ export default class DiscordClient {
         this.publicBroadcastChannel = await this.verifyChannel(EnvManager.env.publicBroadcastChannelId, "the public broadcasting channel");
         this.privateBroadcastChannel = await this.verifyChannel(EnvManager.env.privateBroadcastChannelId, "the private broadcasting channel");
         this.authenticationRequestsChannel = await this.verifyChannel(EnvManager.env.authenticationRequestsChannelId, "the authentication requests channel");
+        this.serverInfoChannel = await this.verifyChannel(EnvManager.env.serverInfoChannelId, "the server info channel");
+
+        new ServerInfoPermanentMessage(this.serverInfoChannel);
 
         Logger.info("Discord client ready!", ANSICodes.ForeGreen);
     }
