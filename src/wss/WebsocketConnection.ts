@@ -36,7 +36,6 @@ export default class WebsocketConnection {
     }
 
     private onMessage(data: string) {
-        Logger.detail(`Received websocket message: ${data}`);
         let structuredData = JSON.parse(data) as { opcode: number; data: any };
 
         let handler: BaseWSInteractionHandler;
@@ -49,7 +48,16 @@ export default class WebsocketConnection {
             }
             handler = websocketResponses[structuredData.opcode]!;
         } else {
-            Logger.detail(`Received websocket opcode ${structuredData.opcode} with data ${JSON.stringify(structuredData.data)}`);
+            if (
+                (structuredData.opcode as number) != WSOpcodes.M2D_Message ||
+                (structuredData.opcode as number) != WSOpcodes.M2D_ServerInfo ||
+                (structuredData.opcode as number) != WSOpcodes.D2M_ServerInfoRequest ||
+                (structuredData.opcode as number) != WSOpcodes.D2M_AuthenticationResponse ||
+                (structuredData.opcode as number) != WSOpcodes.M2D_AuthenticationRequest
+            ) {
+                Logger.detail(`Received websocket opcode ${structuredData.opcode} with data ${JSON.stringify(structuredData.data)}`);
+            }
+
             if (!this.ready) {
                 Logger.warn("Websocket not authenticated. Closing.");
                 this.websocket.close(CloseCodes.NotAuthenticated, "Not authenticated.");
