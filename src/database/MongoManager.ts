@@ -33,4 +33,19 @@ export default class MongoManager {
         };
         Logger.detail("Mongo client ready!");
     }
+
+    public static async getAccountByUUID(uuid: string, narrowToSingleUser = true): Promise<Schema_AuthenticatedUser | null> {
+        const user = await MongoManager.collections.authenticatedUsers.findOne({ "accounts.minecraftUUID": uuid });
+
+        if (narrowToSingleUser) {
+            if (user == null) {
+                return null;
+            } else {
+                user.accounts = [user.accounts.filter((a) => a.minecraftUUID == uuid)[0]];
+                return user;
+            }
+        } else {
+            return user;
+        }
+    }
 }

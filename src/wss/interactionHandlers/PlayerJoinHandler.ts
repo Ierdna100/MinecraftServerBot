@@ -1,5 +1,5 @@
 import { WebSocket } from "ws";
-import { PlayerJoin_IPBanned, PlayerJoin_NotWhitelisted, PlayerJoin_Success, PlayerJoin_UnregisteredIP } from "../dto/MessageSchemas.js";
+import { PlayerJoin_IPBanned, PlayerJoin_NotWhitelisted, PlayerJoin_Success, PlayerJoin_UnregisteredIP, PlayerJoined } from "../dto/MessageSchemas.js";
 import { WSOpcodes } from "../dto/WSOpcodes.js";
 import BaseWSInteractionHandler from "./BaseInteractionHandler.js";
 import WebsocketConnection from "../WebsocketConnection.js";
@@ -10,6 +10,9 @@ import MongoManager from "../../database/MongoManager.js";
 import { ButtonFactory_ConfirmIP, ButtonFactory_DenyIP } from "../../discord/buttons/UnregisteredIPResponse.js";
 import { EmbedColors } from "../../dto/EmbedColors.js";
 
+/**
+ * @deprecated
+ */
 export class WSPlayerJoinSuccessHandler extends BaseWSInteractionHandler {
     public opCode = WSOpcodes.M2D_PlayerJoinSuccess as const;
 
@@ -24,6 +27,41 @@ export class WSPlayerJoinSuccessHandler extends BaseWSInteractionHandler {
             .setTimestamp(new Date());
 
         Logger.broadcastPrivate({ embeds: [privateEmbed] });
+    }
+}
+
+export class WSPlayerJoinHandler extends BaseWSInteractionHandler {
+    public opCode = WSOpcodes.M2D_PlayerJoin as const;
+
+    public async handle(conn: WebsocketConnection, data: PlayerJoined): Promise<void> {
+        const privateEmbed = new EmbedBuilder()
+            .setTitle(`**${data.name}** joined the game!`)
+            .setFields([
+                { name: "IP", value: data.ip },
+                { name: "UUID", value: data.uuid }
+            ])
+            .setColor(EmbedColors.green)
+            .setTimestamp(new Date());
+
+        // prettier-ignore
+        const publicEmbed = new EmbedBuilder()
+            .setTitle(`**${data.name}** joined the game!`)
+            .setColor(EmbedColors.green)
+            .setTimestamp(new Date());
+
+        MongoManager.collections.authenticatedUsers.findOneAndUpdate(
+            {
+                "accounts.minecraftName": data.name
+            },
+            {
+                $set: {
+                    "accounts.$.minecraftUUID": data.uuid
+                }
+            }
+        );
+
+        Logger.broadcastPrivate({ embeds: [privateEmbed] });
+        Logger.broadcastPrivate({ embeds: [publicEmbed] });
     }
 }
 
