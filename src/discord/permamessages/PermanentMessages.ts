@@ -10,7 +10,7 @@ import { EmbedColors } from "../../dto/EmbedColors.js";
 export class ServerInfoPermanentMessage extends PermanentMessageBase<ServerInfo> {
     public static instance: ServerInfoPermanentMessage;
 
-    public data: ServerInfo | undefined;
+    protected data: ServerInfo | undefined;
 
     // prettier-ignore
     private constantServerInfo = new EmbedBuilder()

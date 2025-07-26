@@ -10,7 +10,7 @@ export abstract class PermanentMessageBase<ReplyData> {
 
     private replyTimeout: NodeJS.Timeout | undefined;
 
-    abstract data: ReplyData | undefined;
+    protected abstract data: ReplyData | undefined;
 
     constructor(
         private uniqueIdentifier: PermanentMessageIdentifier,
@@ -22,21 +22,29 @@ export abstract class PermanentMessageBase<ReplyData> {
     }
 
     private async update(): Promise<void> {
+        Logger.detail(`Updating permanent message with unique identifier '${this.uniqueIdentifier}'.`);
         this.fetchData();
         this.replyTimeout = setTimeout(() => this.cancelReply(), 3000);
     }
 
     private cancelReply() {
+        Logger.detail(`Permanent message reply cancelled: Timeout expired.`);
         this.replyTimeout = undefined;
         this.data = undefined;
         this.processDataAndUpdate();
     }
 
     public reply(replyData: ReplyData) {
-        this.data = replyData;
-        clearTimeout(this.replyTimeout);
-        this.replyTimeout = undefined;
-        this.processDataAndUpdate();
+        if (this.replyTimeout != undefined) {
+            Logger.detail(`Permanent message reply arrivd on time.`);
+            this.data = replyData;
+            clearTimeout(this.replyTimeout);
+            this.replyTimeout = undefined;
+            this.processDataAndUpdate();
+        } else {
+            clearTimeout(this.replyTimeout);
+            Logger.detail(`Permanent message reply arrived too late, cancelled.`);
+        }
     }
 
     protected abstract fetchData(): Promise<void>;

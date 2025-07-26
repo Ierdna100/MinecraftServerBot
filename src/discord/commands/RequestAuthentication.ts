@@ -37,14 +37,18 @@ export default class SlashCommand_RequestAuthentication extends SlashCommandBase
             }
         }
 
+        // FIXME: Can't remember why it doesn't work but it crashed last time. //
+
         // If not in a DMs
-        let autoAuthenticate = !interaction.guild != null;
+        let autoAuthenticate = interaction.guild != null;
         // And is in the server with the bot
         autoAuthenticate &&= DiscordClient.instance.publicBroadcastChannel.guild.members.cache.has(userId);
         // And has role for auto-authentication
         autoAuthenticate &&= ((await DiscordClient.instance.publicBroadcastChannel.guild.members.fetch(userId)).roles as GuildMemberRoleManager).cache.has(
             EnvManager.env.autoAuthenticateRoleId
         );
+
+        // end of FIXME //
 
         if (autoAuthenticate) {
             if (existingUser != null) {
