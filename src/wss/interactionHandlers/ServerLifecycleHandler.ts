@@ -11,8 +11,6 @@ export class WSServerStartedHandler extends BaseWSInteractionHandler {
     public opCode = WSOpcodes.M2D_ServerStarted as const;
 
     public async handle(conn: WebsocketConnection, data: Empty): Promise<void> {
-        ServerInfoPermanentMessage.instance.serverUpAndReady = true;
-
         // prettier-ignore
         const embed = new EmbedBuilder()
             .setTitle(`**Server started!**`)
@@ -41,8 +39,6 @@ export class WSServerStoppingHandler extends BaseWSInteractionHandler {
     public opCode = WSOpcodes.M2D_ServerStopping as const;
 
     public async handle(conn: WebsocketConnection, data: Empty): Promise<void> {
-        ServerInfoPermanentMessage.instance.serverUpAndReady = false;
-
         // prettier-ignore
         const embed = new EmbedBuilder()
             .setTitle(`**Server stopping!**`)

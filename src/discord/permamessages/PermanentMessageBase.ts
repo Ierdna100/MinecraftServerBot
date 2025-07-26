@@ -3,10 +3,14 @@ import MongoManager from "../../database/MongoManager.js";
 import { Logger } from "../../logging/Logger.js";
 import { PermanentMessageIdentifier } from "./PermanentMessageIdentifier.js";
 
-export abstract class PermanentMessageBase {
+export abstract class PermanentMessageBase<ReplyData> {
     private newMessageUponEdit = false;
     private messageSnowflake: string;
     private message: Message;
+
+    private replyTimeout: NodeJS.Timeout | undefined;
+
+    abstract data: ReplyData | undefined;
 
     constructor(
         private uniqueIdentifier: PermanentMessageIdentifier,
@@ -14,10 +18,30 @@ export abstract class PermanentMessageBase {
         updateFrequencyMillisec: number
     ) {
         this.initialize();
-        setInterval(async () => this.updateMessage(await this.fetchData()), updateFrequencyMillisec);
+        setInterval(async () => this.update(), updateFrequencyMillisec);
     }
 
-    protected abstract fetchData(): Promise<string | MessagePayload | BaseMessageOptions>;
+    private async update(): Promise<void> {
+        this.fetchData();
+        this.replyTimeout = setTimeout(() => this.cancelReply(), 3000);
+    }
+
+    private cancelReply() {
+        this.replyTimeout = undefined;
+        this.data = undefined;
+        this.processDataAndUpdate();
+    }
+
+    public reply(replyData: ReplyData) {
+        this.data = replyData;
+        clearTimeout(this.replyTimeout);
+        this.replyTimeout = undefined;
+        this.processDataAndUpdate();
+    }
+
+    protected abstract fetchData(): Promise<void>;
+
+    protected abstract processDataAndUpdate(): Promise<string | MessagePayload | BaseMessageOptions>;
 
     private async initialize() {
         const potentialMessage = await MongoManager.collections.permanentMessages.findOne({ identifier: this.uniqueIdentifier });

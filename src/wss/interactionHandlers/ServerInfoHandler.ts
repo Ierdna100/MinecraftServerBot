@@ -8,7 +8,6 @@ export class WSServerInfoHandler extends BaseWSInteractionHandler {
     public opCode = WSOpcodes.M2D_ServerInfo as const;
 
     public async handle(conn: WebsocketConnection, data: ServerInfo): Promise<void> {
-        ServerInfoPermanentMessage.instance.serverUpAndReady = true;
-        ServerInfoPermanentMessage.instance.serverData = data;
+        ServerInfoPermanentMessage.instance.reply(data);
     }
 }
