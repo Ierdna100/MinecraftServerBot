@@ -36,7 +36,13 @@ export default class WebsocketConnection {
     }
 
     private onMessage(data: string) {
-        let structuredData = JSON.parse(data) as { opcode: number; data: any };
+        let structuredData: { opcode: number; data: any };
+        try {
+            structuredData = JSON.parse(data) as { opcode: number; data: any };
+        } catch {
+            Logger.warn(`Websocket server tried to parse message and failed: ${data}`);
+            return;
+        }
 
         let handler: BaseWSInteractionHandler;
         if (structuredData.opcode == WSOpcodes.M2D_AuthenticationRequest) {
