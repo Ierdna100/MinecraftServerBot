@@ -21,36 +21,6 @@ export abstract class PermanentMessageBase<ReplyData> {
         setInterval(async () => this.update(), updateFrequencyMillisec);
     }
 
-    private async update(): Promise<void> {
-        Logger.detail(`Updating permanent message with unique identifier '${this.uniqueIdentifier}'.`);
-        this.fetchData();
-        this.replyTimeout = setTimeout(() => this.cancelReply(), 3000);
-    }
-
-    private cancelReply() {
-        Logger.detail(`Permanent message reply cancelled: Timeout expired.`);
-        this.replyTimeout = undefined;
-        this.data = undefined;
-        this.processDataAndUpdate();
-    }
-
-    public reply(replyData: ReplyData) {
-        if (this.replyTimeout != undefined) {
-            Logger.detail(`Permanent message reply arrivd on time.`);
-            this.data = replyData;
-            clearTimeout(this.replyTimeout);
-            this.replyTimeout = undefined;
-            this.processDataAndUpdate();
-        } else {
-            clearTimeout(this.replyTimeout);
-            Logger.detail(`Permanent message reply arrived too late, cancelled.`);
-        }
-    }
-
-    protected abstract fetchData(): Promise<void>;
-
-    protected abstract processDataAndUpdate(): Promise<string | MessagePayload | BaseMessageOptions>;
-
     private async initialize() {
         const potentialMessage = await MongoManager.collections.permanentMessages.findOne({ identifier: this.uniqueIdentifier });
         if (potentialMessage == null) {
@@ -69,6 +39,36 @@ export abstract class PermanentMessageBase<ReplyData> {
             return;
         }
     }
+
+    private async update(): Promise<void> {
+        // Logger.detail(`Updating permanent message with unique identifier '${this.uniqueIdentifier}'.`);
+        this.fetchData();
+        this.replyTimeout = setTimeout(() => this.cancelReply(), 3000);
+    }
+
+    private async cancelReply() {
+        Logger.detail(`Permanent message with unique identifier '${this.uniqueIdentifier}' reply cancelled: Timeout expired.`);
+        this.replyTimeout = undefined;
+        this.data = undefined;
+        this.updateMessage(await this.processDataAndUpdate());
+    }
+
+    public async reply(replyData: ReplyData) {
+        if (this.replyTimeout != undefined) {
+            // Logger.detail(`Permanent message reply arrived on time.`);
+            this.data = replyData;
+            clearTimeout(this.replyTimeout);
+            this.replyTimeout = undefined;
+            this.updateMessage(await this.processDataAndUpdate());
+        } else {
+            clearTimeout(this.replyTimeout);
+            Logger.detail(`Permanent message with unique identifier '${this.uniqueIdentifier}' reply cancelled: Arrived too late.`);
+        }
+    }
+
+    protected abstract fetchData(): Promise<void>;
+
+    protected abstract processDataAndUpdate(): Promise<string | MessagePayload | BaseMessageOptions>;
 
     private async createNewMessage(contents: string | MessagePayload | BaseMessageOptions) {
         try {

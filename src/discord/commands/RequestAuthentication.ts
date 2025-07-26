@@ -73,7 +73,10 @@ export default class SlashCommand_RequestAuthentication extends SlashCommandBase
 
             this.alertAuthenticationRequest(userId, insertedIdHex, minecraftName);
 
-            return this.awaiting("Your request to authenticate has gone through! Please wait for moderator approval.");
+            return this.awaiting(
+                "Your request to authenticate has gone through! Please wait for moderator approval. " +
+                    "You will receive a direct message once the request is approved."
+            );
         }
     }
 
