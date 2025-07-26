@@ -36,6 +36,7 @@ export default class WebsocketConnection {
     }
 
     private onMessage(data: string) {
+        Logger.detail(`Received websocket message: ${data}`);
         let structuredData = JSON.parse(data) as { opcode: number; data: any };
 
         let handler: BaseWSInteractionHandler;

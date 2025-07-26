@@ -52,13 +52,29 @@ export class EnvManager {
                 }
                 (envFileFields[key as keyof EnvFileFields] as string) = value;
             } else if (typeof envFileFields[key as keyof EnvFileFields] == "boolean") {
-                const value = envFileJSON[key] as boolean;
-                // let value: boolean | undefined = undefined;
-                // if (value == undefined) {
-                //     errors.push(`Environnement variable with key '${key}' was expected to be a boolean, but it is neither 'true' nor 'false'!`);
-                //     continue;
-                // }
+                const value = envFileJSON[key];
+                if (typeof value != "boolean") {
+                    errors.push(`Environnement variable with key '${key}' was expected to be a string[], but it is ${typeof value}!`);
+                    continue;
+                }
+
                 (envFileFields[key as keyof EnvFileFields] as boolean) = value;
+            } else if (Array.isArray(envFileFields[key as keyof EnvFileFields])) {
+                const firstElement = (envFileFields[key as keyof EnvFileFields] as Array<any>)[0];
+                if (typeof firstElement == "string") {
+                    const value = envFileJSON[key];
+                    if (!Array.isArray(value)) {
+                        errors.push(`Environnement variable with key '${key}' was expected to be a string[], but it does not pass the array check!`);
+                        continue;
+                    }
+
+                    if (value.filter((e) => typeof e != "string").length != 0) {
+                        errors.push(`Environnement variable with key '${key}' was expected to be a string[], but some elements are not strings!`);
+                        continue;
+                    }
+
+                    (envFileFields[key as keyof EnvFileFields] as string[]) = value;
+                }
             }
 
             remainingFieldKeys.splice(remainingFieldKeys.indexOf(key), 1);
@@ -92,28 +108,22 @@ export class EnvFileFields {
     websocketPort = 7500;
     websocketPassword = crypto.randomUUID();
 
-    coll_serverData = "serverData";
-    coll_messages = "messages";
-    coll_deaths = "deaths";
-    coll_starts = "serverStarts";
-    coll_stops = "serverStops";
-    coll_disconnects = "playerDisconnects";
-    coll_connects = "playerConnects";
-    coll_advancements = "advancements";
-    coll_overloads = "overloads";
-    coll_allowedMembers = "allowedMembers";
-    coll_awaitingMembers = "awaitingMembers";
-    coll_bannedIps = "ipBans";
-    coll_confirmingIps = "ipConfirms";
+    updateFreqServerInfoMillisec = 15_000;
+    updateFreqPlayerList = 15_000;
 
     publicBroadcastChannelId = "";
     privateBroadcastChannelId = "";
     authenticationRequestsChannelId = "";
+    serverInfoChannelId = "";
 
     authenticationRequestsPingRoleId = "";
     autoAuthenticateRoleId = "";
 
     backupTimeHours = 2400;
+
+    serverInfoEmbedTitle = "";
+    serverInfoEmbedIp = "";
+    serverInfoMoTDList = [""];
 
     constructor() {}
 }
