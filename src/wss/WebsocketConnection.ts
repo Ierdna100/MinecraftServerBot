@@ -49,11 +49,11 @@ export default class WebsocketConnection {
             handler = websocketResponses[structuredData.opcode]!;
         } else {
             if (
-                (structuredData.opcode as number) != WSOpcodes.M2D_Message ||
-                (structuredData.opcode as number) != WSOpcodes.M2D_ServerInfo ||
-                (structuredData.opcode as number) != WSOpcodes.D2M_ServerInfoRequest ||
-                (structuredData.opcode as number) != WSOpcodes.D2M_AuthenticationResponse ||
-                (structuredData.opcode as number) != WSOpcodes.M2D_AuthenticationRequest
+                structuredData.opcode != WSOpcodes.M2D_Message &&
+                structuredData.opcode != WSOpcodes.M2D_ServerInfo &&
+                structuredData.opcode != WSOpcodes.D2M_ServerInfoRequest &&
+                structuredData.opcode != WSOpcodes.D2M_AuthenticationResponse &&
+                structuredData.opcode != WSOpcodes.M2D_AuthenticationRequest
             ) {
                 Logger.detail(`Received websocket opcode ${structuredData.opcode} with data ${JSON.stringify(structuredData.data)}`);
             }
