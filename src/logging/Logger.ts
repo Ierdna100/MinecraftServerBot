@@ -4,6 +4,10 @@ import { LogLevels } from "../dto/LogLevels.js";
 import { APIEmbed, MessageCreateOptions, MessagePayload } from "discord.js";
 import DiscordClient from "../discord/DiscordClient.js";
 import { EnvManager } from "../EnvManager.js";
+import path from "path";
+
+const logsFilepath = "./logs";
+const logsFileExtension = ".log";
 
 export class Logger {
     private static lastFileDate: Date;
@@ -92,9 +96,9 @@ export class Logger {
         now.setHours(0, 0, 0, 0);
 
         if (Logger.logStream == undefined) {
-            Logger.__internalCreateLogFile(now);
+            Logger.__internalCreateLogFile(now, this.getLastLogFileCopyNumber(now));
         } else if (now.getTime() > Logger.lastFileDate.getTime()) {
-            Logger.__internalCreateLogFile(now);
+            Logger.__internalCreateLogFile(now, 1);
         }
 
         let writeForegroundColor = color != ANSICodes.Default;
@@ -112,12 +116,22 @@ export class Logger {
         }
     }
 
-    private static __internalCreateLogFile(timestamp: Date) {
-        let year = timestamp.getFullYear().toString().padStart(2, "0");
-        let month = (timestamp.getMonth() + 1).toString().padStart(2, "0"); // who the fuck programmed this to start at 0
-        let day = timestamp.getDate().toString().padStart(2, "0");
-        let filename = `${year}-${month}-${day}.log`;
-        let filepath = `./logs/${filename}`;
+    private static getLastLogFileCopyNumber(timestamp: Date): number {
+        let largest = 1;
+        const dir = fs.readdirSync(logsFilepath);
+        for (const filename of dir) {
+            if (!filename.endsWith(logsFileExtension)) continue;
+
+            const filenameDateString = this.getLogFilenameDateString(timestamp);
+            if (!filename.includes(filenameDateString)) continue;
+            const copy = parseInt(filename.substring(filenameDateString.length + 1, filename.length - logsFileExtension.length)) + 1;
+            if (copy > largest) largest = copy;
+        }
+        return largest;
+    }
+
+    private static __internalCreateLogFile(timestamp: Date, copy: number) {
+        let filepath = path.join(logsFilepath, `${this.getLogFilenameDateString(timestamp)}-${copy}${logsFileExtension}`);
 
         if (fs.existsSync(filepath)) {
             Logger.logStream = fs.createWriteStream(filepath, { flags: "a" }); // flag "a": append to file
@@ -129,5 +143,12 @@ export class Logger {
             Logger.lastFileDate = timestamp;
             return;
         }
+    }
+
+    private static getLogFilenameDateString(timestamp: Date): string {
+        let year = timestamp.getFullYear().toString().padStart(2, "0");
+        let month = (timestamp.getMonth() + 1).toString().padStart(2, "0"); // who the fuck programmed this to start at 0
+        let day = timestamp.getDate().toString().padStart(2, "0");
+        return `${year}-${month}-${day}`;
     }
 }
