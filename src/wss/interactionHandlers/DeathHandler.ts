@@ -41,7 +41,7 @@ export default class WSDeathHandler extends BaseWSInteractionHandler {
 
         // Only killed data is available.
         if (data.killerUuid == null) {
-            return;
+            return args;
         }
 
         if (data.killerType == "player") {
@@ -58,7 +58,7 @@ export default class WSDeathHandler extends BaseWSInteractionHandler {
 
         // Only killed and killer data is available.
         if (data.itemType == null) {
-            return;
+            return args;
         }
 
         args.push(`*__${LanguageManager.fromKey(LanguageManager.entityStringFromPartial(data.itemType!))}__*`);
