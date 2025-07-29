@@ -20,7 +20,7 @@ export default class WSDeathHandler extends BaseWSInteractionHandler {
 
         // prettier-ignore
         const embed = new EmbedBuilder()
-            .setTitle(formatStringMinecraft(LanguageManager.formatterFromKey(data.messageKey), ...args))
+            .setTitle(LanguageManager.stringFromKey(data.messageKey, ...args))
             // .setDescription(data.message)
             .setColor(Colors.Gold)
             .setTimestamp(new Date());
