@@ -21,6 +21,11 @@ export default class LanguageManager {
     }
 
     public static entityStringFromPartial(key: string) {
-        return `minecraft.entity.${key}`;
+        if (key.startsWith("minecraft:")) {
+            key = key.replace("minecraft:", "");
+            return `minecraft.entity.${key}`;
+        } else {
+            return `minecraft.entity.${key}`;
+        }
     }
 }

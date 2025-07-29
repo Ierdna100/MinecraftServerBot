@@ -44,7 +44,7 @@ export default class WSDeathHandler extends BaseWSInteractionHandler {
             return args;
         }
 
-        if (data.killerType == "player") {
+        if (data.killerType == "minecraft:player") {
             const killer = await MongoManager.getAccountByUUID(data.killerUuid);
             if (killer == null) {
                 Logger.error(`User with UUID ${data.killedUuid} was killed but no matching account was found in database.`);
