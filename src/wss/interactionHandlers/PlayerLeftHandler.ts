@@ -20,7 +20,7 @@ export default class WSPlayerLeftHandler extends BaseWSInteractionHandler {
         // prettier-ignore
         const embed = new EmbedBuilder()
             .setTitle(`**${user.accounts[0].minecraftName}** left the game: ${data.reason}!`)
-            .setColor(Colors.Red)
+            .setColor(EmbedColors.Red)
             .setTimestamp(new Date());
 
         Logger.broadcastPublic({ embeds: [embed] });
