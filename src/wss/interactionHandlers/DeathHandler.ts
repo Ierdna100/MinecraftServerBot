@@ -53,7 +53,7 @@ export default class WSDeathHandler extends BaseWSInteractionHandler {
                 args.push(`**${killer.accounts[0].minecraftName}**`);
             }
         } else {
-            args.push(`*${LanguageManager.fromKey(LanguageManager.entityStringFromPartial(data.killerType!))}*`);
+            args.push(`*${LanguageManager.fromKey(data.killerType!)}*`);
         }
 
         // Only killed and killer data is available.
@@ -61,7 +61,7 @@ export default class WSDeathHandler extends BaseWSInteractionHandler {
             return args;
         }
 
-        args.push(`*__${LanguageManager.fromKey(LanguageManager.entityStringFromPartial(data.itemType!))}__*`);
+        args.push(`*__${data.itemName}__*`);
 
         return args;
     }
