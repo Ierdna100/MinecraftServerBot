@@ -27,3 +27,8 @@ export type Schema_PermanentMessage = {
     identifier: number;
     messageId: string;
 };
+
+export type Schema_Administrator = {
+    userId: string;
+    level: number;
+};

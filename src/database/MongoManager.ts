@@ -1,7 +1,14 @@
 import { EnvManager } from "../EnvManager.js";
 import { Logger } from "../logging/Logger.js";
 import MongoDB from "mongodb";
-import { Schema_AuthenticatedUser, Schema_AwaitingAuthenticationUser, Schema_IPBans, Schema_IPConfirmation, Schema_PermanentMessage } from "./Schemas.js";
+import {
+    Schema_Administrator,
+    Schema_AuthenticatedUser,
+    Schema_AwaitingAuthenticationUser,
+    Schema_IPBans,
+    Schema_IPConfirmation,
+    Schema_PermanentMessage
+} from "./Schemas.js";
 
 export default class MongoManager {
     public static instance: MongoManager;
@@ -12,6 +19,7 @@ export default class MongoManager {
         awaitingIPConfirms: MongoDB.Collection<Schema_IPConfirmation>;
         bannedIPs: MongoDB.Collection<Schema_IPBans>;
         permanentMessages: MongoDB.Collection<Schema_PermanentMessage>;
+        administrators: MongoDB.Collection<Schema_Administrator>;
     };
 
     private client!: MongoDB.MongoClient;
@@ -31,7 +39,8 @@ export default class MongoManager {
             awaitingAuthenticationUsers: this.db.collection<Schema_AwaitingAuthenticationUser>("awaitingMembers"),
             awaitingIPConfirms: this.db.collection<Schema_IPConfirmation>("ipConfirms"),
             bannedIPs: this.db.collection<Schema_IPBans>("ipBans"),
-            permanentMessages: this.db.collection<Schema_PermanentMessage>("permanentMessages")
+            permanentMessages: this.db.collection<Schema_PermanentMessage>("permanentMessages"),
+            administrators: this.db.collection<Schema_Administrator>("administrators")
         };
         Logger.detail("Mongo client ready!");
     }
