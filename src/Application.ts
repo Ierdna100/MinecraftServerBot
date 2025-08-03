@@ -1,6 +1,7 @@
+import BackupManager from "./BackupManager.js";
 import MongoManager from "./database/MongoManager.js";
 import DiscordClient from "./discord/DiscordClient.js";
-import { ANSICodes } from "./dto/ANSICodes.js";
+import { loadDatePolyfill } from "./dto/DatePolyfill.js";
 import { EnvFileFields, EnvManager } from "./EnvManager.js";
 import HTTPServer from "./http/HttpServer.js";
 import LanguageManager from "./LanguageManager.js";
@@ -13,6 +14,8 @@ export class Application {
     public env!: EnvFileFields;
 
     constructor() {
+        loadDatePolyfill();
+
         Application.instance = this;
         Logger.detail(`Current working directory: ${process.cwd()}`);
 
@@ -22,6 +25,10 @@ export class Application {
             return;
         }
         Logger.initializeLevelsFromSettings();
+
+        if (!new BackupManager().initialize()) {
+            return;
+        }
 
         Logger.info("Initializing Discord bridge");
         LanguageManager.initialize();
