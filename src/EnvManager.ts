@@ -81,7 +81,7 @@ export class EnvManager {
         }
 
         if (remainingFieldKeys.length != 0) {
-            errors.push(`Environnement variable with key '${remainingFieldKeys[0]}' not set to a value! Please fill out the .env file!`);
+            remainingFieldKeys.forEach((f) => errors.push(`Environnement variable with key '${f}' not set to a value! Please fill out the .env file!`));
         }
 
         if (errors.length != 0) {
@@ -108,6 +108,10 @@ export class EnvFileFields {
     websocketPort = 7500;
     websocketPassword = crypto.randomUUID();
 
+    backupSizeGigabytes = 100;
+    backupRelativePathToMinecraftRoot = "./minecraft/";
+    backupRelativePathDestination = "./backups/";
+
     updateFreqServerInfoMillisec = 15_000;
     updateFreqPlayerList = 15_000;
 
@@ -119,7 +123,7 @@ export class EnvFileFields {
     authenticationRequestsPingRoleId = "";
     autoAuthenticateRoleId = "";
 
-    backupTimeHours = 2400;
+    backupTimeHours = "00:00";
 
     serverInfoEmbedTitle = "";
     serverInfoEmbedIp = "";
