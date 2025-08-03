@@ -13,6 +13,8 @@ export default class BackupManager {
     public lastBackupTime: Date | undefined;
     private backupTime: Date;
 
+    private overrideBackupTimer = false;
+
     public initialize(): boolean {
         BackupManager.instance = this;
 
@@ -36,20 +38,39 @@ export default class BackupManager {
         return true;
     }
 
+    public async forceBackup(immediate: boolean, overrideDailyBackupLimit: boolean): Promise<string> {
+        const now = new Date();
+        const nowDateMillisec = new Date(now.getTime()).setHours(0, 0, 0, 0);
+        const backedUpToday = this.lastBackupTime == undefined ? false : new Date(this.lastBackupTime.getTime()).setHours(0, 0, 0, 0) == nowDateMillisec;
+
+        if (backedUpToday && !overrideDailyBackupLimit) {
+            Logger.info("Did not start forceful backup: Already backed up today.");
+            return "Backup cancelled: Already backed up today.";
+        }
+
+        if (immediate) {
+            Logger.info("Forceful immediate backup scheduled.");
+            this.backup(now);
+            return "Immediate backup scheduled.";
+        } else {
+            this.overrideBackupTimer = true;
+            Logger.info("Forceful backup scheduled for next game save.");
+            return "Backup scheduled for next game save.";
+        }
+    }
+
     public async onGameSave(now: Date = new Date()) {
         const nowTimeOnly = new Date(now.getTime() % 86400000).getTime();
         const nowDateOnly = new Date(now.getTime()).setHours(0, 0, 0, 0);
 
-        const shouldBackup = nowTimeOnly > this.backupTime.getTime();
-        const alreadyBackedUpToday = this.lastBackupTime != undefined && nowDateOnly == new Date(this.lastBackupTime.getTime()).setHours(0, 0, 0, 0);
-        console.log(new Date(nowTimeOnly));
-        console.log(this.backupTime);
-        console.log(new Date(nowDateOnly));
-        console.log(new Date(new Date(this.lastBackupTime == undefined ? 0 : this.lastBackupTime.getTime()).setHours(0, 0, 0, 0)));
+        if (!this.overrideBackupTimer) {
+            const shouldBackup = nowTimeOnly > this.backupTime.getTime();
+            const alreadyBackedUpToday = this.lastBackupTime != undefined && nowDateOnly == new Date(this.lastBackupTime.getTime()).setHours(0, 0, 0, 0);
 
-        if (!shouldBackup || alreadyBackedUpToday) {
-            Logger.detail(`Not backing up, should have backed up?: ${shouldBackup}. Already backed up today?: ${alreadyBackedUpToday}`);
-            return;
+            if (!shouldBackup || alreadyBackedUpToday) {
+                // Logger.detail(`Not backing up, should have backed up?: ${shouldBackup}. Already backed up today?: ${alreadyBackedUpToday}`);
+                return;
+            }
         }
 
         await this.backup(now);
@@ -57,6 +78,7 @@ export default class BackupManager {
 
     public async backup(backupDate: Date) {
         this.lastBackupTime = backupDate;
+        this.overrideBackupTimer = false;
 
         Logger.info("Starting backup...");
         const embed = new EmbedBuilder().setColor(EmbedColors.Orange).setTitle("Starting backup...").setTimestamp(new Date());
