@@ -45,6 +45,7 @@ export class Logger {
             Logger.__internalLog(`[PUBLIC] ${JSON.stringify(message)}`, ANSICodes.ForeBlack, ANSICodes.BackCyan);
         }
 
+        if (DiscordClient.instance == undefined) return;
         if (!DiscordClient.instance.ready) return;
         DiscordClient.instance.publicBroadcastChannel.send(message);
     }
@@ -54,6 +55,7 @@ export class Logger {
             Logger.__internalLog(`[PRIVATE] ${JSON.stringify(message)}`, ANSICodes.ForeBlack, ANSICodes.BackMagneta);
         }
 
+        if (DiscordClient.instance == undefined) return;
         if (!DiscordClient.instance.ready) return;
         DiscordClient.instance.privateBroadcastChannel.send(message);
     }
