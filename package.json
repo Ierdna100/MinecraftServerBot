@@ -6,6 +6,7 @@
     "scripts": {
         "build": "npx tsc",
         "run": "node ./bin/Application.js",
+        "test": "node ./bin/Test.js",
         "bnr": "npm run build & npm run run",
         "register": "node ./bin/RegisterCommands.js",
         "postbuild": "node ./bin/Install.js",
@@ -20,6 +21,8 @@
         "prettier": "3.1.1"
     },
     "dependencies": {
+        "@types/archiver": "^6.0.3",
+        "archiver": "^7.0.1",
         "body-parser": "^1.20.2",
         "discord.js": "^14.21.0",
         "dotenv": "^16.3.1",
