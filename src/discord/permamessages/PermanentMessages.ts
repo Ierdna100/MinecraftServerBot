@@ -6,6 +6,7 @@ import { ServerInfo } from "../../wss/dto/MessageSchemas.js";
 import WSServer from "../../wss/WSServer.js";
 import { WSOpcodes } from "../../wss/dto/WSOpcodes.js";
 import { EmbedColors } from "../../dto/EmbedColors.js";
+import BackupManager from "../../BackupManager.js";
 
 export class ServerInfoPermanentMessage extends PermanentMessageBase<ServerInfo> {
     public static instance: ServerInfoPermanentMessage;
@@ -30,6 +31,12 @@ export class ServerInfoPermanentMessage extends PermanentMessageBase<ServerInfo>
     protected async processDataAndUpdate(): Promise<string | MessagePayload | BaseMessageOptions> {
         if (this.data != undefined) {
             this.constantServerInfo.setColor(EmbedColors.Green).setTimestamp(new Date()).setDescription(this.getRandomMoTD());
+            let lastBackupText = "No previous backup.";
+            if (BackupManager.instance.lastBackupTime != undefined) {
+                const backupTime = Math.round(BackupManager.instance.lastBackupTime.getTime() / 1000);
+                lastBackupText = `<t:${backupTime}:f> <t:${backupTime}:R>`;
+            }
+
             const serverInfo = new EmbedBuilder()
                 .setTitle("Server is running")
                 .setDescription(`Uptime: ${this.formatTime(this.data.uptimeSeconds * 1000)}`)
@@ -41,7 +48,7 @@ export class ServerInfoPermanentMessage extends PermanentMessageBase<ServerInfo>
                         name: "In-game time: ",
                         value: `Day ${Math.floor(this.data.serverTimeOfDay / 24000)} (${this.getDayPeriod(this.data.serverTimeOfDay)})`
                     },
-                    { name: "Last backup at: ", value: "Backup system offline | No previous backup." }
+                    { name: "Last backup at: ", value: lastBackupText }
                 ]);
 
             const playerList = new EmbedBuilder()

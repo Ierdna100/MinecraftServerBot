@@ -6,6 +6,7 @@ import WebsocketConnection from "../WebsocketConnection.js";
 import BaseWSInteractionHandler from "./BaseInteractionHandler.js";
 import { ServerInfoPermanentMessage } from "../../discord/permamessages/PermanentMessages.js";
 import { EmbedColors } from "../../dto/EmbedColors.js";
+import BackupManager from "../../BackupManager.js";
 
 export class WSServerStartedHandler extends BaseWSInteractionHandler {
     public opCode = WSOpcodes.M2D_ServerStarted as const;
@@ -60,5 +61,6 @@ export class WSGameSavedHandler extends BaseWSInteractionHandler {
             .setTimestamp(new Date());
 
         Logger.broadcastPrivate({ embeds: [embed] });
+        BackupManager.instance.onGameSave();
     }
 }
