@@ -30,7 +30,7 @@ export class SlashCommand_Administrators extends SlashCommandBase {
     public async reply(interaction: CommandInteraction, userId: string, options: CommandOptions): Promise<InteractionReplyOptions> {
         if (
             (await MongoManager.collections.administrators.estimatedDocumentCount()) != 0 &&
-            (await MongoManager.collections.administrators.findOne({ userId: userId }))
+            (await MongoManager.collections.administrators.findOne({ userId: userId })) == null
         ) {
             return { content: "You are not an administrator. You cannot execute this command.", flags: MessageFlags.Ephemeral };
         }
